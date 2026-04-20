@@ -4014,16 +4014,22 @@
   function initReveal() {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        if (entry.isIntersecting) entry.target.classList.add('visible');
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        } else {
+          entry.target.classList.remove('visible');
+        }
       });
     }, { threshold: 0.12 });
 
     document.querySelectorAll('.page-view.active .reveal').forEach(el => {
       el.classList.remove('visible');
       const rect = el.getBoundingClientRect();
-      // If already in viewport, animate immediately with a short stagger
       if (rect.top < window.innerHeight && rect.bottom > 0) {
-        setTimeout(() => el.classList.add('visible'), 80);
+        setTimeout(() => {
+          el.classList.add('visible');
+          observer.observe(el); // re-observe so it can animate again on scroll-away + return
+        }, 80);
       } else {
         observer.observe(el);
       }
