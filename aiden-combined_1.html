@@ -460,6 +460,98 @@
 
   .check-item p { font-size: 0.92rem; color: var(--olark-muted); line-height: 1.55; }
 
+  /* ── Bot chat checklist ── */
+  .bot-chat-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 28px;
+  }
+
+  .bot-chat-msg {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    animation: chatSlideIn 0.3s ease both;
+  }
+
+  .bot-chat-avatar {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--olark-purple-mid), var(--olark-pink));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .bot-chat-bubble {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 4px 14px 14px 14px;
+    padding: 12px 16px;
+    font-size: 0.88rem;
+    color: var(--olark-text);
+    line-height: 1.55;
+    max-width: calc(100% - 46px);
+    position: relative;
+  }
+
+  .bot-chat-bubble strong {
+    display: block;
+    color: var(--olark-white);
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 0.88rem;
+    margin-bottom: 4px;
+  }
+
+  .bot-chat-bubble .bot-typing-text {
+    color: var(--olark-muted);
+    font-size: 0.84rem;
+    opacity: 0;
+    transform: translateY(3px);
+    transition: opacity 0.3s ease 0.05s, transform 0.3s ease 0.05s;
+  }
+
+  .bot-chat-bubble .bot-typing-text.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .bot-chat-bubble .bot-title-cursor {
+    display: inline-block;
+    width: 2px;
+    height: 0.8em;
+    background: var(--olark-gold);
+    margin-left: 2px;
+    vertical-align: middle;
+    border-radius: 1px;
+    animation: heroCursorBlink 0.65s step-end infinite;
+  }
+
+  /* Delivered tick in bottom right */
+  .bot-chat-tick {
+    position: absolute;
+    bottom: 6px;
+    right: 10px;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+
+  .bot-chat-tick.show { opacity: 1; }
+
+  .bot-chat-tick svg {
+    width: 12px; height: 12px;
+    stroke: var(--olark-gold);
+    fill: none;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
   /* ── Upload knowledge animation ── */
   .upload-item {
     opacity: 0;
@@ -3575,19 +3667,8 @@
         <div class="section-label">See It In Action</div>
         <h2 class="section-title">Watch Aiden Work</h2>
         <p class="section-intro">See how Aiden handles the full pre-sales and support workflow, from routing to handoff, in a single conversation.</p>
-        <div class="video-checklist">
-          <div class="check-item">
-            <div class="check-icon"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
-            <p><strong>Smart Routing Buttons</strong><span class="upload-body-text">Route chats to sales, support, or product information automatically, with no manual triage.</span></p>
-          </div>
-          <div class="check-item">
-            <div class="check-icon"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
-            <p><strong>Lead Capture and Qualification</strong><span class="upload-body-text">Watch Aiden capture prospects, qualify intent, and pass hot opportunities directly to your sales team.</span></p>
-          </div>
-          <div class="check-item">
-            <div class="check-icon"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
-            <p><strong>Instant, Accurate Answers</strong><span class="upload-body-text">Deliver fast answers from your own knowledge base, with no wait times and no backlog.</span></p>
-          </div>
+        <div class="bot-chat-list" id="bot-chat-checklist">
+          <!-- items injected by JS -->
         </div>
       </div>
       <div class="video-embed-wrapper reveal" onclick="openVideoModal('tx6su2gamj')" style="transition-delay: 0.12s;">
@@ -4965,6 +5046,116 @@ document.addEventListener('keydown', function(e) {
 });
 
 // ════════════════════════════════════════
+// BOT CHAT CHECKLIST ANIMATION
+// ════════════════════════════════════════
+(function() {
+  var botChatStarted = false;
+  var CHAR_DELAY = 38;
+  var MSG_GAP    = 320;
+
+  var messages = [
+    { title: 'Smart Routing Buttons',          body: 'Route chats to sales, support, or product information automatically, with no manual triage.' },
+    { title: 'Lead Capture and Qualification', body: 'Watch Aiden capture prospects, qualify intent, and pass hot opportunities directly to your sales team.' },
+    { title: 'Instant, Accurate Answers',      body: 'Deliver fast answers from your own knowledge base, with no wait times and no backlog.' }
+  ];
+
+  function delay(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
+
+  function makeTypingRow(container) {
+    var row = document.createElement('div');
+    row.className = 'bot-chat-msg';
+    row.innerHTML = '<div class="bot-chat-avatar">🤖</div><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>';
+    row.style.animation = 'chatSlideIn 0.3s ease both';
+    container.appendChild(row);
+    return row;
+  }
+
+  function typeTitle(el, text) {
+    return new Promise(function(resolve) {
+      el.innerHTML = '';
+      var cursor = document.createElement('span');
+      cursor.className = 'bot-title-cursor';
+      el.appendChild(cursor);
+      var i = 0;
+      function tick() {
+        if (i < text.length) {
+          el.insertBefore(document.createTextNode(text[i]), cursor);
+          i++;
+          setTimeout(tick, CHAR_DELAY);
+        } else {
+          setTimeout(function() {
+            if (cursor.parentNode) cursor.parentNode.removeChild(cursor);
+            resolve();
+          }, 200);
+        }
+      }
+      tick();
+    });
+  }
+
+  async function playBotChat() {
+    var container = document.getElementById('bot-chat-checklist');
+    if (!container) return;
+    container.innerHTML = '';
+
+    for (var i = 0; i < messages.length; i++) {
+      var msg = messages[i];
+
+      // Typing indicator
+      var typingRow = makeTypingRow(container);
+      await delay(900);
+      container.removeChild(typingRow);
+
+      // Build message bubble
+      var row = document.createElement('div');
+      row.className = 'bot-chat-msg';
+      var avatar = document.createElement('div');
+      avatar.className = 'bot-chat-avatar';
+      avatar.textContent = '🤖';
+      var bubble = document.createElement('div');
+      bubble.className = 'bot-chat-bubble';
+      var titleEl = document.createElement('strong');
+      var bodyEl  = document.createElement('span');
+      bodyEl.className = 'bot-typing-text';
+      bodyEl.textContent = msg.body;
+      var tick = document.createElement('div');
+      tick.className = 'bot-chat-tick';
+      tick.innerHTML = '<svg viewBox="0 0 16 10"><polyline points="1,5 5,9 15,1"/></svg>';
+      bubble.appendChild(titleEl);
+      bubble.appendChild(bodyEl);
+      bubble.appendChild(tick);
+      row.appendChild(avatar);
+      row.appendChild(bubble);
+      container.appendChild(row);
+
+      // Type the title
+      await typeTitle(titleEl, msg.title);
+
+      // Fade in body + tick
+      bodyEl.classList.add('visible');
+      await delay(180);
+      tick.classList.add('show');
+
+      if (i < messages.length - 1) await delay(MSG_GAP);
+    }
+  }
+
+  window.initBotChat = function() {
+    if (botChatStarted) return;
+    botChatStarted = true;
+    playBotChat();
+  };
+
+  window.resetBotChat = function() {
+    botChatStarted = false;
+    var c = document.getElementById('bot-chat-checklist');
+    if (c) c.innerHTML = '';
+  };
+
+  window.isBotChatStarted = function() { return botChatStarted; };
+})();
+
+// ════════════════════════════════════════
 // UPLOAD KNOWLEDGE ANIMATION
 // ════════════════════════════════════════
 (function() {
@@ -5651,9 +5842,10 @@ document.addEventListener('keydown', function(e) {
 (function() {
 
   var targets = [
-    { id: 'routing-visual',       tab: 'advanced',   started: function() { return window.isChatStarted(); },       fire: function() { window.initChat(); } },
-    { id: 'pipeline-visual',      tab: 'advanced',   started: function() { return window.isPipelineStarted(); },   fire: function() { window.setPipelineStarted(true); setTimeout(window.animatePipeline, 200); } },
-    { id: 'automation-visual',    tab: 'advanced',   started: function() { return window.isAutoStarted(); },       fire: function() { window.initAutoAnim(); } },
+    { id: 'routing-visual',       tab: 'advanced',   started: function() { return window.isChatStarted(); },        fire: function() { window.initChat(); } },
+    { id: 'pipeline-visual',      tab: 'advanced',   started: function() { return window.isPipelineStarted(); },    fire: function() { window.setPipelineStarted(true); setTimeout(window.animatePipeline, 200); } },
+    { id: 'automation-visual',    tab: 'advanced',   started: function() { return window.isAutoStarted(); },        fire: function() { window.initAutoAnim(); } },
+    { id: 'bot-chat-checklist',   tab: 'advanced',   started: function() { return window.isBotChatStarted(); },     fire: function() { window.initBotChat(); } },
     { id: 'ess-features-grid',    tab: 'essentials', started: function() { return window.isEssStarted(); },        fire: function() { window.initEssFeatures(); } },
     { id: 'upload-checklist',     tab: 'essentials', started: function() { return window.isUploadStarted(); },     fire: function() { window.initUploadAnim(); } },
     { id: 'problem-signal-visual',tab: 'commercial', started: function() { return window.isSigStarted(); },        fire: function() { window.initProblemSignal(); } },
@@ -5688,6 +5880,7 @@ document.addEventListener('keydown', function(e) {
       window.resetChatAnim();
       window.resetPipelineAnim();
       window.resetAutoAnim();
+      window.resetBotChat();
     }
     if (id === 'essentials') {
       window.resetEssFeatures();
