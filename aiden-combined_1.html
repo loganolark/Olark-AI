@@ -460,6 +460,113 @@
 
   .check-item p { font-size: 0.92rem; color: var(--olark-muted); line-height: 1.55; }
 
+  /* ── Upload knowledge animation ── */
+  .upload-item {
+    opacity: 0;
+    transform: translateX(-14px);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .upload-item.uploading { opacity: 1; transform: translateX(0); }
+
+  /* Scan line that sweeps across the item while "ingesting" */
+  .upload-item::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%; bottom: 0;
+    width: 60%;
+    background: linear-gradient(90deg, transparent 0%, rgba(245,194,0,0.12) 50%, transparent 100%);
+    transition: none;
+    pointer-events: none;
+  }
+
+  .upload-item.scanning::after {
+    animation: uploadScan 0.65s ease-out forwards;
+  }
+
+  @keyframes uploadScan {
+    0%   { left: -60%; }
+    100% { left: 110%; }
+  }
+
+  /* Check icon starts as a loading ring, then confirms */
+  .upload-icon {
+    position: relative;
+    background: rgba(245,194,0,0) !important;
+    border-color: rgba(245,194,0,0.15) !important;
+    transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .upload-icon svg {
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    stroke-dasharray: 20;
+    stroke-dashoffset: 20;
+  }
+
+  .upload-icon.loading::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-top-color: var(--olark-gold);
+    animation: uploadSpin 0.6s linear infinite;
+  }
+
+  @keyframes uploadSpin {
+    to { transform: rotate(360deg); }
+  }
+
+  .upload-icon.confirmed {
+    background: rgba(245,194,0,0.15) !important;
+    border-color: rgba(245,194,0,0.5) !important;
+    box-shadow: 0 0 16px rgba(245,194,0,0.35);
+    animation: uploadConfirm 0.4s cubic-bezier(0.22,1,0.36,1) forwards;
+  }
+
+  .upload-icon.confirmed svg {
+    opacity: 1;
+    stroke-dashoffset: 0;
+    transition: opacity 0.2s ease, stroke-dashoffset 0.3s ease;
+  }
+
+  .upload-icon.confirmed::before { display: none; }
+
+  @keyframes uploadConfirm {
+    0%   { transform: scale(0.8); }
+    60%  { transform: scale(1.18); }
+    100% { transform: scale(1); }
+  }
+
+  /* Text reveal bar */
+  .upload-item p {
+    position: relative;
+  }
+
+  .upload-item p strong {
+    display: block;
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path 0.45s cubic-bezier(0.22,1,0.36,1);
+  }
+
+  .upload-item.text-revealed p strong {
+    clip-path: inset(0 0% 0 0);
+  }
+
+  .upload-item .upload-body-text {
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.35s ease 0.1s, transform 0.35s ease 0.1s;
+  }
+
+  .upload-item.text-revealed .upload-body-text {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
   .check-item p strong {
     display: block;
     color: var(--olark-text);
@@ -3211,18 +3318,18 @@
         <div class="section-label">Live Search</div>
         <h2 class="section-title">Your Bot Is Ready Before Your First Customer Arrives</h2>
         <p class="section-intro">See how Aiden goes from a completely blank dashboard to a fully trained, live chatbot in under 60 seconds. No downloads, no waiting, no maintenance.</p>
-        <div class="video-checklist">
-          <div class="check-item">
-            <div class="check-icon"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
-            <p><strong>One-Step Setup</strong>Paste your website URL and your bot is live and trained. No file downloads. No scraping tools. No setup calls with IT.</p>
+        <div class="video-checklist" id="upload-checklist">
+          <div class="check-item upload-item" data-upload-index="0">
+            <div class="check-icon upload-icon"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+            <p><strong>One-Step Setup</strong><span class="upload-body-text">Paste your website URL and your bot is live and trained. No file downloads. No scraping tools. No setup calls with IT.</span></p>
           </div>
-          <div class="check-item">
-            <div class="check-icon"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
-            <p><strong>Always Current</strong>Aiden continuously learns from your website as it changes. Updates happen automatically. You won't even have to remember.</p>
+          <div class="check-item upload-item" data-upload-index="1">
+            <div class="check-icon upload-icon"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+            <p><strong>Always Current</strong><span class="upload-body-text">Aiden continuously learns from your website as it changes. Updates happen automatically. You won't even have to remember.</span></p>
           </div>
-          <div class="check-item">
-            <div class="check-icon"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
-            <p><strong>Test It Immediately</strong>Most platforms make you wait an hour or more after setup. With Live Search, your bot is ready to test the moment you hit save.</p>
+          <div class="check-item upload-item" data-upload-index="2">
+            <div class="check-icon upload-icon"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+            <p><strong>Test It Immediately</strong><span class="upload-body-text">Most platforms make you wait an hour or more after setup. With Live Search, your bot is ready to test the moment you hit save.</span></p>
           </div>
         </div>
       </div>
@@ -3471,15 +3578,15 @@
         <div class="video-checklist">
           <div class="check-item">
             <div class="check-icon"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
-            <p><strong>Smart Routing Buttons</strong>Route chats to sales, support, or product information automatically, with no manual triage.</p>
+            <p><strong>Smart Routing Buttons</strong><span class="upload-body-text">Route chats to sales, support, or product information automatically, with no manual triage.</span></p>
           </div>
           <div class="check-item">
             <div class="check-icon"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
-            <p><strong>Lead Capture and Qualification</strong>Watch Aiden capture prospects, qualify intent, and pass hot opportunities directly to your sales team.</p>
+            <p><strong>Lead Capture and Qualification</strong><span class="upload-body-text">Watch Aiden capture prospects, qualify intent, and pass hot opportunities directly to your sales team.</span></p>
           </div>
           <div class="check-item">
             <div class="check-icon"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
-            <p><strong>Instant, Accurate Answers</strong>Deliver fast answers from your own knowledge base, with no wait times and no backlog.</p>
+            <p><strong>Instant, Accurate Answers</strong><span class="upload-body-text">Deliver fast answers from your own knowledge base, with no wait times and no backlog.</span></p>
           </div>
         </div>
       </div>
@@ -4858,6 +4965,51 @@ document.addEventListener('keydown', function(e) {
 });
 
 // ════════════════════════════════════════
+// UPLOAD KNOWLEDGE ANIMATION
+// ════════════════════════════════════════
+(function() {
+  var uploadStarted = false;
+  var ITEM_DELAY    = 520;
+  var SCAN_DELAY    = 220;
+  var CONFIRM_DELAY = 700;
+  var TEXT_DELAY    = 300;
+
+  function animateUploadItem(item) {
+    var icon = item.querySelector('.upload-icon');
+    item.classList.add('uploading');
+    icon.classList.add('loading');
+    setTimeout(function() { item.classList.add('scanning'); }, SCAN_DELAY);
+    setTimeout(function() {
+      icon.classList.remove('loading');
+      icon.classList.add('confirmed');
+    }, SCAN_DELAY + CONFIRM_DELAY);
+    setTimeout(function() {
+      item.classList.add('text-revealed');
+    }, SCAN_DELAY + CONFIRM_DELAY + TEXT_DELAY);
+  }
+
+  window.initUploadAnim = function() {
+    var checklist = document.getElementById('upload-checklist');
+    if (!checklist || uploadStarted) return;
+    uploadStarted = true;
+    Array.from(checklist.querySelectorAll('.upload-item')).forEach(function(item, i) {
+      setTimeout(function() { animateUploadItem(item); }, i * ITEM_DELAY);
+    });
+  };
+
+  window.resetUploadAnim = function() {
+    uploadStarted = false;
+    document.querySelectorAll('.upload-item').forEach(function(item) {
+      item.classList.remove('uploading','scanning','text-revealed');
+      var icon = item.querySelector('.upload-icon');
+      if (icon) icon.classList.remove('loading','confirmed');
+    });
+  };
+
+  window.isUploadStarted = function() { return uploadStarted; };
+})();
+
+// ════════════════════════════════════════
 // PIPELINE BAR ANIMATION ENGINE
 // ════════════════════════════════════════
 (function() {
@@ -5503,6 +5655,7 @@ document.addEventListener('keydown', function(e) {
     { id: 'pipeline-visual',      tab: 'advanced',   started: function() { return window.isPipelineStarted(); },   fire: function() { window.setPipelineStarted(true); setTimeout(window.animatePipeline, 200); } },
     { id: 'automation-visual',    tab: 'advanced',   started: function() { return window.isAutoStarted(); },       fire: function() { window.initAutoAnim(); } },
     { id: 'ess-features-grid',    tab: 'essentials', started: function() { return window.isEssStarted(); },        fire: function() { window.initEssFeatures(); } },
+    { id: 'upload-checklist',     tab: 'essentials', started: function() { return window.isUploadStarted(); },     fire: function() { window.initUploadAnim(); } },
     { id: 'problem-signal-visual',tab: 'commercial', started: function() { return window.isSigStarted(); },        fire: function() { window.initProblemSignal(); } },
     { id: 'steps-grid',           tab: 'commercial', started: function() { return window.isStepsStarted(); },      fire: function() { window.initStepsAnim(); } },
     { id: 'outcome-flow',         tab: 'commercial', started: function() { return window.isFlowStarted(); },       fire: function() { window.initFlowAnimation(); } }
@@ -5538,6 +5691,7 @@ document.addEventListener('keydown', function(e) {
     }
     if (id === 'essentials') {
       window.resetEssFeatures();
+      window.resetUploadAnim();
     }
     if (id === 'commercial') {
       window.resetFlowAnim();
