@@ -831,7 +831,38 @@
 
   .auto-summary strong { color: var(--olark-white); font-weight: 600; }
 
-  /* Automation row animation */
+  /* Hero headline typewriter cursor */
+  .hero-type-cursor {
+    display: inline-block;
+    width: 3px;
+    height: 0.85em;
+    background: var(--olark-white);
+    margin-left: 3px;
+    vertical-align: middle;
+    border-radius: 2px;
+    animation: heroCursorBlink 0.65s step-end infinite;
+  }
+
+  @keyframes heroCursorBlink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+  }
+
+  /* One-shot glow on colored words */
+  @keyframes heroWordGlowGold {
+    0%   { text-shadow: none; }
+    40%  { text-shadow: 0 0 30px rgba(245,194,0,0.9), 0 0 60px rgba(245,194,0,0.55); }
+    100% { text-shadow: none; }
+  }
+
+  @keyframes heroWordGlowPink {
+    0%   { text-shadow: none; }
+    40%  { text-shadow: 0 0 30px rgba(232,50,90,0.9), 0 0 60px rgba(232,50,90,0.55); }
+    100% { text-shadow: none; }
+  }
+
+  .hero-glow-gold { animation: heroWordGlowGold 1.2s ease forwards; }
+  .hero-glow-pink { animation: heroWordGlowPink 1.2s ease forwards; }
   .auto-anim-row { transition: opacity 0.3s ease; }
 
   .auto-sub {
@@ -1702,6 +1733,26 @@
     animation: pulse 1.8s ease-in-out infinite;
   }
 
+  .ess-badge span.dot,
+  .beta-badge span.dot {
+    width: 6px; height: 6px;
+    background: var(--olark-gold);
+    border-radius: 50%;
+    display: inline-block;
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+
+  .badge-icon {
+    display: inline-block;
+    animation: badgeIconPulse 1.8s ease-in-out infinite;
+    transform-origin: center;
+  }
+
+  @keyframes badgeIconPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.45; transform: scale(0.72); }
+  }
+
   .adv-hero h1 {
     font-family: 'Poppins', sans-serif;
     font-weight: 900;
@@ -2348,6 +2399,74 @@
   }
 
   .quiz-feature-item:hover { border-color: rgba(245,194,0,0.2); }
+
+  .quiz-feature-item.inherited {
+    background: rgba(255,255,255,0.04);
+    border-color: rgba(93,211,179,0.25);
+  }
+
+  .quiz-feature-item.inherited .quiz-feature-dot {
+    background: #5DD3B3;
+  }
+
+  .quiz-feature-item.inherited span {
+    color: var(--olark-text);
+  }
+
+  .quiz-inherit-toggle {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: transparent;
+    border: 1.5px dashed rgba(93,211,179,0.4);
+    border-radius: 8px;
+    padding: 10px 14px;
+    cursor: pointer;
+    color: #5DD3B3;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    width: 100%;
+    text-align: left;
+  }
+
+  .quiz-inherit-toggle:hover {
+    border-color: rgba(93,211,179,0.75);
+    background: rgba(93,211,179,0.06);
+    color: #7EECD2;
+  }
+
+  .quiz-inherit-toggle svg {
+    width: 14px; height: 14px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    flex-shrink: 0;
+    transition: transform 0.25s ease;
+  }
+
+  .quiz-inherit-toggle.open svg { transform: rotate(180deg); }
+
+  .quiz-inherited-grid {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 8px;
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.45s ease, opacity 0.35s ease;
+    opacity: 0;
+  }
+
+  .quiz-inherited-grid.open {
+    max-height: 800px;
+    opacity: 1;
+  }
 
   .quiz-feature-dot {
     width: 6px; height: 6px;
@@ -3046,7 +3165,7 @@
         <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style="stroke:var(--olark-gold);stroke-width:2.2;stroke-linecap:round;"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg>
         Close
       </button>
-      <div class="card-modal-hint" id="modal-hint">← swipe or use arrow keys to navigate →</div>
+      <div class="card-modal-hint" id="modal-hint">use ← → arrow keys to navigate</div>
     </div>
   </div>
 </div>
@@ -3078,9 +3197,9 @@
 
   <!-- HERO -->
   <section class="ess-hero">
-    <div class="ess-badge">✦ Foundation Plan</div>
-    <h1>Real AI for Every Business.<br>Live in <em>Minutes</em>, Not Days.</h1>
-    <p class="hero-sub">Aiden Essentials is the fastest path to a working AI — <strong>no technical setup, no long waits, no guesswork.</strong> Deploy straight from your existing website, unlock insights from conversations you already have, and get live onboarding from the Olark team every step of the way.</p>
+    <div class="ess-badge"><span class="badge-icon">✦</span> Foundation Plan</div>
+    <h1 id="hero-h1-essentials"></h1>
+    <p class="hero-sub">Aiden Essentials is the fastest path to a working AI. <strong>No technical setup, no long waits, no guesswork.</strong> Deploy straight from your existing website, unlock insights from conversations you already have, and get live onboarding from the Olark team every step of the way.</p>
     <a href="#" onclick="openMeetingModal();return false;" class="hero-cta">Schedule Your Free Onboarding</a>
     <span class="hero-note">Live onboarding and ongoing support included with every Essentials plan.</span>
   </section>
@@ -3091,7 +3210,7 @@
       <div class="video-copy reveal">
         <div class="section-label">Live Search</div>
         <h2 class="section-title">Your Bot Is Ready Before Your First Customer Arrives</h2>
-        <p class="section-intro">See how Aiden goes from a completely blank dashboard to a fully trained, live chatbot in under 60 seconds — no downloads, no waiting, no maintenance.</p>
+        <p class="section-intro">See how Aiden goes from a completely blank dashboard to a fully trained, live chatbot in under 60 seconds. No downloads, no waiting, no maintenance.</p>
         <div class="video-checklist">
           <div class="check-item">
             <div class="check-icon"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
@@ -3099,7 +3218,7 @@
           </div>
           <div class="check-item">
             <div class="check-icon"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
-            <p><strong>Always Current</strong>Aiden continuously learns from your website as it changes. Updates happen automatically — you won't even have to remember.</p>
+            <p><strong>Always Current</strong>Aiden continuously learns from your website as it changes. Updates happen automatically. You won't even have to remember.</p>
           </div>
           <div class="check-item">
             <div class="check-icon"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
@@ -3107,8 +3226,8 @@
           </div>
         </div>
       </div>
-      <div class="video-embed-wrapper" onclick="openVideoModal('fgqmk8acw5')">
-      <div class="video-embed" style="transition-delay: 0.12s;">
+      <div class="video-embed-wrapper reveal" onclick="openVideoModal('fgqmk8acw5')" style="transition-delay: 0.12s;">
+      <div class="video-embed">
         <script src="https://fast.wistia.com/player.js" async></script>
         <script src="https://fast.wistia.com/embed/fgqmk8acw5.js" async type="module"></script>
         <style>wistia-player[media-id='fgqmk8acw5']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/fgqmk8acw5/swatch'); display: block; padding-top:56.25%; }</style>
@@ -3137,7 +3256,7 @@
         </div>
       </div>
       <div class="feature-graphic">
-        <div class="video-embed-wrapper" onclick="openVideoModal('654bn7hwb5')">
+        <div class="video-embed-wrapper reveal" onclick="openVideoModal('654bn7hwb5')" style="transition-delay: 0.12s;">
       <div class="video-embed" style="transition-delay: 0.1s;">
           <script src="https://fast.wistia.com/player.js" async></script>
           <script src="https://fast.wistia.com/embed/654bn7hwb5.js" async type="module"></script>
@@ -3159,7 +3278,7 @@
       <div class="reveal">
         <div class="section-label">What's Included</div>
         <h2 class="section-title">Everything You Need to Start Smart</h2>
-        <p class="section-intro">Aiden Essentials is a complete AI platform — not a stripped-down starter. Every feature you need to deploy, train, and run a high-quality chatbot comes included from day one.</p>
+        <p class="section-intro">Aiden Essentials is a complete AI platform, not a stripped-down starter. Every feature you need to deploy, train, and run a high-quality chatbot comes included from day one.</p>
       </div>
       <div class="ess-features-grid" id="ess-features-grid">
 
@@ -3176,7 +3295,7 @@
         <div class="ess-feature-card ess-g1 ess-card-hidden" data-card-group="ess-features" data-card-index="1" data-ess-group="1">
           <span class="ess-feature-icon">⚡</span>
           <h3>Live Search — Website Ingest</h3>
-          <p>Paste your URL and Aiden learns your entire site instantly. It stays current automatically — no manual updates, ever.</p>
+          <p>Paste your URL and Aiden learns your entire site instantly. It stays current automatically. No manual updates, ever.</p>
         </div>
         <div class="ess-feature-card ess-g1 ess-card-hidden" data-card-group="ess-features" data-card-index="2" data-ess-group="1">
           <span class="ess-feature-icon">📄</span>
@@ -3197,7 +3316,7 @@
         <div class="ess-feature-card ess-g2 ess-card-hidden" data-card-group="ess-features" data-card-index="4" data-ess-group="2">
           <span class="ess-feature-icon">💬</span>
           <h3>Stock Answers</h3>
-          <p>Pre-set instant responses to your most common questions — delivered consistently, every single time, without fail.</p>
+          <p>Pre-set instant responses to your most common questions, delivered consistently, every single time, without fail.</p>
         </div>
         <div class="ess-feature-card ess-g2 ess-card-hidden" data-card-group="ess-features" data-card-index="5" data-ess-group="2">
           <span class="ess-feature-icon">🌍</span>
@@ -3218,7 +3337,7 @@
         <div class="ess-feature-card ess-g3 ess-card-hidden" data-card-group="ess-features" data-card-index="7" data-ess-group="3">
           <span class="ess-feature-icon">📊</span>
           <h3>AI Admin Portal &amp; Reporting</h3>
-          <p>Manage your AI and track performance from one clean, intuitive dashboard — no training required to get started.</p>
+          <p>Manage your AI and track performance from one clean, intuitive dashboard. No training required to get started.</p>
         </div>
 
       </div>
@@ -3231,14 +3350,14 @@
       <div class="reveal">
         <div class="section-label">We've Got You</div>
         <h2 class="section-title">You're Never on Your Own</h2>
-        <p class="section-intro">Getting started with AI should not feel like a solo expedition into the unknown. Every Aiden Essentials plan comes with the live support you need to go live fast — and stay that way.</p>
-        <p class="section-intro" style="margin-top: 16px;">Whether you are a team of two or a growing business, Aiden is designed so that anyone can deploy it, train it, and see results — without ever filing a support ticket.</p>
+        <p class="section-intro">Getting started with AI should not feel like a solo expedition into the unknown. Every Aiden Essentials plan comes with the live support you need to go live fast and keep it that way.</p>
+        <p class="section-intro" style="margin-top: 16px;">Whether you are a team of two or a growing business, Aiden is designed so that anyone can deploy it, train it, and see results without ever filing a support ticket.</p>
       </div>
       <div class="ess-support-promise reveal" style="transition-delay: 0.1s;">
         <h3>Support That Comes Standard.</h3>
         <ul>
           <li>Free live onboarding included with every Essentials plan</li>
-          <li>Ongoing support from the Olark team — not a ticket queue</li>
+          <li>Ongoing support from the Olark team, not a ticket queue</li>
           <li>Simple enough to train and manage without a developer</li>
           <li>No engineering resources required at any stage</li>
           <li>Go live the same day you get access</li>
@@ -3252,7 +3371,7 @@
     <div class="reveal">
       <div class="section-label">Build Your Quote</div>
       <h2 class="section-title">Not Sure What You'll Need?<br>Get a Custom Quote in 60 Seconds.</h2>
-      <p class="section-intro" style="margin: 0 auto 8px;">Answer a few quick questions and we'll put together a personalized Aiden Essentials quote — right here on the page, no email required.</p>
+      <p class="section-intro" style="margin: 0 auto 8px;">Answer a few quick questions and we'll put together a personalized Aiden Essentials quote right here on the page. No email required.</p>
       <button class="quiz-open-btn" id="quiz-trigger-essentials" onclick="initQuiz('essentials')">
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none" style="stroke:var(--olark-dark);stroke-width:2.2;flex-shrink:0;"><circle cx="9" cy="9" r="7.5"/><path d="M7 9h4M9 7v4"/></svg>
         Get My Custom Quote
@@ -3277,7 +3396,7 @@
           Start Today
         </div>
         <h2 class="section-title">The Smartest First Step in AI Starts Here</h2>
-        <p class="section-intro">Even the smallest investment in AI can deliver outsized value — and Aiden Essentials is designed to prove that from day one.</p>
+        <p class="section-intro">Even the smallest investment in AI can deliver outsized value. Aiden Essentials is designed to prove that from day one.</p>
         <div class="meeting-trust">
           <div class="trust-item">
             <svg width="15" height="15" viewBox="0 0 15 15" fill="none" style="stroke:var(--olark-gold);stroke-width:2;flex-shrink:0;"><circle cx="7.5" cy="7.5" r="6"/><polyline points="5,7.5 7,9.5 11,5.5"/></svg>
@@ -3336,8 +3455,8 @@
       <span class="dot"></span>
       Live Now
     </div>
-    <h1>Meet Advanced Aiden:<br>Your <em>24/7</em> Sales &amp; <span class="pink">Support Rep</span></h1>
-    <p class="hero-sub">Turn your knowledge base into a <strong>revenue-driving, always-on chat assistant</strong> that answers questions, qualifies leads, and routes customers the right way — day or night.</p>
+    <h1 id="hero-h1-advanced"></h1>
+    <p class="hero-sub">Turn your knowledge base into a <strong>revenue-driving, always-on chat assistant</strong> that answers questions, qualifies leads, and routes customers the right way, day or night.</p>
     <a href="#" onclick="openMeetingModal();return false;" class="hero-cta">Schedule to Learn More About Aiden</a>
     <span class="hero-note">No commitment required. We'll show you exactly how it works for your team.</span>
   </section>
@@ -3348,11 +3467,11 @@
       <div class="video-copy reveal">
         <div class="section-label">See It In Action</div>
         <h2 class="section-title">Watch Aiden Work</h2>
-        <p class="section-intro">See how Aiden handles the full pre-sales and support workflow — from routing to handoff — in a single conversation.</p>
+        <p class="section-intro">See how Aiden handles the full pre-sales and support workflow, from routing to handoff, in a single conversation.</p>
         <div class="video-checklist">
           <div class="check-item">
             <div class="check-icon"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
-            <p><strong>Smart Routing Buttons</strong>Route chats to sales, support, or product information automatically — no manual triage.</p>
+            <p><strong>Smart Routing Buttons</strong>Route chats to sales, support, or product information automatically, with no manual triage.</p>
           </div>
           <div class="check-item">
             <div class="check-icon"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
@@ -3360,11 +3479,11 @@
           </div>
           <div class="check-item">
             <div class="check-icon"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
-            <p><strong>Instant, Accurate Answers</strong>Deliver fast answers from your own knowledge base — with no wait times and no backlog.</p>
+            <p><strong>Instant, Accurate Answers</strong>Deliver fast answers from your own knowledge base, with no wait times and no backlog.</p>
           </div>
         </div>
       </div>
-      <div class="video-embed-wrapper" onclick="openVideoModal('tx6su2gamj')">
+      <div class="video-embed-wrapper reveal" onclick="openVideoModal('tx6su2gamj')" style="transition-delay: 0.12s;">
       <div class="video-embed" style="transition-delay: 0.12s;">
         <script src="https://fast.wistia.com/player.js" async></script>
         <script src="https://fast.wistia.com/embed/tx6su2gamj.js" async type="module"></script>
@@ -3385,7 +3504,7 @@
       <div class="feature-copy">
         <div class="section-label pink">Routing</div>
         <h2 class="section-title">Guide Every Conversation From the Start</h2>
-        <p>With routing buttons at the beginning of every chat, Aiden helps customers self-select the right path — <strong>sales, support, or product details</strong> — so every interaction starts in the right place.</p>
+        <p>With routing buttons at the beginning of every chat, Aiden helps customers self-select the right path: <strong>sales, support, or product details.</strong> Every interaction starts in the right place.</p>
         <p>That reduces friction, boosts engagement, and means your team never fields a conversation that was never theirs to begin with.</p>
         <div class="feature-pills">
           <span class="pill">Smart Routing</span>
@@ -3407,7 +3526,7 @@
       <div class="feature-copy">
         <div class="section-label">Pipeline</div>
         <h2 class="section-title">Turn Chats Into Sales Opportunities</h2>
-        <p>Aiden doesn't just deflect tickets. It <strong>captures lead info, qualifies prospects, and passes hot opportunities straight to your sales team</strong> — automatically and without a single manual step.</p>
+        <p>Aiden doesn't just deflect tickets. It <strong>captures lead info, qualifies prospects, and passes hot opportunities straight to your sales team</strong>, automatically and without a single manual step.</p>
         <p>In e-commerce, that means helping customers navigate to the right product. In B2B, it means surfacing high-value conversations without wasting anyone's time.</p>
         <div class="feature-pills">
           <span class="pill">Lead Capture</span>
@@ -3459,8 +3578,8 @@
       <div class="feature-copy">
         <div class="section-label pink">Automation</div>
         <h2 class="section-title">Automate the Routine. Elevate the Human.</h2>
-        <p>Repetitive questions don't need your team's time. <strong>Aiden provides instant, accurate answers from your own content</strong> — so your staff can focus on complex issues and meaningful connections.</p>
-        <p>Customers get quick help. Your team gets their time back. Everyone wins — except the support backlog.</p>
+        <p>Repetitive questions don't need your team's time. <strong>Aiden provides instant, accurate answers from your own content</strong>, freeing your staff can focus on complex issues and meaningful connections.</p>
+        <p>Customers get quick help. Your team gets their time back. Everyone wins. Except the support backlog.</p>
         <div class="feature-pills">
           <span class="pill">Knowledge Base Answers</span>
           <span class="pill pink">Zero Wait Times</span>
@@ -3487,7 +3606,7 @@
           </div>
           <div class="auto-summary" id="auto-summary-block" style="opacity:0;transform:translateY(12px);transition:opacity 0.5s ease,transform 0.5s ease;">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="stroke:var(--olark-gold);stroke-width:2;flex-shrink:0;"><circle cx="8" cy="8" r="6.5"/><line x1="8" y1="5" x2="8" y2="8.5"/><circle cx="8" cy="11" r="0.75" fill="var(--olark-gold)"/></svg>
-            Your team handles <strong>complex, high-value conversations</strong> while Aiden handles the rest — 24/7.
+            Your team handles <strong>complex, high-value conversations</strong> while Aiden handles the rest, 24/7.
           </div>
         </div>
       </div>
@@ -3579,9 +3698,9 @@
 
   <!-- HERO -->
   <section class="com-hero">
-    <span class="beta-badge">⚡ Commercial AI</span>
-    <h1>Stop Sending Your Reps Into Conversations <span class="accent">Cold.</span></h1>
-    <p class="hero-sub">Aiden qualifies, routes, and preps every lead automatically — so your reps arrive at conversations that are already warmed up and ready to close.</p>
+    <span class="beta-badge"><span class="badge-icon">⚡</span> Commercial AI</span>
+    <h1 id="hero-h1-commercial"></h1>
+    <p class="hero-sub">Aiden qualifies, routes, and preps every lead automatically, so your reps arrive at conversations that are already warmed up and ready to close.</p>
     <a href="#" onclick="openMeetingModal();return false;" class="com-hero-cta">Schedule a Demo</a>
     <span class="hero-note">No commitment required. We'll show you exactly how it works for your team.</span>
   </section>
@@ -3592,10 +3711,10 @@
       <div class="reveal">
       <div class="section-label">See It In Action</div>
       <h2 class="section-title">Watch Aiden Handle the Entire Pre-Sales Workflow</h2>
-      <p class="com-section-intro">From entry-point recognition to CRM update — in a single automated conversation.</p>
+      <p class="com-section-intro">From entry-point recognition to CRM update, in a single automated conversation.</p>
       </div>
-      <div class="video-embed-wrapper" onclick="openVideoModal('ttc5obl4nd')">
-        <div class="video-wrapper reveal" style="transition-delay:0.12s;">
+      <div class="video-embed-wrapper reveal" onclick="openVideoModal('ttc5obl4nd')" style="transition-delay:0.12s;">
+        <div class="video-wrapper">
           <script src="https://fast.wistia.com/player.js" async></script>
           <script src="https://fast.wistia.com/embed/ttc5obl4nd.js" async type="module"></script>
           <style>wistia-player[media-id='ttc5obl4nd']:not(:defined) { background: center / cover no-repeat url('https://fast.wistia.com/embed/medias/ttc5obl4nd/swatch'); display: block; padding-top:63.33%; }</style>
@@ -3619,7 +3738,7 @@
           <div class="problem-signal-icon">🕐</div>
           <div class="problem-signal-body">
             <h4 data-sigtext="Pre-Chat CRM Lookup"></h4>
-            <p class="flow-p-hidden">Time lost to manual data look-up before every chat — and that's assuming the rep can find it at all.</p>
+            <p class="flow-p-hidden">Time lost to manual data look-up before every chat, and that's assuming the rep can find it at all.</p>
           </div>
           <span class="problem-signal-tag">Time Lost</span>
         </div>
@@ -3641,7 +3760,7 @@
         </div>
         <div class="problem-signal-summary" id="problem-signal-summary">
           <svg width="15" height="15" viewBox="0 0 15 15" fill="none" style="stroke:var(--olark-pink);stroke-width:2;flex-shrink:0;"><circle cx="7.5" cy="7.5" r="6"/><line x1="7.5" y1="4.5" x2="7.5" y2="8"/><circle cx="7.5" cy="10" r="0.75" fill="var(--olark-pink)"/></svg>
-          3 friction points in every conversation — before the rep says a single word.
+          3 friction points before the rep says a single word.
         </div>
       </div>
     </div>
@@ -3649,7 +3768,7 @@
 
   <!-- AIDEN QUOTE -->
   <div class="aiden-quote reveal">
-    <p>"Aiden does not replace the human moment. <span class="highlight">It sets it up for success.</span> When the rep takes over, they are arriving at a conversation that is already warmed up — stepping into a deal that's ready to close rather than struggling to understand the problem."</p>
+    <p>"Aiden does not replace the human moment. <span class="highlight">It sets it up for success.</span> When the rep takes over, they are arriving at a conversation that is already warmed up, stepping into a deal that's ready to close rather than struggling to understand the problem."</p>
     <cite>— From the Commercial Presales Desk at Olark</cite>
   </div>
 
@@ -3659,7 +3778,7 @@
       <div class="how-header reveal">
         <div class="section-label">How It Works</div>
         <h2 class="section-title">Seven Steps From First Click to Closed Deal</h2>
-        <p class="section-intro">Aiden Signature and Aiden Bespoke automate the entire intake and handoff workflow — without engineering resources.</p>
+        <p class="section-intro">Aiden Signature and Aiden Bespoke automate the entire intake and handoff workflow, with no engineering resources required.</p>
       </div>
       <div class="steps-grid" id="steps-grid">
 
@@ -3672,13 +3791,13 @@
           <span class="step-tag tag-g1">Awareness</span>
           <div class="step-num">01</div>
           <h3>Recognize the Entry Point</h3>
-          <p>Aiden understands and recognizes where a visitor came from — whether it's an ad, an email campaign, or an organic web search.</p>
+          <p>Aiden understands and recognizes where a visitor came from, whether it's an ad, an email campaign, or an organic web search.</p>
         </div>
         <div class="step-card step-hidden" data-card-group="step-cards" data-card-index="1" data-step-group="1">
           <span class="step-tag tag-g1">Personalization</span>
           <div class="step-num">02</div>
           <h3>Deliver a Tailored Opening</h3>
-          <p>When the conversation opens, the bot provides visitors with specific information tailored to their entry point — not a generic greeting.</p>
+          <p>When the conversation opens, the bot provides visitors with specific information tailored to their entry point rather than a generic greeting.</p>
         </div>
         <div class="step-card step-hidden" data-card-group="step-cards" data-card-index="2" data-step-group="1">
           <span class="step-tag tag-g1">Transparency</span>
@@ -3702,7 +3821,7 @@
           <span class="step-tag tag-g2">Routing</span>
           <div class="step-num">05</div>
           <h3>Qualify and Route by Territory</h3>
-          <p>Geography, sales identifiers, and team structure determine exactly which rep or department gets the conversation — automatically.</p>
+          <p>Geography, sales identifiers, and team structure determine exactly which rep or department gets the conversation, automatically.</p>
         </div>
         <div class="step-card step-hidden" data-card-group="step-cards" data-card-index="5" data-step-group="2">
           <span class="step-tag tag-g2">Handoff</span>
@@ -3759,7 +3878,7 @@
           <div class="flow-step">
             <div class="flow-dot dot-pink">🤝</div>
             <div class="flow-content">
-              <h4 data-text="The rep takes over — fully briefed"></h4>
+              <h4 data-text="The rep takes over, fully briefed"></h4>
               <p class="flow-p-hidden">The rep joins a warm conversation with full context. No prep. No missed details. No awkward catch-up.</p>
             </div>
           </div>
@@ -3775,7 +3894,7 @@
       <div class="outcome-summary reveal" style="transition-delay:0.12s;">
         <h3>SDR Prep Is Nearly Eliminated.</h3>
         <ul>
-          <li>No missed context at handoff — ever</li>
+          <li>No missed context at handoff, ever</li>
           <li>No dead ends for customers mid-conversation</li>
           <li>No CRM gaps from manual entry failures</li>
           <li>Faster speed-to-lead</li>
@@ -3802,12 +3921,12 @@
         <div class="who-card" data-card-group="who-cards" data-card-index="1">
           <span class="who-icon">🏆</span>
           <h3>High-Value, High-Consideration Products</h3>
-          <p>Companies with long sales cycles and multiple stakeholder touchpoints — where every conversation needs to move a deal forward.</p>
+          <p>Companies with long sales cycles and multiple stakeholder touchpoints, where every conversation needs to move a deal forward.</p>
         </div>
         <div class="who-card" data-card-group="who-cards" data-card-index="2">
           <span class="who-icon">⚙️</span>
           <h3>Live Chat at Scale</h3>
-          <p>Teams running live chat as a serious revenue channel who need every conversation to end in a pipeline action — not a dead end.</p>
+          <p>Teams running live chat as a serious revenue channel who need every conversation to end in a pipeline action, not a dead end.</p>
         </div>
       </div>
     </div>
@@ -3818,7 +3937,7 @@
     <div class="reveal">
       <div class="section-label">Build Your Quote</div>
       <h2 class="section-title">Signature or Bespoke? Let's Find Out.</h2>
-      <p class="section-intro" style="margin: 0 auto 8px;">A few quick questions about your CRM, routing needs, and team size — and we'll produce a custom quote for the right commercial plan right here.</p>
+      <p class="section-intro" style="margin: 0 auto 8px;">A few quick questions about your CRM, routing needs, and team size. We'll produce a custom quote for the right commercial plan right here.</p>
       <button class="quiz-open-btn" id="quiz-trigger-commercial" onclick="initQuiz('commercial')">
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none" style="stroke:var(--olark-dark);stroke-width:2.2;flex-shrink:0;"><circle cx="9" cy="9" r="7.5"/><path d="M7 9h4M9 7v4"/></svg>
         Get My Custom Quote
@@ -3901,7 +4020,13 @@
 
     document.querySelectorAll('.page-view.active .reveal').forEach(el => {
       el.classList.remove('visible');
-      observer.observe(el);
+      const rect = el.getBoundingClientRect();
+      // If already in viewport, animate immediately with a short stagger
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        setTimeout(() => el.classList.add('visible'), 80);
+      } else {
+        observer.observe(el);
+      }
     });
   }
 
@@ -3956,6 +4081,15 @@ const planData = {
       'One standard integration (no custom config)','3 included agent seats',
       'Live Onboarding Included','Quarterly Business Reviews','Priority Support'
     ],
+    inheritedLabel: 'All Advanced features included',
+    inheritedFrom: 'Aiden Advanced',
+    inheritedFeatures: [
+      'Aiden Chatbot for one website','Live Search — Website Ingest','Document Ingest',
+      'Real-time AI Web Search','Stock Answers','Multilingual Chatbot',
+      'Unlimited Chats & Knowledge Uploads','AI Admin Portal','AI Reporting',
+      'Up to 10 customizable routing buttons','Customizable Support & Sales Flows',
+      'Smart escalation to live agents','2 included agent seats'
+    ],
     managed: ['Live Onboarding: Training session for your team.','Quarterly Business Review: Proactive performance reviews.','Priority Support: Same business day responses.']
   },
   signature: {
@@ -3980,6 +4114,19 @@ const planData = {
       'Custom SOW option for integrations','Dedicated Account Manager',
       'First Priority Support Queue','8 hours maintenance per quarter','5 included agent seats'
     ],
+    inheritedLabel: 'All Signature features included',
+    inheritedFrom: 'Aiden Signature',
+    inheritedFeatures: [
+      'Aiden Chatbot for one website','Live Search — Website Ingest','Document Ingest',
+      'Real-time AI Web Search','Stock Answers','Multilingual Chatbot',
+      'Unlimited Chats & Knowledge Uploads','AI Admin Portal','AI Reporting',
+      'Live Chat Translation PowerUp','Visitor Cobrowsing PowerUp',
+      'Up to 30 routing buttons with custom lead capture flows',
+      'One standard CRM integration (HubSpot or Salesforce)',
+      'Departmental routing by sales & support need',
+      'Dedicated Onboarding Manager','Dedicated Account Manager',
+      'First Priority Support Queue','4 hours maintenance per quarter','3 included agent seats'
+    ],
     managed: ['Dedicated account manager.','Live Training: Full team onboarding call.','Quarterly Business Review.','Advanced Technical Support for API & integrations.','Priority Support + phone support by appointment.']
   }
 };
@@ -3990,6 +4137,23 @@ function calcPricing(plan, seatsInput) {
   const additional = Math.max(0, seats - d.includedSeats);
   const seatCost = additional * d.seatPrice;
   return { base: d.base, seats, includedSeats: d.includedSeats, additional, seatCost, seatPrice: d.seatPrice, total: d.base + seatCost };
+}
+
+function toggleInherited(id) {
+  var btn  = document.getElementById(id + '-btn');
+  var grid = document.getElementById(id + '-grid');
+  if (!btn || !grid) return;
+  var isOpen = grid.classList.contains('open');
+  grid.classList.toggle('open', !isOpen);
+  btn.classList.toggle('open', !isOpen);
+  var label = btn.querySelector('span');
+  if (!label) return;
+  if (!isOpen) {
+    btn.setAttribute('data-label', label.textContent);
+    label.textContent = 'Hide included features ↑';
+  } else {
+    label.textContent = btn.getAttribute('data-label') || label.textContent;
+  }
 }
 
 function initQuiz(type) {
@@ -4006,7 +4170,7 @@ function initQuiz(type) {
 }
 
 function firstQuestion(type) {
-  return { id: 'company', type: 'text', step: 'Getting Started', text: 'What is your company name?', placeholder: 'e.g. Acme Inc.' };
+  return { id: 'company', type: 'text', step: 'Getting Started', text: 'What is your company name?', placeholder: 'e.g. Olark' };
 }
 
 function renderQuestion(type, q) {
@@ -4134,18 +4298,18 @@ function nextCommercial(qId, value) {
     }
     s.track = 'signature';
     return {
-      id: 'territorial', type: 'options', text: 'Will you need territorial routing — directing chats to specific regional teams based on geography?',
+      id: 'territorial', type: 'options', text: 'Will you need territorial routing (directing chats to specific regional teams based on geography)?',
       options: [{ value: 'yes', label: 'Yes, we have regional teams' }, { value: 'no', label: 'No, single team or no regional routing' }]
     };
   }
   if (qId === 'crm_name') return {
-    id: 'territorial', type: 'options', text: 'Will you need territorial routing — directing chats to specific regional teams based on geography?',
+    id: 'territorial', type: 'options', text: 'Will you need territorial routing (directing chats to specific regional teams based on geography)?',
     options: [{ value: 'yes', label: 'Yes, we have regional teams' }, { value: 'no', label: 'No, single team or no regional routing' }]
   };
   if (qId === 'territorial') {
     if (value === 'yes') s.track = 'bespoke';
     if (s.track === 'bespoke') return {
-      id: 'other_integrations', type: 'text-optional', text: 'Do you need any additional integrations beyond your CRM?', placeholder: 'e.g. Zendesk, Slack — or leave blank if none'
+      id: 'other_integrations', type: 'text-optional', text: 'Do you need any additional integrations beyond your CRM?', placeholder: 'e.g. Zendesk, Slack (leave blank if none)'
     };
     return { id: 'seats', type: 'number', text: 'How many user seats will you need?' };
   }
@@ -4178,11 +4342,27 @@ function showResult(type) {
       <div class="quiz-history-text"><strong>${escHtml(h.qShort)}:</strong> ${escHtml(h.aLabel)}</div>
     </div>`).join('');
 
-  const seatsRow = p.additional > 0
+  const includedValue = p.includedSeats * p.seatPrice;
+  const includedSeatsRow = `<div class="quiz-pricing-row"><span class="qlabel">${p.includedSeats} included seat${p.includedSeats !== 1 ? 's' : ''} ($${includedValue.toLocaleString()} value/yr)</span><span class="qvalue">Included</span></div>`;
+  const additionalSeatsRow = p.additional > 0
     ? `<div class="quiz-pricing-row"><span class="qlabel">${p.additional} additional seat${p.additional !== 1 ? 's' : ''} × $${p.seatPrice.toLocaleString()}/yr</span><span class="qvalue">$${p.seatCost.toLocaleString()}</span></div>`
-    : `<div class="quiz-pricing-row"><span class="qlabel">Agent seats (${p.seats} seat${p.seats !== 1 ? 's' : ''} — ${p.includedSeats} included)</span><span class="qvalue">Included</span></div>`;
+    : '';
+  const seatsRow = includedSeatsRow + additionalSeatsRow;
 
-  const featHtml = d.features.map(f => `<div class="quiz-feature-item"><div class="quiz-feature-dot"></div><span>${escHtml(f)}</span></div>`).join('');
+  const inheritId = 'inherit-' + type + '-' + plan;
+
+  const featHtml = d.features.map(f => {
+    if (d.inheritedLabel && f === d.inheritedLabel) {
+      return `<div class="quiz-inherit-toggle" id="${inheritId}-btn" onclick="toggleInherited('${inheritId}')">
+        <svg viewBox="0 0 14 14"><polyline points="2,4 7,10 12,4"/></svg>
+        <span>${escHtml(f)} — see what's included ↓</span>
+      </div>
+      <div class="quiz-inherited-grid" id="${inheritId}-grid">
+        ${d.inheritedFeatures.map(fi => `<div class="quiz-feature-item inherited"><div class="quiz-feature-dot"></div><span>${escHtml(fi)}</span></div>`).join('')}
+      </div>`;
+    }
+    return `<div class="quiz-feature-item"><div class="quiz-feature-dot"></div><span>${escHtml(f)}</span></div>`;
+  }).join('');
 
   const resultEl = document.getElementById('quiz-result-' + type);
   resultEl.style.display = 'block';
@@ -4209,14 +4389,14 @@ function showResult(type) {
       </div>
 
       <div style="background:var(--olark-card);border:1.5px solid var(--olark-border);border-radius:12px;padding:24px;margin-bottom:32px;border-left:4px solid var(--olark-gold);">
-        <div class="quiz-section-sublabel" style="margin-bottom:12px;">Managed Service — Included</div>
+        <div class="quiz-section-sublabel" style="margin-bottom:12px;">Managed Service (Included)</div>
         ${d.managed.map(m => `<div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:8px;font-size:0.875rem;color:var(--olark-muted);"><span style="color:var(--olark-gold);font-weight:700;flex-shrink:0;margin-top:1px;">✓</span><span>${escHtml(m)}</span></div>`).join('')}
       </div>
 
       <div class="quiz-action-row">
         <button class="quiz-dl-btn" onclick="downloadPDF('${plan}','${type}')">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="stroke:currentColor;stroke-width:2;flex-shrink:0;"><path d="M8 2v8M5 7l3 3 3-3"/><path d="M3 13h10"/></svg>
-          For a detailed quote as a PDF — click here
+          Download a detailed PDF quote
         </button>
         <a href="https://hello.olark.com/meetings/logan-stuard/aiden" target="_blank" class="quiz-book-btn">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="stroke:var(--olark-dark);stroke-width:2;flex-shrink:0;"><rect x="2" y="3" width="12" height="11" rx="1.5"/><path d="M5 1v3M11 1v3M2 7h12"/></svg>
@@ -4395,8 +4575,6 @@ function downloadPDF(plan, quizType) {
 (function() {
   let modalGroup = null;
   let modalIndex = 0;
-  let touchStartX = 0;
-  let touchStartY = 0;
   let isAnimating = false;
 
   function getGroupCards(groupName) {
@@ -4472,11 +4650,11 @@ function downloadPDF(plan, quizType) {
     if (modalIndex === 0 && cards.length === 1) {
       hint.textContent = 'Press Esc to close';
     } else if (modalIndex === 0) {
-      hint.textContent = 'swipe left or → to continue  |  Esc to close';
+      hint.textContent = '→ arrow key to continue  |  Esc to close';
     } else if (modalIndex === cards.length - 1) {
-      hint.textContent = '← to go back  |  swipe right or → to close';
+      hint.textContent = '← to go back  |  → or Esc to close';
     } else {
-      hint.textContent = '← → arrow keys or swipe to navigate';
+      hint.textContent = '← → arrow keys to navigate';
     }
 
     prev.disabled = false;
@@ -4506,20 +4684,6 @@ function downloadPDF(plan, quizType) {
   document.getElementById('card-modal').addEventListener('click', function(e) {
     if (e.target === this) closeModal();
   });
-
-  // Touch swipe
-  document.getElementById('card-modal').addEventListener('touchstart', function(e) {
-    touchStartX = e.touches[0].clientX;
-    touchStartY = e.touches[0].clientY;
-  }, { passive: true });
-
-  document.getElementById('card-modal').addEventListener('touchend', function(e) {
-    const dx = e.changedTouches[0].clientX - touchStartX;
-    const dy = e.changedTouches[0].clientY - touchStartY;
-    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 44) {
-      modalNav(dx < 0 ? 1 : -1);
-    }
-  }, { passive: true });
 
   // Add cursor pointer to all card groups to signal clickability
   function styleCards() {
@@ -4620,7 +4784,7 @@ var meetingCopy = {
   essentials: {
     badge: 'Start Today',
     title: 'The Smartest First Step in AI Starts Here',
-    intro: 'Even the smallest investment in AI can deliver outsized value — and Aiden Essentials is designed to prove that from day one.',
+    intro: 'Even the smallest investment in AI can deliver outsized value. Aiden Essentials is designed to prove that from day one.',
     trust: ['Free live onboarding included with every plan', 'No commitment required', 'No technical setup required']
   },
   advanced: {
@@ -5098,7 +5262,143 @@ document.addEventListener('keydown', function(e) {
 })();
 
 // ════════════════════════════════════════
-// ESSENTIALS FEATURES GROUP ANIMATION
+// HERO HEADLINE TYPEWRITER ENGINE
+// ════════════════════════════════════════
+(function() {
+  // Each headline is defined as an array of segments:
+  // { text, tag, glowClass } — tag/glowClass optional
+  var headlines = {
+    essentials: [
+      { text: 'Real AI for Every Business.' },
+      { br: true },
+      { text: 'Live in ' },
+      { text: 'Minutes', tag: 'em', glowClass: 'hero-glow-gold' },
+      { text: ', Not Days.' }
+    ],
+    advanced: [
+      { text: 'Meet Advanced Aiden:' },
+      { br: true },
+      { text: 'Your ' },
+      { text: '24/7', tag: 'em', glowClass: 'hero-glow-gold' },
+      { text: ' Sales & ' },
+      { text: 'Support Rep', tag: 'span', className: 'pink', glowClass: 'hero-glow-pink' }
+    ],
+    commercial: [
+      { text: 'Stop Sending Your Reps Into Conversations ' },
+      { text: 'Cold.', tag: 'span', className: 'accent', glowClass: 'hero-glow-gold' }
+    ]
+  };
+
+  var CHAR_DELAY = 48;
+  var gen  = { essentials: 0, advanced: 0, commercial: 0 };
+  var seen = {};
+
+  function typeHero(tab) {
+    var h1 = document.getElementById('hero-h1-' + tab);
+    if (!h1) return;
+    var myGen = gen[tab];
+    var segs  = headlines[tab];
+
+    h1.innerHTML = '';
+    var cursor = document.createElement('span');
+    cursor.className = 'hero-type-cursor';
+    h1.appendChild(cursor);
+
+    var si = 0; // segment index
+    var ci = 0; // char index within segment
+    var activeEl = null; // current DOM element being typed into
+
+    function next() {
+      if (gen[tab] !== myGen) return; // stale — abort
+
+      if (si >= segs.length) {
+        // Done — remove cursor
+        if (cursor.parentNode) cursor.parentNode.removeChild(cursor);
+        return;
+      }
+
+      var seg = segs[si];
+
+      // Line break segment
+      if (seg.br) {
+        h1.insertBefore(document.createElement('br'), cursor);
+        si++; ci = 0; activeEl = null;
+        setTimeout(next, CHAR_DELAY);
+        return;
+      }
+
+      // Start a new segment element if needed
+      if (ci === 0) {
+        if (seg.tag) {
+          activeEl = document.createElement(seg.tag);
+          if (seg.className) activeEl.className = seg.className;
+          h1.insertBefore(activeEl, cursor);
+        } else {
+          activeEl = null;
+        }
+      }
+
+      var text   = seg.text;
+      var parent = activeEl || h1;
+
+      if (ci < text.length) {
+        // Append next character — insert before cursor if parent is h1, else append
+        if (parent === h1) {
+          // Find text nodes directly before cursor and append, or create new text node
+          var prev = cursor.previousSibling;
+          if (prev && prev.nodeType === 3 && !prev.parentNode.tagName) {
+            prev.textContent += text[ci];
+          } else {
+            h1.insertBefore(document.createTextNode(text[ci]), cursor);
+          }
+        } else {
+          parent.textContent += text[ci];
+        }
+        ci++;
+        setTimeout(next, CHAR_DELAY);
+      } else {
+        // Segment done — trigger glow if applicable
+        if (seg.glowClass && activeEl) {
+          activeEl.classList.add(seg.glowClass);
+        }
+        si++; ci = 0; activeEl = null;
+        setTimeout(next, CHAR_DELAY);
+      }
+    }
+
+    // Small delay so page fade-in animation runs first
+    setTimeout(next, 320);
+  }
+
+  window.startHeroType = function(tab) {
+    if (seen[tab]) return; // already played — leave it as-is
+    seen[tab] = true;
+    gen[tab]++;
+    var h1 = document.getElementById('hero-h1-' + tab);
+    if (h1) h1.innerHTML = '';
+    typeHero(tab);
+  };
+
+  // Hook into showPage
+  var _prevHero = window.showPage;
+  window.showPage = function(id) {
+    _prevHero(id);
+    setTimeout(function() { window.startHeroType(id); }, 80);
+  };
+
+  // Fire on initial load for whichever tab is active
+  setTimeout(function() {
+    var activeBtn = document.querySelector('.toggle-btn.active');
+    var tab = 'essentials';
+    if (activeBtn) {
+      var id = activeBtn.id || '';
+      if (id.indexOf('advanced') > -1)   tab = 'advanced';
+      if (id.indexOf('commercial') > -1) tab = 'commercial';
+    }
+    window.startHeroType(tab);
+  }, 200);
+
+})();
 // ════════════════════════════════════════
 (function() {
   var essStarted = false;
