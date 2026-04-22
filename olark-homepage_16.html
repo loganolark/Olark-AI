@@ -1,0 +1,3363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aiden by Olark — AI That Works Like Your Best Rep</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --olark-dark:       #0F0D2E;
+    --olark-navy:       #141250;
+    --olark-card:       #252275;
+    --olark-card-hover: #2D2B8F;
+    --olark-border:     rgba(120, 115, 220, 0.45);
+    --olark-purple:     #2D2B8F;
+    --olark-purple-mid: #3B39A8;
+    --olark-gold:       #F5C200;
+    --olark-gold-light: #FFD533;
+    --olark-pink:       #E8325A;
+    --olark-white:      #F0EEFF;
+    --olark-muted:      #A09DD8;
+    --olark-text:       #D8D5F5;
+    --max-w:            1100px;
+    --nav-h:            64px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; overflow-x: hidden; }
+
+  body {
+    background: var(--olark-dark);
+    color: var(--olark-text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 17px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ══ NAV ══ */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 200;
+    height: var(--nav-h);
+    background: rgba(15, 13, 46, 0.85);
+    border-bottom: 1px solid rgba(120,115,220,0.2);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    transition: background 0.3s ease;
+  }
+
+  nav.scrolled {
+    background: rgba(15, 13, 46, 0.97);
+    border-bottom-color: rgba(120,115,220,0.35);
+  }
+
+  .nav-logo { display: flex; align-items: center; gap: 10px; }
+  .nav-logo img { height: 26px; }
+  .nav-logo-divider { width: 1px; height: 18px; background: var(--olark-border); }
+  .nav-product-name {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    color: var(--olark-gold);
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .nav-link {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--olark-muted);
+    text-decoration: none;
+    padding: 7px 14px;
+    border-radius: 6px;
+    transition: color 0.2s, background 0.2s;
+    letter-spacing: 0.01em;
+  }
+
+  .nav-link:hover { color: var(--olark-text); background: rgba(255,255,255,0.05); }
+
+  .nav-cta {
+    background: var(--olark-gold);
+    color: var(--olark-dark);
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: 13px;
+    padding: 9px 22px;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+    letter-spacing: 0.02em;
+    margin-left: 6px;
+  }
+  .nav-cta:hover { background: var(--olark-gold-light); transform: translateY(-1px); }
+
+  /* ══ CANVAS BACKGROUND ══ */
+  #bg-canvas {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.55;
+  }
+
+  /* ══ HERO ══ */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: calc(var(--nav-h) + 60px) 32px 80px;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 1000px 600px at 50% 0%, rgba(245,194,0,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 700px 500px at 80% 80%, rgba(232,50,90,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 600px 400px at 10% 70%, rgba(59,57,168,0.2) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .hero-ribbon {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(245,194,0,0.1);
+    border: 1px solid rgba(245,194,0,0.35);
+    color: var(--olark-gold);
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 6px 18px;
+    border-radius: 100px;
+    margin-bottom: 32px;
+    animation: fadeUp 0.6s ease 0.1s both;
+  }
+
+  .hero-ribbon .dot {
+    width: 6px; height: 6px;
+    background: var(--olark-gold);
+    border-radius: 50%;
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+
+  .hero-headline {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 900;
+    font-size: clamp(2.6rem, 6.5vw, 5rem);
+    line-height: 1.05;
+    color: var(--olark-white);
+    max-width: 900px;
+    margin: 0 auto 28px;
+    letter-spacing: -0.03em;
+    animation: fadeUp 0.6s ease 0.2s both;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-headline .word-gold {
+    background: linear-gradient(90deg, var(--olark-gold), var(--olark-gold-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-headline .word-pink {
+    background: linear-gradient(90deg, var(--olark-pink), #FF6B8A);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: 1.18rem;
+    color: var(--olark-muted);
+    max-width: 600px;
+    margin: 0 auto 48px;
+    font-weight: 300;
+    line-height: 1.75;
+    animation: fadeUp 0.6s ease 0.3s both;
+  }
+
+  .hero-sub strong { color: var(--olark-text); font-weight: 500; }
+
+  .hero-cta-row {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    flex-wrap: wrap;
+    animation: fadeUp 0.6s ease 0.4s both;
+    margin-bottom: 72px;
+  }
+
+  .btn-gold {
+    background: var(--olark-gold);
+    color: var(--olark-dark);
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    padding: 16px 38px;
+    border-radius: 8px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 0 48px rgba(245,194,0,0.25), 0 4px 16px rgba(0,0,0,0.4);
+    letter-spacing: 0.01em;
+  }
+
+  .btn-gold:hover {
+    background: var(--olark-gold-light);
+    transform: translateY(-2px);
+    box-shadow: 0 0 72px rgba(245,194,0,0.42);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--olark-text);
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 16px 34px;
+    border-radius: 8px;
+    text-decoration: none;
+    border: 1.5px solid var(--olark-border);
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.01em;
+  }
+
+  .btn-ghost:hover {
+    border-color: rgba(245,194,0,0.45);
+    color: var(--olark-gold);
+    transform: translateY(-2px);
+  }
+
+  /* ══ FLOATING STATS ══ */
+  .hero-stats {
+    display: flex;
+    gap: 0;
+    justify-content: center;
+    flex-wrap: wrap;
+    animation: fadeUp 0.6s ease 0.5s both;
+    position: relative;
+    z-index: 1;
+  }
+
+  .stat-pill {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 28px;
+    border-right: 1px solid var(--olark-border);
+  }
+
+  .stat-pill:last-child { border-right: none; }
+
+  .stat-num {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 900;
+    font-size: 1.7rem;
+    color: var(--olark-white);
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+
+  .stat-num .stat-accent { color: var(--olark-gold); }
+
+  .stat-label {
+    font-size: 0.8rem;
+    color: var(--olark-muted);
+    line-height: 1.35;
+    text-align: left;
+    max-width: 90px;
+  }
+
+  /* ══ PRODUCT PREVIEW CARDS ══ */
+  .products-section {
+    position: relative;
+    z-index: 1;
+    padding: 100px 32px 0;
+  }
+
+  .products-inner { max-width: var(--max-w); margin: 0 auto; }
+
+  .section-label {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 0.7rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--olark-gold);
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+    color: var(--olark-white);
+    line-height: 1.2;
+    margin-bottom: 14px;
+    letter-spacing: -0.02em;
+  }
+
+  .section-intro {
+    font-size: 1rem;
+    color: var(--olark-muted);
+    max-width: 560px;
+    font-weight: 300;
+    line-height: 1.7;
+    margin-bottom: 52px;
+  }
+
+  .product-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  .product-card {
+    background: var(--olark-card);
+    border: 1.5px solid var(--olark-border);
+    border-radius: 16px;
+    padding: 36px 30px 32px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.22,1,0.36,1);
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    display: block;
+  }
+
+  .product-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    transition: opacity 0.3s ease;
+  }
+
+  .product-card.card-essentials::before { background: linear-gradient(90deg, var(--olark-gold), var(--olark-gold-light)); }
+  .product-card.card-leadgen::before   { background: linear-gradient(90deg, var(--olark-pink), #FF6B8A); }
+  .product-card.card-commercial::before { background: linear-gradient(90deg, #5DD3B3, var(--olark-gold)); }
+
+  .product-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(245,194,0,0.55);
+    background: var(--olark-card-hover);
+    box-shadow:
+      0 20px 60px rgba(0,0,0,0.5),
+      0 0 0 1px rgba(245,194,0,0.2),
+      0 0 60px 8px rgba(245,194,0,0.22),
+      0 0 120px 20px rgba(245,194,0,0.1);
+  }
+
+  .product-card.card-leadgen:hover {
+    border-color: rgba(232,50,90,0.55);
+    box-shadow:
+      0 20px 60px rgba(0,0,0,0.5),
+      0 0 0 1px rgba(232,50,90,0.2),
+      0 0 60px 8px rgba(232,50,90,0.22),
+      0 0 120px 20px rgba(232,50,90,0.1);
+  }
+
+  .product-card.card-commercial:hover {
+    border-color: rgba(93,211,179,0.55);
+    box-shadow:
+      0 20px 60px rgba(0,0,0,0.5),
+      0 0 0 1px rgba(93,211,179,0.2),
+      0 0 60px 8px rgba(93,211,179,0.22),
+      0 0 120px 20px rgba(93,211,179,0.1);
+  }
+
+  .card-tier-badge {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 4px 11px;
+    border-radius: 100px;
+    display: inline-block;
+    margin-bottom: 20px;
+  }
+
+  .badge-foundation { background: rgba(245,194,0,0.12); color: var(--olark-gold); border: 1px solid rgba(245,194,0,0.35); }
+  .badge-leadgen    { background: rgba(232,50,90,0.12); color: var(--olark-pink); border: 1px solid rgba(232,50,90,0.35); }
+  .badge-commercial { background: rgba(93,211,179,0.12); color: #5DD3B3; border: 1px solid rgba(93,211,179,0.35); }
+
+  .card-icon {
+    font-size: 2.2rem;
+    margin-bottom: 16px;
+    display: block;
+    line-height: 1;
+  }
+
+  .product-card h3 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: 1.15rem;
+    color: var(--olark-white);
+    margin-bottom: 10px;
+    letter-spacing: -0.01em;
+  }
+
+  .product-card p {
+    font-size: 0.88rem;
+    color: var(--olark-muted);
+    line-height: 1.65;
+    font-weight: 300;
+  }
+
+  .card-features {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .card-feat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    color: var(--olark-muted);
+  }
+
+  .feat-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .dot-gold { background: var(--olark-gold); }
+  .dot-pink { background: var(--olark-pink); }
+  .dot-teal { background: #5DD3B3; }
+
+  .card-arrow {
+    margin-top: 28px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--olark-muted);
+    transition: color 0.2s, gap 0.2s;
+  }
+
+  .product-card:hover .card-arrow { gap: 10px; }
+  .product-card.card-essentials:hover .card-arrow { color: var(--olark-gold); }
+  .product-card.card-leadgen:hover   .card-arrow { color: var(--olark-pink); }
+  .product-card.card-commercial:hover .card-arrow { color: #5DD3B3; }
+
+  /* ══ PATH FINDER ══ */
+  .pathfinder-section {
+    position: relative;
+    z-index: 1;
+    padding: 110px 32px 100px;
+  }
+
+  .pathfinder-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 800px 500px at 50% 50%, rgba(245,194,0,0.05) 0%, transparent 70%),
+      radial-gradient(ellipse 500px 350px at 85% 20%, rgba(232,50,90,0.04) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .pathfinder-inner {
+    max-width: 740px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .pathfinder-header { text-align: center; margin-bottom: 48px; }
+
+  .pf-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(245,194,0,0.1);
+    border: 1px solid rgba(245,194,0,0.3);
+    color: var(--olark-gold);
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 6px 18px;
+    border-radius: 100px;
+    margin-bottom: 22px;
+  }
+
+  .pathfinder-header h2 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 900;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    color: var(--olark-white);
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+    margin-bottom: 14px;
+  }
+
+  .pathfinder-header p {
+    font-size: 1rem;
+    color: var(--olark-muted);
+    max-width: 480px;
+    margin: 0 auto;
+    font-weight: 300;
+  }
+
+  /* Quiz card */
+  .pf-card {
+    background: var(--olark-card);
+    border: 1.5px solid var(--olark-border);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.5);
+    position: relative;
+  }
+
+  .pf-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--olark-gold), var(--olark-pink), #5DD3B3);
+    border-radius: 20px 20px 0 0;
+    z-index: 2;
+  }
+
+  /* Progress bar */
+  .pf-progress {
+    height: 3px;
+    background: rgba(255,255,255,0.06);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pf-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--olark-gold), var(--olark-pink));
+    transition: width 0.5s cubic-bezier(0.22,1,0.36,1);
+    width: 0%;
+  }
+
+  .pf-body { padding: 44px 44px 40px; }
+
+  /* Step counter */
+  .pf-step-label {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--olark-gold);
+    margin-bottom: 10px;
+    opacity: 0.85;
+  }
+
+  .pf-question {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.1rem, 2.5vw, 1.45rem);
+    color: var(--olark-white);
+    line-height: 1.3;
+    margin-bottom: 32px;
+    min-height: 2em;
+  }
+
+  /* Options */
+  .pf-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .pf-opt {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px 20px;
+    background: rgba(255,255,255,0.04);
+    border: 1.5px solid rgba(120,115,220,0.35);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.22,1,0.36,1);
+    text-align: left;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .pf-opt:hover {
+    border-color: rgba(245,194,0,0.55);
+    background: rgba(245,194,0,0.06);
+    transform: translateX(4px);
+  }
+
+  .pf-opt.selected {
+    border-color: var(--olark-gold);
+    background: rgba(245,194,0,0.1);
+    transform: translateX(4px);
+  }
+
+  .pf-opt-icon {
+    font-size: 1.3rem;
+    line-height: 1;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .pf-opt-text { flex: 1; }
+  .pf-opt-label {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--olark-white);
+    margin-bottom: 2px;
+    display: block;
+  }
+  .pf-opt-sub {
+    font-size: 0.8rem;
+    color: var(--olark-muted);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+  }
+
+  /* Result state */
+  .pf-result {
+    display: none;
+    text-align: center;
+  }
+
+  .pf-result-icon {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    display: block;
+    line-height: 1;
+  }
+
+  .pf-result-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 100px;
+    margin-bottom: 16px;
+  }
+
+  .pf-result-name {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 900;
+    font-size: clamp(1.5rem, 3vw, 2.1rem);
+    color: var(--olark-white);
+    letter-spacing: -0.025em;
+    margin-bottom: 10px;
+  }
+
+  .pf-result-desc {
+    font-size: 0.95rem;
+    color: var(--olark-muted);
+    max-width: 440px;
+    margin: 0 auto 32px;
+    font-weight: 300;
+    line-height: 1.7;
+  }
+
+  .pf-result-bullets {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 400px;
+    margin: 0 auto 36px;
+    text-align: left;
+  }
+
+  .pf-result-bullet {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 0.875rem;
+    color: var(--olark-text);
+  }
+
+  .pf-result-bullet::before {
+    content: '✓';
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .pf-goto-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: 0.95rem;
+    padding: 14px 32px;
+    border-radius: 8px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.01em;
+  }
+
+  .pf-goto-gold { background: var(--olark-gold); color: var(--olark-dark); box-shadow: 0 0 40px rgba(245,194,0,0.28); }
+  .pf-goto-gold:hover { background: var(--olark-gold-light); transform: translateY(-2px); }
+  .pf-goto-pink { background: var(--olark-pink); color: #fff; box-shadow: 0 0 40px rgba(232,50,90,0.28); }
+  .pf-goto-pink:hover { background: #f04b6c; transform: translateY(-2px); }
+  .pf-goto-teal { background: #5DD3B3; color: var(--olark-dark); box-shadow: 0 0 40px rgba(93,211,179,0.28); }
+  .pf-goto-teal:hover { background: #7EECD2; transform: translateY(-2px); }
+
+  .pf-restart {
+    background: none;
+    border: none;
+    color: var(--olark-muted);
+    font-size: 0.8rem;
+    cursor: pointer;
+    text-decoration: underline;
+    margin-top: 14px;
+    display: block;
+    width: 100%;
+    text-align: center;
+    transition: color 0.2s;
+  }
+  .pf-restart:hover { color: var(--olark-text); }
+
+  /* Quiz question slide transitions */
+  .pf-step-wrap {
+    transition: opacity 0.22s ease, transform 0.28s cubic-bezier(0.22,1,0.36,1);
+  }
+
+  .pf-step-wrap.exit-left  { opacity: 0; transform: translateX(-28px); }
+  .pf-step-wrap.exit-right { opacity: 0; transform: translateX(28px); }
+  .pf-step-wrap.enter      { opacity: 0; transform: translateX(20px); }
+
+  /* History trail */
+  .pf-history {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 22px;
+  }
+
+  .pf-hist-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.82rem;
+    color: var(--olark-muted);
+    padding: 9px 14px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 7px;
+    animation: fadeUp 0.25s ease both;
+  }
+
+  .pf-hist-check {
+    width: 18px; height: 18px;
+    background: rgba(245,194,0,0.12);
+    border: 1.5px solid rgba(245,194,0,0.4);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .pf-hist-check svg { width: 9px; height: 9px; stroke: var(--olark-gold); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ══ HOW SECTION ══ */
+  .how-section {
+    position: relative;
+    z-index: 1;
+    padding: 100px 32px;
+    background: var(--olark-navy);
+    border-top: 1px solid var(--olark-border);
+    border-bottom: 1px solid var(--olark-border);
+  }
+
+  .how-inner { max-width: var(--max-w); margin: 0 auto; }
+
+  .how-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+    margin-top: 56px;
+  }
+
+  .how-card {
+    background: var(--olark-card);
+    border: 1.5px solid var(--olark-border);
+    border-radius: 14px;
+    padding: 32px 28px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    box-shadow: 0 4px 28px rgba(0,0,0,0.35);
+  }
+
+  .how-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 48px rgba(0,0,0,0.45);
+    border-color: rgba(245,194,0,0.45);
+  }
+
+  .how-num {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 900;
+    font-size: 3.5rem;
+    color: rgba(255,255,255,0.06);
+    line-height: 1;
+    position: absolute;
+    top: 16px; right: 20px;
+    letter-spacing: -0.04em;
+    pointer-events: none;
+  }
+
+  .how-icon {
+    font-size: 1.8rem;
+    display: block;
+    margin-bottom: 14px;
+    line-height: 1;
+  }
+
+  .how-card h3 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--olark-white);
+    margin-bottom: 8px;
+  }
+
+  .how-card p { font-size: 0.88rem; color: var(--olark-muted); line-height: 1.65; }
+
+  /* ══ TRUST BAR ══ */
+  .trust-section {
+    position: relative;
+    z-index: 1;
+    padding: 80px 32px;
+    text-align: center;
+  }
+
+  .trust-inner { max-width: var(--max-w); margin: 0 auto; }
+
+  .trust-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 0.7rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--olark-muted);
+    margin-bottom: 36px;
+    opacity: 0.75;
+  }
+
+  .trust-logos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 28px;
+    justify-content: center;
+    align-items: center;
+    opacity: 0.45;
+    filter: brightness(0) invert(1);
+    margin-bottom: 60px;
+  }
+
+  .trust-logos span {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    letter-spacing: 0.04em;
+    color: white;
+    padding: 0 18px;
+    border-right: 1px solid rgba(255,255,255,0.2);
+  }
+  .trust-logos span:last-child { border-right: none; }
+
+  .trust-quote-card {
+    max-width: 680px;
+    margin: 0 auto;
+    background: var(--olark-card);
+    border: 1.5px solid var(--olark-border);
+    border-left: 4px solid var(--olark-gold);
+    border-radius: 14px;
+    padding: 38px 42px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.35);
+  }
+
+  .trust-quote-card blockquote {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--olark-text);
+    line-height: 1.65;
+    margin-bottom: 18px;
+  }
+
+  .trust-quote-card .quote-author {
+    font-size: 0.82rem;
+    color: var(--olark-muted);
+    font-style: italic;
+  }
+
+  /* ══ FINAL CTA ══ */
+  .final-cta {
+    position: relative;
+    z-index: 1;
+    padding: 110px 32px;
+    text-align: center;
+    background: var(--olark-navy);
+    border-top: 1px solid var(--olark-border);
+    overflow: hidden;
+  }
+
+  .final-cta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 800px 500px at 50% 50%, rgba(245,194,0,0.07) 0%, transparent 70%),
+      radial-gradient(ellipse 500px 300px at 80% 30%, rgba(232,50,90,0.05) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .final-cta h2 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 900;
+    font-size: clamp(2rem, 4.5vw, 3.2rem);
+    color: var(--olark-white);
+    max-width: 700px;
+    margin: 0 auto 18px;
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+    position: relative;
+  }
+
+  .final-cta h2 .accent {
+    background: linear-gradient(90deg, var(--olark-gold), var(--olark-gold-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .final-cta p {
+    color: var(--olark-muted);
+    max-width: 480px;
+    margin: 0 auto 40px;
+    font-size: 1.05rem;
+    font-weight: 300;
+    line-height: 1.7;
+    position: relative;
+  }
+
+  .final-note {
+    margin-top: 18px;
+    font-size: 0.82rem;
+    color: var(--olark-muted);
+    font-style: italic;
+    position: relative;
+  }
+
+  /* ══ FOOTER ══ */
+  footer {
+    border-top: 1px solid var(--olark-border);
+    background: var(--olark-dark);
+    padding: 36px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  footer img { height: 22px; filter: brightness(0) invert(1); opacity: 0.9; }
+
+  .footer-links { display: flex; gap: 4px; flex-wrap: wrap; }
+  .footer-links a {
+    font-size: 0.8rem;
+    color: var(--olark-muted);
+    text-decoration: none;
+    padding: 4px 10px;
+    border-radius: 4px;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--olark-gold); }
+
+  footer p { font-size: 0.78rem; color: rgba(160,157,216,0.55); }
+
+  /* ══ SCROLL REVEAL ══ */
+  .reveal {
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity 0.55s ease, transform 0.55s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ══ SHARED ANIMATIONS ══ */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(22px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  @keyframes shimmer {
+    0%   { background-position: -200% center; }
+    100% { background-position:  200% center; }
+  }
+
+  /* ══ RESPONSIVE ══ */
+  @media (max-width: 900px) {
+    .product-cards { grid-template-columns: 1fr; max-width: 480px; margin: 0 auto; }
+    .how-grid { grid-template-columns: 1fr; max-width: 480px; margin: 0 auto; }
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    .pf-body { padding: 32px 24px; }
+  }
+
+  @media (max-width: 600px) {
+    .hero-stats { flex-direction: column; gap: 6px; }
+    .stat-pill { border-right: none; border-bottom: 1px solid var(--olark-border); padding: 12px 20px; }
+    .stat-pill:last-child { border-bottom: none; }
+    footer { justify-content: center; text-align: center; }
+  }
+
+  /* ══════════════════════════════════════
+     PRODUCT PREVIEW MODAL
+  ══════════════════════════════════════ */
+
+  /* Clickable icon span on cards */
+  .card-icon-btn {
+    display: inline-block;
+    margin-left: 14px;
+    margin-bottom: 16px;
+    position: relative;
+    font-size: 2.2rem;
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  /* Whole card is the click surface */
+  .product-card[role="button"] { cursor: pointer; }
+  .product-card[role="button"]:focus-visible {
+    outline: 2px solid var(--olark-gold);
+    outline-offset: 3px;
+  }
+
+  /* ── Charge bar — fills over 1s on sustained hover ── */
+  .card-charge-bar {
+    position: absolute;
+    top: 0; left: 0;
+    height: 3px;
+    width: 0%;
+    z-index: 4;
+    border-radius: 2px 0 0 0;
+    pointer-events: none;
+    transition: none;
+  }
+
+  .card-essentials  .card-charge-bar { background: linear-gradient(90deg, var(--olark-gold), var(--olark-gold-light)); }
+  .card-leadgen     .card-charge-bar { background: linear-gradient(90deg, var(--olark-pink), #FF6B8A); }
+  .card-commercial  .card-charge-bar { background: linear-gradient(90deg, #5DD3B3, #7EECD2); }
+
+  .product-card.card-charging .card-charge-bar {
+    width: 100%;
+    transition: width 1s linear;
+  }
+
+  /* Icon swells during charge */
+  .product-card.card-charging .card-icon-btn {
+    transform: scale(1.15);
+    transition: transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* Pulse ring spins up during charge */
+  .product-card.card-charging .icon-pulse-ring {
+    animation: iconRingCharge 1s linear forwards !important;
+    opacity: 1 !important;
+  }
+
+  @keyframes iconRingCharge {
+    0%   { opacity: 0.2; transform: scale(0.85); }
+    100% { opacity: 0.9; transform: scale(1.5); }
+  }
+
+  /* Border brightens during charge */
+  .card-essentials.card-charging  { border-color: rgba(245,194,0,0.75) !important; animation: chargeGlowGold 1s linear forwards !important; }
+  .card-leadgen.card-charging     { border-color: rgba(232,50,90,0.75) !important;  animation: chargeGlowPink 1s linear forwards !important; }
+  .card-commercial.card-charging  { border-color: rgba(93,211,179,0.75) !important; animation: chargeGlowTeal 1s linear forwards !important; }
+
+  @keyframes chargeGlowGold {
+    0%   { box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 20px  2px rgba(245,194,0,0.1);  border-color: rgba(245,194,0,0.5); }
+    50%  { box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 60px 10px rgba(245,194,0,0.25); border-color: rgba(245,194,0,0.65); }
+    100% { box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 100px 20px rgba(245,194,0,0.45), 0 0 180px 40px rgba(245,194,0,0.15); border-color: rgba(245,194,0,0.9); }
+  }
+
+  @keyframes chargeGlowPink {
+    0%   { box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 20px  2px rgba(232,50,90,0.1);  border-color: rgba(232,50,90,0.5); }
+    50%  { box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 60px 10px rgba(232,50,90,0.25); border-color: rgba(232,50,90,0.65); }
+    100% { box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 100px 20px rgba(232,50,90,0.45), 0 0 180px 40px rgba(232,50,90,0.15); border-color: rgba(232,50,90,0.9); }
+  }
+
+  @keyframes chargeGlowTeal {
+    0%   { box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 20px  2px rgba(93,211,179,0.1);  border-color: rgba(93,211,179,0.5); }
+    50%  { box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 60px 10px rgba(93,211,179,0.25); border-color: rgba(93,211,179,0.65); }
+    100% { box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 100px 20px rgba(93,211,179,0.45), 0 0 180px 40px rgba(93,211,179,0.15); border-color: rgba(93,211,179,0.9); }
+  }
+
+  .card-icon-btn .icon-pulse-ring {
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 1.5px solid;
+    opacity: 0;
+    animation: iconRingPulse 2.4s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  .card-essentials .icon-pulse-ring { border-color: var(--olark-gold); }
+  .card-leadgen   .icon-pulse-ring { border-color: var(--olark-pink); }
+  .card-commercial .icon-pulse-ring { border-color: #5DD3B3; }
+
+  @keyframes iconRingPulse {
+    0%   { opacity: 0; transform: scale(0.85); }
+    30%  { opacity: 0.55; }
+    100% { opacity: 0; transform: scale(1.6); }
+  }
+
+  /* ── Modal Overlay ── */
+  .preview-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 900;
+    background: rgba(8, 6, 28, 0.88);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.28s ease;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .preview-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .preview-shell {
+    position: relative;
+    width: 100%;
+    max-width: 1020px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    transform: scale(0.93) translateY(20px);
+    transition: transform 0.35s cubic-bezier(0.22,1,0.36,1);
+  }
+
+  .preview-overlay.open .preview-shell {
+    transform: scale(1) translateY(0);
+  }
+
+  /* Halo glow */
+  .preview-shell::before {
+    content: '';
+    position: absolute;
+    inset: -40px;
+    border-radius: 32px;
+    filter: blur(32px);
+    pointer-events: none;
+    z-index: -1;
+    animation: previewHaloPulse 3.5s ease-in-out infinite;
+  }
+
+  .preview-shell.halo-gold::before  { background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(245,194,0,0.18) 0%, transparent 60%); }
+  .preview-shell.halo-pink::before  { background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(232,50,90,0.18) 0%, transparent 60%); }
+  .preview-shell.halo-teal::before  { background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(93,211,179,0.16) 0%, transparent 60%); }
+
+  @keyframes previewHaloPulse {
+    0%, 100% { opacity: 0.7; transform: scale(1); }
+    50%       { opacity: 1;   transform: scale(1.06); }
+  }
+
+  .preview-card {
+    background: var(--olark-card);
+    border: 1.5px solid var(--olark-border);
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.7);
+  }
+
+  /* Top accent bar — color per tier */
+  .preview-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .preview-shell.halo-gold  .preview-card::before { background: linear-gradient(90deg, var(--olark-gold), var(--olark-gold-light)); }
+  .preview-shell.halo-pink  .preview-card::before { background: linear-gradient(90deg, var(--olark-pink), #FF6B8A); }
+  .preview-shell.halo-teal  .preview-card::before { background: linear-gradient(90deg, #5DD3B3, var(--olark-gold)); }
+
+  .preview-shell.halo-gold .preview-card {
+    box-shadow:
+      0 40px 100px rgba(0,0,0,0.7),
+      0 0 60px 8px rgba(245,194,0,0.22),
+      0 0 120px 24px rgba(245,194,0,0.1);
+  }
+
+  .preview-shell.halo-pink .preview-card {
+    box-shadow:
+      0 40px 100px rgba(0,0,0,0.7),
+      0 0 60px 8px rgba(232,50,90,0.22),
+      0 0 120px 24px rgba(232,50,90,0.1);
+  }
+
+  .preview-shell.halo-teal .preview-card {
+    box-shadow:
+      0 40px 100px rgba(0,0,0,0.7),
+      0 0 60px 8px rgba(93,211,179,0.22),
+      0 0 120px 24px rgba(93,211,179,0.1);
+  }
+
+  /* Close row */
+  .preview-close-row {
+    position: absolute;
+    top: 16px; right: 16px;
+    z-index: 10;
+  }
+
+  .preview-close-btn {
+    background: rgba(245,194,0,0.1);
+    border: 1.5px solid rgba(245,194,0,0.35);
+    color: var(--olark-gold);
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 6px 18px;
+    border-radius: 100px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+  }
+
+  .preview-close-btn:hover { background: rgba(245,194,0,0.2); border-color: rgba(245,194,0,0.65); }
+
+  /* Two-column layout */
+  .preview-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.35fr;
+    align-items: stretch;
+    flex: 1;
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  /* Copy column */
+  .preview-copy {
+    padding: 48px 40px 40px;
+    border-right: 1px solid rgba(120,115,220,0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow-y: auto;
+  }
+
+  .preview-tier-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 100px;
+    margin-bottom: 18px;
+    width: fit-content;
+  }
+
+  .preview-copy h2 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 900;
+    font-size: clamp(1.35rem, 2.5vw, 1.85rem);
+    color: var(--olark-white);
+    line-height: 1.2;
+    letter-spacing: -0.022em;
+    margin-bottom: 14px;
+  }
+
+  .preview-copy .preview-sub {
+    font-size: 0.9rem;
+    color: var(--olark-muted);
+    line-height: 1.7;
+    font-weight: 300;
+    margin-bottom: 28px;
+  }
+
+  .preview-copy .preview-sub strong { color: var(--olark-text); font-weight: 500; }
+
+  .preview-feature-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 32px;
+  }
+
+  .preview-feat {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 0.88rem;
+    color: var(--olark-text);
+    line-height: 1.5;
+  }
+
+  .preview-feat-check {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .preview-feat-check svg { width: 9px; height: 9px; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+  .check-gold { background: rgba(245,194,0,0.12); border: 1.5px solid rgba(245,194,0,0.4); }
+  .check-gold svg { stroke: var(--olark-gold); }
+  .check-pink { background: rgba(232,50,90,0.12); border: 1.5px solid rgba(232,50,90,0.4); }
+  .check-pink svg { stroke: var(--olark-pink); }
+  .check-teal { background: rgba(93,211,179,0.12); border: 1.5px solid rgba(93,211,179,0.4); }
+  .check-teal svg { stroke: #5DD3B3; }
+
+  .preview-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: 0.92rem;
+    padding: 14px 28px;
+    border-radius: 8px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.01em;
+    width: fit-content;
+  }
+
+  .cta-gold { background: var(--olark-gold); color: var(--olark-dark); box-shadow: 0 0 36px rgba(245,194,0,0.28); }
+  .cta-gold:hover { background: var(--olark-gold-light); transform: translateY(-2px); }
+  .cta-pink { background: var(--olark-pink); color: #fff; box-shadow: 0 0 36px rgba(232,50,90,0.28); }
+  .cta-pink:hover { background: #f04b6c; transform: translateY(-2px); }
+  .cta-teal { background: #5DD3B3; color: var(--olark-dark); box-shadow: 0 0 36px rgba(93,211,179,0.28); }
+  .cta-teal:hover { background: #7EECD2; transform: translateY(-2px); }
+
+  /* Animation column */
+  .preview-anim {
+    background: rgba(0,0,0,0.18);
+    padding: 36px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .preview-anim-label {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--olark-muted);
+    margin-bottom: 4px;
+    opacity: 0.75;
+  }
+
+  /* ── Essentials: Live Search demo ── */
+  .ls-demo {
+    background: var(--olark-navy);
+    border: 1.5px solid var(--olark-border);
+    border-radius: 14px;
+    padding: 24px;
+    flex: 1;
+  }
+
+  .ls-url-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--olark-border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 20px;
+    font-size: 0.82rem;
+    color: var(--olark-muted);
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .ls-url-dot { width: 8px; height: 8px; background: var(--olark-gold); border-radius: 50%; flex-shrink: 0; animation: pulse 1.8s ease-in-out infinite; }
+
+  .ls-url-text { flex: 1; color: var(--olark-text); font-size: 0.85rem; }
+
+  .ls-url-badge {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: rgba(74,222,128,0.12);
+    color: #4ADE80;
+    border: 1px solid rgba(74,222,128,0.3);
+    padding: 3px 8px;
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .ls-features-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .ls-feat-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    opacity: 0;
+    transform: translateX(-12px);
+    transition: opacity 0.38s ease, transform 0.38s ease;
+  }
+
+  .ls-feat-item.show { opacity: 1; transform: translateX(0); }
+
+  .ls-feat-icon-wrap {
+    width: 30px; height: 30px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 0.95rem;
+    background: rgba(245,194,0,0.1);
+    border: 1px solid rgba(245,194,0,0.25);
+    position: relative;
+  }
+
+  .ls-feat-item.confirmed .ls-feat-icon-wrap { background: rgba(245,194,0,0.18); border-color: rgba(245,194,0,0.5); box-shadow: 0 0 12px rgba(245,194,0,0.2); }
+
+  .ls-feat-body strong { display: block; font-size: 0.83rem; color: var(--olark-white); font-weight: 600; margin-bottom: 1px; }
+  .ls-feat-body span  { font-size: 0.78rem; color: var(--olark-muted); line-height: 1.4; }
+
+  /* ── Lead-Gen: Routing chat ── */
+  .routing-demo {
+    background: var(--olark-navy);
+    border: 1.5px solid var(--olark-border);
+    border-radius: 14px;
+    padding: 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 320px;
+  }
+
+  .rd-bubble-row {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    animation: chatSlideIn 0.3s ease both;
+  }
+
+  .rd-bubble-row.user-row { justify-content: flex-end; }
+
+  .rd-avatar {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    margin-top: 2px;
+  }
+
+  .rd-avatar.bot  { background: linear-gradient(135deg, var(--olark-purple-mid), var(--olark-pink)); }
+  .rd-avatar.user { background: rgba(245,194,0,0.18); border: 1.5px solid rgba(245,194,0,0.4); color: var(--olark-gold); font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 0.65rem; }
+
+  .rd-bubble {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 4px 14px 14px 14px;
+    padding: 9px 13px;
+    font-size: 0.8rem;
+    color: var(--olark-text);
+    line-height: 1.5;
+    max-width: 78%;
+  }
+
+  .rd-bubble.user-bubble {
+    background: rgba(245,194,0,0.1);
+    border-color: rgba(245,194,0,0.22);
+    border-radius: 14px 14px 4px 14px;
+    color: var(--olark-white);
+  }
+
+  .rd-typing {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 10px 13px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 4px 14px 14px 14px;
+    border: 1px solid rgba(255,255,255,0.08);
+    width: fit-content;
+  }
+
+  .rd-typing-dot { width: 6px; height: 6px; background: var(--olark-muted); border-radius: 50%; animation: typingBounce 1.2s ease-in-out infinite; }
+  .rd-typing-dot:nth-child(2) { animation-delay: 0.2s; }
+  .rd-typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+  .rd-route-btns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    padding: 4px 0 4px 36px;
+  }
+
+  .rd-route-btn {
+    padding: 6px 13px;
+    border-radius: 100px;
+    font-size: 0.72rem;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    border: 1.5px solid;
+    transition: all 0.2s;
+    cursor: default;
+  }
+
+  .rd-route-btn.sales   { border-color: rgba(245,194,0,0.5); color: var(--olark-gold); background: rgba(245,194,0,0.07); }
+  .rd-route-btn.support { border-color: rgba(232,50,90,0.5); color: var(--olark-pink); background: rgba(232,50,90,0.07); }
+  .rd-route-btn.info    { border-color: rgba(160,157,216,0.5); color: var(--olark-muted); background: rgba(160,157,216,0.07); }
+  .rd-route-btn.selected { background: var(--olark-gold); color: var(--olark-dark); border-color: var(--olark-gold); }
+
+  .rd-result {
+    padding: 11px 14px;
+    background: rgba(245,194,0,0.08);
+    border: 1px solid rgba(245,194,0,0.25);
+    border-radius: 10px;
+    font-size: 0.78rem;
+    color: var(--olark-gold);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    animation: chatSlideIn 0.3s ease both;
+  }
+
+  /* ── Commercial: Outcome flow ── */
+  .flow-demo {
+    background: var(--olark-navy);
+    border: 1.5px solid var(--olark-border);
+    border-radius: 14px;
+    padding: 20px 24px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .fd-step {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    position: relative;
+    padding: 12px 0;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.38s ease, transform 0.38s ease;
+  }
+
+  .fd-step.show { opacity: 1; transform: translateY(0); }
+
+  .fd-step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 40px;
+    bottom: -6px;
+    width: 2px;
+    background: linear-gradient(180deg, rgba(245,194,0,0.3), rgba(232,50,90,0.2), rgba(93,211,179,0.1));
+  }
+
+  .fd-dot {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 0.85rem;
+    border: 2px solid;
+    position: relative;
+    z-index: 1;
+  }
+
+  .fd-dot.gold { background: rgba(245,194,0,0.12); border-color: rgba(245,194,0,0.75); }
+  .fd-dot.pink { background: rgba(232,50,90,0.1);  border-color: rgba(232,50,90,0.7); }
+  .fd-dot.teal { background: rgba(93,211,179,0.1); border-color: rgba(93,211,179,0.7); }
+
+  .fd-dot.pulsing { animation: fdPulse 1s ease-in-out infinite; }
+
+  @keyframes fdPulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(245,194,0,0); }
+    50%      { box-shadow: 0 0 0 7px rgba(245,194,0,0.12), 0 0 18px rgba(245,194,0,0.3); }
+  }
+
+  @keyframes fdPulsePink {
+    0%,100% { box-shadow: 0 0 0 0 rgba(232,50,90,0); }
+    50%      { box-shadow: 0 0 0 7px rgba(232,50,90,0.1), 0 0 18px rgba(232,50,90,0.25); }
+  }
+
+  @keyframes fdPulseTeal {
+    0%,100% { box-shadow: 0 0 0 0 rgba(93,211,179,0); }
+    50%      { box-shadow: 0 0 0 7px rgba(93,211,179,0.1), 0 0 18px rgba(93,211,179,0.25); }
+  }
+
+  .fd-dot.pulsing.pink { animation: fdPulsePink 1s ease-in-out infinite; }
+  .fd-dot.pulsing.teal { animation: fdPulseTeal 1s ease-in-out infinite; }
+
+  .fd-body h4 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 0.86rem;
+    color: var(--olark-white);
+    margin-bottom: 2px;
+    min-height: 1.2em;
+  }
+
+  .fd-body p { font-size: 0.78rem; color: var(--olark-muted); line-height: 1.45; opacity: 0; transition: opacity 0.35s ease 0.1s; }
+  .fd-step.show .fd-body p { opacity: 1; }
+
+  .fd-crm-badge {
+    margin-top: 14px;
+    padding: 11px 14px;
+    background: rgba(93,211,179,0.08);
+    border: 1px solid rgba(93,211,179,0.25);
+    border-radius: 8px;
+    font-size: 0.78rem;
+    color: #5DD3B3;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+
+  .fd-crm-badge.show { opacity: 1; transform: translateY(0); }
+
+  /* ── Shared modal keyframes ── */
+  @keyframes chatSlideIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes typingBounce {
+    0%,60%,100% { transform: translateY(0); opacity: 0.4; }
+    30%          { transform: translateY(-4px); opacity: 1; }
+  }
+
+  @media (max-width: 760px) {
+    .preview-grid { grid-template-columns: 1fr; }
+    .preview-copy { border-right: none; border-bottom: 1px solid rgba(120,115,220,0.2); }
+    .preview-anim { min-height: 320px; }
+  }
+
+  /* ── Quiz result two-column layout ── */
+  .pf-result-header {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+
+  .pf-result-header .pf-result-icon {
+    font-size: 2.4rem;
+    display: block;
+    margin-bottom: 12px;
+    line-height: 1;
+  }
+
+  .pf-result-header .pf-result-name {
+    margin-top: 10px;
+    margin-bottom: 0;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+  }
+
+  .pf-result-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.25fr;
+    gap: 32px;
+    align-items: start;
+    text-align: left;
+  }
+
+  .pf-result-anim-panel {
+    background: rgba(0,0,0,0.2);
+    border: 1px solid rgba(120,115,220,0.22);
+    border-radius: 14px;
+    padding: 20px;
+    overflow: hidden;
+    min-height: 280px;
+  }
+
+  .pf-result-anim-label {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--olark-muted);
+    margin-bottom: 14px;
+    opacity: 0.75;
+  }
+
+  .pf-result-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 24px;
+    margin-bottom: 14px;
+  }
+
+  .pf-goto-meeting {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    color: var(--olark-muted);
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 0.88rem;
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    border: 1.5px solid var(--olark-border);
+    transition: all 0.2s;
+    width: fit-content;
+    cursor: pointer;
+  }
+
+  .pf-goto-meeting:hover {
+    border-color: rgba(245,194,0,0.45);
+    color: var(--olark-gold);
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 640px) {
+    .pf-result-grid { grid-template-columns: 1fr; }
+    .pf-result-anim-panel { min-height: 260px; }
+  }
+  /* ══ MEETING MODAL ══ */
+  .meeting-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 800;
+    background: rgba(10, 8, 35, 0.82);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .meeting-modal-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .meeting-modal-shell {
+    position: relative;
+    width: 100%;
+    max-width: 980px;
+    transform: scale(0.93) translateY(18px);
+    transition: transform 0.35s cubic-bezier(0.22,1,0.36,1);
+  }
+
+  .meeting-modal-overlay.open .meeting-modal-shell {
+    transform: scale(1) translateY(0);
+  }
+
+  .meeting-modal-shell::before {
+    content: '';
+    position: absolute;
+    inset: -40px;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 50%, rgba(245,194,0,0.14) 0%, transparent 60%),
+      radial-gradient(ellipse 55% 45% at 15% 85%, rgba(232,50,90,0.1) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 40% at 85% 15%, rgba(59,57,168,0.4) 0%, transparent 60%);
+    filter: blur(28px);
+    border-radius: 28px;
+    pointer-events: none;
+    z-index: -1;
+    animation: meetingHaloPulse 3.8s ease-in-out infinite;
+  }
+
+  @keyframes meetingHaloPulse {
+    0%, 100% { opacity: 0.75; transform: scale(1); }
+    50%       { opacity: 1;   transform: scale(1.06); }
+  }
+
+  @keyframes meetingModalGlow {
+    0%, 100% {
+      box-shadow:
+        0 0 0 1px rgba(245,194,0,0.1),
+        0 0 60px rgba(245,194,0,0.18),
+        0 0 120px rgba(232,50,90,0.1),
+        0 40px 100px rgba(0,0,0,0.7);
+    }
+    50% {
+      box-shadow:
+        0 0 0 1px rgba(245,194,0,0.2),
+        0 0 100px rgba(245,194,0,0.35),
+        0 0 180px rgba(232,50,90,0.18),
+        0 40px 100px rgba(0,0,0,0.7);
+    }
+  }
+
+  .meeting-modal-card {
+    background: var(--olark-card);
+    border: 1.5px solid rgba(245,194,0,0.35);
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    animation: meetingModalGlow 3.8s ease-in-out infinite;
+    display: grid;
+    grid-template-columns: 1fr 1.45fr;
+    align-items: stretch;
+  }
+
+  .meeting-modal-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--olark-gold), var(--olark-pink));
+    z-index: 2;
+  }
+
+  .meeting-modal-close-row {
+    position: absolute;
+    top: 16px; right: 16px;
+    z-index: 10;
+  }
+
+  .meeting-modal-close {
+    background: rgba(245,194,0,0.1);
+    border: 1.5px solid rgba(245,194,0,0.35);
+    color: var(--olark-gold);
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 6px 18px;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .meeting-modal-close:hover {
+    background: rgba(245,194,0,0.2);
+    border-color: rgba(245,194,0,0.65);
+  }
+
+  .meeting-modal-copy {
+    padding: 44px 36px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-right: 1px solid rgba(120,115,220,0.25);
+  }
+
+  .meeting-modal-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(245,194,0,0.1);
+    border: 1px solid rgba(245,194,0,0.35);
+    color: var(--olark-gold);
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 100px;
+    margin-bottom: 20px;
+    width: fit-content;
+  }
+
+  .meeting-modal-badge .dot {
+    width: 6px; height: 6px;
+    background: var(--olark-gold);
+    border-radius: 50%;
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+
+  .meeting-modal-copy h2 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: clamp(1.25rem, 2.2vw, 1.7rem);
+    color: var(--olark-white);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin-bottom: 14px;
+  }
+
+  .meeting-modal-copy p {
+    font-size: 0.9rem;
+    color: var(--olark-muted);
+    font-weight: 300;
+    line-height: 1.7;
+    margin-bottom: 24px;
+  }
+
+  .meeting-modal-trust { display: flex; flex-direction: column; gap: 11px; }
+
+  .meeting-modal-trust .trust-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.875rem;
+    color: var(--olark-muted);
+  }
+
+  .meeting-modal-embed {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+  }
+
+  .meeting-modal-embed .meetings-iframe-container { min-height: 620px; }
+  .meeting-modal-embed iframe { display: block; border-radius: 0 0 18px 18px; }
+
+  @media (max-width: 680px) {
+    .meeting-modal-card { grid-template-columns: 1fr; }
+    .meeting-modal-copy { border-right: none; border-bottom: 1px solid rgba(120,115,220,0.25); padding: 28px 24px; }
+    .meeting-modal-embed iframe { border-radius: 0 0 18px 18px !important; }
+  }
+
+  @media (max-width: 600px) {
+    .meeting-modal-embed .meetings-iframe-container { min-height: 520px; }
+  }
+</style>
+<body>
+
+<!-- ══ MEETING MODAL ══ -->
+<div class="meeting-modal-overlay" id="meeting-modal" onclick="if(event.target===this)closeMeetingModal()">
+  <div class="meeting-modal-shell">
+    <div class="meeting-modal-card">
+      <div class="meeting-modal-close-row">
+        <button class="meeting-modal-close" onclick="closeMeetingModal()">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style="stroke:var(--olark-gold);stroke-width:2.2;stroke-linecap:round;"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg>
+          Close
+        </button>
+      </div>
+      <div class="meeting-modal-copy" id="meeting-modal-copy">
+        <div class="meeting-modal-badge"><span class="dot"></span> Let's Talk</div>
+        <h2>Schedule a Scoping Call with the Olark Team</h2>
+        <p>We'll walk through your team's setup, answer your questions, and make sure you're pointed at the right product from day one.</p>
+        <div class="meeting-modal-trust">
+          <div class="trust-item">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" style="stroke:var(--olark-gold);stroke-width:2;flex-shrink:0;"><circle cx="7.5" cy="7.5" r="6"/><polyline points="5,7.5 7,9.5 11,5.5"/></svg>
+            <span>No commitment required</span>
+          </div>
+          <div class="trust-item">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" style="stroke:var(--olark-gold);stroke-width:2;flex-shrink:0;"><circle cx="7.5" cy="7.5" r="6"/><polyline points="5,7.5 7,9.5 11,5.5"/></svg>
+            <span>30-minute live walkthrough</span>
+          </div>
+          <div class="trust-item">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" style="stroke:var(--olark-gold);stroke-width:2;flex-shrink:0;"><circle cx="7.5" cy="7.5" r="6"/><polyline points="5,7.5 7,9.5 11,5.5"/></svg>
+            <span>Tailored to your team's workflow</span>
+          </div>
+        </div>
+      </div>
+      <div class="meeting-modal-embed">
+        <div class="meetings-iframe-container" data-src="https://hello.olark.com/meetings/logan-stuard/aiden?embed=true"></div>
+        <script type="text/javascript" src="https://static.hsappstatic.net/MeetingsEmbed/ex/MeetingsEmbedCode.js"></script>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PARTICLE BACKGROUND -->
+<canvas id="bg-canvas"></canvas>
+
+<!-- ══ NAV ══ -->
+<nav id="main-nav">
+  <div class="nav-logo">
+    <img src="https://cdn.prod.website-files.com/646d3c484b3d75dd99420842/6633e36dd87b8cf67a0b0e22_Olark_poppins_white.svg" alt="Olark">
+    <div class="nav-logo-divider"></div>
+    <span class="nav-product-name">Aiden AI</span>
+  </div>
+  <div class="nav-links">
+    <a href="#products" class="nav-link">Products</a>
+    <a href="#how-it-works" class="nav-link">How It Works</a>
+    <a href="#find-your-plan" class="nav-link">Find My Plan</a>
+  </div>
+  <a href="#" onclick="openMeetingModal();return false;" class="nav-cta">Get Started</a>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="hero-ribbon">
+    <span class="dot"></span>
+    Now Live — Aiden AI for Sales & Support
+  </div>
+  <h1 class="hero-headline">
+    Your AI Rep Is<br>
+    <span class="word-gold">Already</span> Working.<br>
+    Is Yours?
+  </h1>
+  <p class="hero-sub">
+    Aiden qualifies leads, routes conversations, answers questions, and updates your CRM — <strong>while your team focuses on closing deals.</strong>
+  </p>
+  <div class="hero-cta-row">
+    <a href="#find-your-plan" class="btn-gold">Find My Aiden Plan</a>
+    <a href="#products" class="btn-ghost">See All Products</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat-pill">
+      <div>
+        <div class="stat-num"><span class="stat-accent">60</span>s</div>
+        <div class="stat-label">to a live, trained chatbot</div>
+      </div>
+    </div>
+    <div class="stat-pill">
+      <div>
+        <div class="stat-num"><span class="stat-accent">24</span>/7</div>
+        <div class="stat-label">always-on sales coverage</div>
+      </div>
+    </div>
+    <div class="stat-pill">
+      <div>
+        <div class="stat-num"><span class="stat-accent">0</span></div>
+        <div class="stat-label">manual CRM updates required</div>
+      </div>
+    </div>
+    <div class="stat-pill">
+      <div>
+        <div class="stat-num"><span class="stat-accent">3</span></div>
+        <div class="stat-label">product tiers to fit every team</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PRODUCTS ══ -->
+<section class="products-section" id="products">
+  <div class="products-inner">
+    <div class="reveal">
+      <div class="section-label">The Aiden Product Line</div>
+      <h2 class="section-title">One AI Platform, Three Ways to Win.</h2>
+      <p class="section-intro">From a self-serve chatbot you can launch today to a fully integrated commercial sales engine — Aiden meets you where your team is.</p>
+    </div>
+
+    <div class="product-cards reveal" style="transition-delay: 0.1s;">
+
+      <!-- Essentials -->
+      <div class="product-card card-essentials" onclick="openPreviewModal(event,'essentials')" role="button" tabindex="0">
+        <div class="card-charge-bar"></div>
+        <div class="card-tier-badge badge-foundation">Foundation Plan</div>
+        <span class="card-icon-btn" aria-hidden="true"><span class="icon-pulse-ring"></span>⚡</span>
+        <h3>Aiden Essentials</h3>
+        <p>The fastest path from zero to a live, trained AI. Deploy from your existing website in under 60 seconds. No dev, no waiting.</p>
+        <div class="card-features">
+          <div class="card-feat"><div class="feat-dot dot-gold"></div>Live Search — instant website ingest</div>
+          <div class="card-feat"><div class="feat-dot dot-gold"></div>AI Analyst — lead ranking from transcripts</div>
+          <div class="card-feat"><div class="feat-dot dot-gold"></div>Free live onboarding included</div>
+          <div class="card-feat"><div class="feat-dot dot-gold"></div>Unlimited chats, no caps</div>
+        </div>
+        <div class="card-arrow">
+          Explore Essentials
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="stroke:currentColor;stroke-width:2.2;"><path d="M2 7h10M8 3l4 4-4 4"/></svg>
+        </div>
+      </div>
+
+      <!-- Lead-Gen -->
+      <div class="product-card card-leadgen" onclick="openPreviewModal(event,'leadgen')" role="button" tabindex="0">
+        <div class="card-charge-bar"></div>
+        <div class="card-tier-badge badge-leadgen">Lead-Gen Platform</div>
+        <span class="card-icon-btn" aria-hidden="true"><span class="icon-pulse-ring"></span>🎯</span>
+        <h3>Aiden for Lead-Gen</h3>
+        <p>Intelligent routing, lead qualification, and automated handoff — built for teams that run live chat as a revenue channel.</p>
+        <div class="card-features">
+          <div class="card-feat"><div class="feat-dot dot-pink"></div>Smart routing buttons & self-selection</div>
+          <div class="card-feat"><div class="feat-dot dot-pink"></div>Lead capture & prospect qualification</div>
+          <div class="card-feat"><div class="feat-dot dot-pink"></div>Hot handoff to live reps</div>
+          <div class="card-feat"><div class="feat-dot dot-pink"></div>Multi-team & departmental routing</div>
+        </div>
+        <div class="card-arrow">
+          Explore Lead-Gen
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="stroke:currentColor;stroke-width:2.2;"><path d="M2 7h10M8 3l4 4-4 4"/></svg>
+        </div>
+      </div>
+
+      <!-- Commercial -->
+      <div class="product-card card-commercial" onclick="openPreviewModal(event,'commercial')" role="button" tabindex="0">
+        <div class="card-charge-bar"></div>
+        <div class="card-tier-badge badge-commercial">Commercial AI</div>
+        <span class="card-icon-btn" aria-hidden="true"><span class="icon-pulse-ring"></span>🏆</span>
+        <h3>Aiden for Commercial Sales</h3>
+        <p>CRM-connected, territory-aware, and fully automated. Built for organizations where every conversation needs to close something.</p>
+        <div class="card-features">
+          <div class="card-feat"><div class="feat-dot dot-teal"></div>Pre-chat CRM lookup & enrichment</div>
+          <div class="card-feat"><div class="feat-dot dot-teal"></div>Geo & territorial routing</div>
+          <div class="card-feat"><div class="feat-dot dot-teal"></div>Automatic post-chat CRM update</div>
+          <div class="card-feat"><div class="feat-dot dot-teal"></div>Full context handoff to reps</div>
+        </div>
+        <div class="card-arrow">
+          Explore Commercial
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="stroke:currentColor;stroke-width:2.2;"><path d="M2 7h10M8 3l4 4-4 4"/></svg>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ HOW IT WORKS ══ -->
+<section class="how-section" id="how-it-works">
+  <div class="how-inner">
+    <div class="reveal">
+      <div class="section-label">Under the Hood</div>
+      <h2 class="section-title">What Aiden Actually Does</h2>
+      <p class="section-intro">Not a chatbot that answers FAQs. A rep that runs your entire pre-sales workflow — automatically.</p>
+    </div>
+    <div class="how-grid reveal" style="transition-delay: 0.1s;">
+      <div class="how-card">
+        <div class="how-num">01</div>
+        <span class="how-icon">👋</span>
+        <h3>Greet & Qualify</h3>
+        <p>Aiden opens every conversation with context — recognizing entry points, campaign sources, and visitor intent before a human ever types a word.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-num">02</div>
+        <span class="how-icon">🔀</span>
+        <h3>Route & Enrich</h3>
+        <p>Geography, CRM records, and routing logic connect every visitor to exactly the right rep or department — with full context attached at handoff.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-num">03</div>
+        <span class="how-icon">📊</span>
+        <h3>Log & Close</h3>
+        <p>When the conversation ends, the CRM updates itself. No manual entry. Every interaction ends in a pipeline action, not a dead end.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PATH FINDER ══ -->
+<section class="pathfinder-section" id="find-your-plan">
+  <div class="pathfinder-inner">
+    <div class="pathfinder-header reveal">
+      <div class="pf-badge">✦ Aiden Path Finder</div>
+      <h2>Not Sure Which Aiden<br>Is Right for You?</h2>
+      <p>Answer three quick questions and we'll point you to the product page built for your exact situation.</p>
+    </div>
+
+    <div class="pf-card reveal" style="transition-delay: 0.1s;">
+      <div class="pf-progress"><div class="pf-progress-fill" id="pf-progress-fill"></div></div>
+      <div class="pf-body">
+        <div class="pf-history" id="pf-history"></div>
+        <div id="pf-quiz-area">
+          <div class="pf-step-wrap" id="pf-step-wrap">
+            <!-- injected by JS -->
+          </div>
+        </div>
+        <div class="pf-result" id="pf-result"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ TRUST ══ -->
+<section class="trust-section">
+  <div class="trust-inner reveal">
+    <p class="trust-title">Used by teams who take live chat seriously</p>
+    <div class="trust-logos">
+      <span>Acumatica</span>
+      <span>PointClickCare</span>
+      <span>Grasshopper</span>
+      <span>Influitive</span>
+      <span>Paylocity</span>
+    </div>
+    <div class="trust-quote-card">
+      <blockquote>"Aiden doesn't replace the human moment. It sets it up for success. When the rep takes over, they're arriving at a conversation that's already warmed up."</blockquote>
+      <div class="quote-author">— From the Commercial Presales Desk at Olark</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FINAL CTA ══ -->
+<section class="final-cta">
+  <div class="reveal" style="position:relative;">
+    <h2>Your Leads Are Already<br><span class="accent">Landing Somewhere.</span></h2>
+    <p>Make sure Aiden is there to meet them — qualified, routed, and ready before your team takes the first word.</p>
+    <div class="hero-cta-row" style="margin-bottom: 0;">
+      <a href="#find-your-plan" class="btn-gold">Find My Plan in 60 Seconds</a>
+      <a href="#" onclick="openMeetingModal();return false;" class="btn-ghost">Talk to Sales</a>
+    </div>
+    <p class="final-note">No commitment required. No credit card. Just the right AI for your team.</p>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <img src="https://cdn.prod.website-files.com/646d3c484b3d75dd99420842/6633d97bc26b66fa20f8ae32_Olark_Poppins_underline-02%20(1).png" alt="Olark">
+  <div class="footer-links">
+    <a href="https://www.olark.com/tos">Terms</a>
+    <a href="https://www.olark.com/privacy-policy">Privacy</a>
+    <a href="https://www.olark.com/contact">Contact</a>
+    <a href="https://www.olark.com">olark.com</a>
+  </div>
+  <p>© 2025 Olark. All rights reserved.</p>
+</footer>
+
+<script>
+// ════════════════════════════════════
+// PARTICLE CANVAS
+// ════════════════════════════════════
+(function() {
+  var canvas = document.getElementById('bg-canvas');
+  var ctx    = canvas.getContext('2d');
+  var W, H, particles = [], lines = [], mouse = { x: -9999, y: -9999 };
+  var PARTICLE_COUNT = 80;
+  var COLORS = ['rgba(245,194,0,', 'rgba(232,50,90,', 'rgba(93,211,179,', 'rgba(160,157,216,'];
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  function Particle() {
+    this.reset();
+  }
+
+  Particle.prototype.reset = function() {
+    this.x     = Math.random() * W;
+    this.y     = Math.random() * H;
+    this.vx    = (Math.random() - 0.5) * 0.35;
+    this.vy    = (Math.random() - 0.5) * 0.35;
+    this.r     = Math.random() * 1.6 + 0.4;
+    this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
+    this.alpha = Math.random() * 0.5 + 0.15;
+    this.life  = Math.random() * 300 + 200;
+    this.age   = 0;
+  };
+
+  Particle.prototype.update = function() {
+    this.x  += this.vx;
+    this.y  += this.vy;
+    this.age++;
+    if (this.age > this.life || this.x < -20 || this.x > W + 20 || this.y < -20 || this.y > H + 20) {
+      this.reset();
+    }
+  };
+
+  function init() {
+    resize();
+    particles = [];
+    for (var i = 0; i < PARTICLE_COUNT; i++) {
+      particles.push(new Particle());
+      particles[i].x = Math.random() * W;
+      particles[i].y = Math.random() * H;
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    // Connection lines between nearby particles
+    for (var i = 0; i < particles.length; i++) {
+      for (var j = i + 1; j < particles.length; j++) {
+        var dx = particles[i].x - particles[j].x;
+        var dy = particles[i].y - particles[j].y;
+        var dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 110) {
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = 'rgba(120,115,220,' + (0.08 * (1 - dist / 110)) + ')';
+          ctx.lineWidth = 0.6;
+          ctx.stroke();
+        }
+      }
+
+      // Mouse proximity glow
+      var mdx = particles[i].x - mouse.x;
+      var mdy = particles[i].y - mouse.y;
+      var mdist = Math.sqrt(mdx * mdx + mdy * mdy);
+      if (mdist < 180) {
+        ctx.beginPath();
+        ctx.arc(particles[i].x, particles[i].y, particles[i].r * 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = particles[i].color + (0.35 * (1 - mdist / 180)) + ')';
+        ctx.fill();
+      }
+
+      particles[i].update();
+      ctx.beginPath();
+      ctx.arc(particles[i].x, particles[i].y, particles[i].r, 0, Math.PI * 2);
+      ctx.fillStyle = particles[i].color + particles[i].alpha + ')';
+      ctx.fill();
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', function() { resize(); });
+  window.addEventListener('mousemove', function(e) { mouse.x = e.clientX; mouse.y = e.clientY; });
+
+  init();
+  draw();
+})();
+
+// ════════════════════════════════════
+// MEETING MODAL
+// ════════════════════════════════════
+window.openMeetingModal = function() {
+  document.getElementById('meeting-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+};
+
+window.closeMeetingModal = function() {
+  document.getElementById('meeting-modal').classList.remove('open');
+  document.body.style.overflow = '';
+};
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closeMeetingModal();
+    closePreviewModal();
+  }
+});
+
+// ════════════════════════════════════
+// NAV SCROLL STATE
+// ════════════════════════════════════
+window.addEventListener('scroll', function() {
+  var nav = document.getElementById('main-nav');
+  if (window.scrollY > 40) nav.classList.add('scrolled');
+  else nav.classList.remove('scrolled');
+});
+
+// ════════════════════════════════════
+// SCROLL REVEAL
+// ════════════════════════════════════
+(function() {
+  var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) e.target.classList.add('visible');
+    });
+  }, { threshold: 0.12 });
+
+  function attach() {
+    document.querySelectorAll('.reveal').forEach(function(el) { obs.observe(el); });
+  }
+  attach();
+})();
+
+// ════════════════════════════════════
+// PATH FINDER QUIZ
+// ════════════════════════════════════
+(function() {
+
+  // ── Question definitions ──────────────────────────────────────────────────
+  var allQuestions = {
+
+    goal: {
+      id: 'goal',
+      progress: 12,
+      text: "What's the single biggest thing you need from a live chat AI right now?",
+      options: [
+        { icon: '⚡', label: 'Get AI live fast',       sub: 'Deploy a trained chatbot without any technical setup or long waits',             value: 'speed' },
+        { icon: '🎯', label: 'Generate more leads',    sub: 'Qualify visitors, capture prospects, and pass hot leads to my sales team',        value: 'leads' },
+        { icon: '🤝', label: 'Arm my sales reps',      sub: 'Give reps full context, CRM data, and warm handoffs before every conversation',   value: 'reps'  }
+      ]
+    },
+
+    crm: {
+      id: 'crm',
+      progress: 36,
+      text: "Does your team use a CRM today?",
+      options: [
+        { icon: '✅', label: 'Yes — HubSpot or Salesforce', sub: "We're actively managing deals in a CRM right now",                          value: 'yes_standard' },
+        { icon: '🔧', label: 'Yes — a different CRM',       sub: 'We use something else like Zoho, Dynamics, or Pipedrive',                   value: 'yes_other'    },
+        { icon: '🚫', label: "No — not yet",                sub: "We don't have a CRM, or it's not connected to our sales workflow",           value: 'no'           }
+      ]
+    },
+
+    crm_pushpull: {
+      id: 'crm_pushpull',
+      progress: 58,
+      text: "Is it important to push and pull contact record information from your CRM as part of your AI deployment?",
+      options: [
+        { icon: '🔗', label: 'Yes \u2014 that\'s essential',       sub: 'We need Aiden to read and write CRM data in real time during conversations', value: 'yes' },
+        { icon: '👋', label: 'Not right now',                 sub: "We'd like CRM connectivity eventually, but it's not a day-one requirement", value: 'no'  }
+      ]
+    },
+
+    team: {
+      id: 'team',
+      progress: 74,
+      text: "How would you describe your sales team structure?",
+      options: [
+        { icon: '👤', label: 'Small or solo',             sub: '1–5 people, one team, no complex routing needs',                              value: 'small' },
+        { icon: '👥', label: 'Mid-size, single team',     sub: '5–20 people managing leads and support together',                             value: 'mid'   },
+        { icon: '🌍', label: 'Multiple teams or regions', sub: 'We have more than one team, product line, or geographic territory',           value: 'multi' }
+      ]
+    },
+
+    lead_gen_interest: {
+      id: 'lead_gen_interest',
+      progress: 88,
+      text: "Do you want to use Aiden to actively generate and qualify leads — or primarily to answer questions and support visitors?",
+      options: [
+        { icon: '🎯', label: 'Yes — lead generation is a priority', sub: 'I want Aiden qualifying prospects and passing hot leads to my team',      value: 'yes' },
+        { icon: '💬', label: 'Mainly support and self-service',      sub: 'Answer questions, deflect tickets, and help visitors find what they need', value: 'no'  }
+      ]
+    },
+
+    location: {
+      id: 'location',
+      progress: 90,
+      text: "Are your teams based in one location, or do you have regional teams across multiple areas?",
+      options: [
+        { icon: '🏢', label: 'One location or office',    sub: 'All our teams operate from the same place or under unified management',        value: 'single'   },
+        { icon: '🗺️', label: 'Regional teams',            sub: 'We route by territory, time zone, or geographic area',                        value: 'regional' }
+      ]
+    }
+
+  };
+
+  // ── Routing logic ─────────────────────────────────────────────────────────
+  // Returns next question id, or 'RESULT'
+  function nextQ(qId, value, answers) {
+    if (qId === 'goal')         return 'crm';
+    if (qId === 'crm') {
+      if (value === 'no')       return 'team';
+      return 'crm_pushpull';
+    }
+    if (qId === 'crm_pushpull') {
+      if (value === 'yes')      return 'RESULT';  // → commercial
+      return 'team';
+    }
+    if (qId === 'team') {
+      if (value === 'multi') return 'location';
+      // If they already told us lead gen is their goal, we don't need to ask again
+      if (answers.goal === 'leads') return 'RESULT';
+      return 'lead_gen_interest';
+    }
+    if (qId === 'lead_gen_interest') return 'RESULT';
+    if (qId === 'location')     return 'RESULT';
+    return 'RESULT';
+  }
+
+  // Determine final product recommendation
+  function getResult(answers) {
+    // Explicit CRM push/pull → commercial always
+    if (answers.crm_pushpull === 'yes') return 'commercial';
+
+    // Regional teams → commercial
+    if (answers.location === 'regional') return 'commercial';
+
+    // Multi-team, same location → lead gen
+    if (answers.location === 'single') return 'leadgen';
+
+    // Already said lead gen is their goal + small/mid team → lead gen directly
+    if (answers.goal === 'leads' && (answers.team === 'small' || answers.team === 'mid')) return 'leadgen';
+
+    // Small or mid team who answered the lead gen interest question
+    if (answers.lead_gen_interest === 'yes') return 'leadgen';
+    if (answers.lead_gen_interest === 'no')  return 'essentials';
+
+    // Multi-team fallback
+    if (answers.team === 'multi') return 'leadgen';
+
+    return 'essentials';
+  }
+
+  // ── Result copy ───────────────────────────────────────────────────────────
+  var results = {
+    essentials: {
+      icon: '⚡',
+      badgeText: 'Your Match — Foundation Plan',
+      badgeClass: 'badge-foundation',
+      name: 'Aiden Essentials',
+      desc: "You need AI live fast, not in six weeks. Essentials gets you a fully trained chatbot in under 60 seconds — no dev, no setup calls, no waiting.",
+      bullets: [
+        'Live Search ingests your website instantly',
+        'Free live onboarding included with every plan',
+        'AI Analyst ranks leads from your existing transcripts',
+        'Unlimited chats — no caps, no surprise fees'
+      ],
+      btnClass: 'pf-goto-gold',
+      btnText: 'Explore Aiden Essentials →',
+      btnTarget: 'essentials'
+    },
+    leadgen: {
+      icon: '🎯',
+      badgeText: 'Your Match — Lead-Gen Platform',
+      badgeClass: 'badge-leadgen',
+      name: 'Aiden for Lead-Gen',
+      desc: "You're using chat as a sales channel and you need it to actually produce pipeline. Aiden for Lead-Gen qualifies, routes, and hands off — automatically.",
+      bullets: [
+        'Smart routing buttons self-select the right path',
+        'Lead capture and qualification built in',
+        'Hot handoff to live reps with full context',
+        'Multi-team routing for complex workflows'
+      ],
+      btnClass: 'pf-goto-pink',
+      btnText: 'Explore Aiden for Lead-Gen →',
+      btnTarget: 'advanced'
+    },
+    commercial: {
+      icon: '🏆',
+      badgeText: 'Your Match — Commercial AI',
+      badgeClass: 'badge-commercial',
+      name: 'Aiden for Commercial Sales',
+      desc: "You have a CRM, a real sales team, and leads that need to hit the right rep. Aiden Commercial automates intake, enrichment, routing, and logging end-to-end.",
+      bullets: [
+        'Pre-chat CRM lookup before every conversation',
+        'Geo and territorial routing built in',
+        'Reps arrive with full context — no prep needed',
+        'CRM updates automatically when the chat ends'
+      ],
+      btnClass: 'pf-goto-teal',
+      btnText: 'Explore Aiden for Commercial Sales →',
+      btnTarget: 'commercial'
+    }
+  };
+
+  // ── State ─────────────────────────────────────────────────────────────────
+  var state = { currentQ: 'goal', answers: {}, history: [] };
+
+  // ── Render ────────────────────────────────────────────────────────────────
+  function stepLabel() {
+    var order = ['goal','crm','crm_pushpull','team','location'];
+    var total = ['goal','crm'];
+    // Build the actual path given current answers to get realistic total
+    var pos = order.indexOf(state.currentQ) + 1;
+    // Estimate max steps: if no CRM we skip crm_pushpull; if team !== multi we skip location
+    var max = 5;
+    if (state.answers.crm === 'no')           max--;
+    if (state.answers.crm_pushpull === 'yes') max = pos; // ends next
+    if (state.answers.team && state.answers.team !== 'multi') max--;
+    return 'Step ' + pos + ' of ' + Math.max(pos, max);
+  }
+
+  function render() {
+    var q    = allQuestions[state.currentQ];
+    var wrap = document.getElementById('pf-step-wrap');
+    var hist = document.getElementById('pf-history');
+    var fill = document.getElementById('pf-progress-fill');
+    var quiz = document.getElementById('pf-quiz-area');
+    var res  = document.getElementById('pf-result');
+
+    quiz.style.display = '';
+    res.style.display  = 'none';
+    fill.style.width   = q.progress + '%';
+
+    hist.innerHTML = state.history.map(function(h) {
+      return '<div class="pf-hist-item"><div class="pf-hist-check"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,8 8.5,2"/></svg></div><span>' + h + '</span></div>';
+    }).join('');
+
+    wrap.innerHTML = [
+      '<div class="pf-step-label">' + stepLabel() + '</div>',
+      '<div class="pf-question">' + q.text + '</div>',
+      '<div class="pf-options">',
+      q.options.map(function(o, i) {
+        return '<button class="pf-opt" onclick="pfSelect(\'' + q.id + '\',' + i + ')">' +
+          '<span class="pf-opt-icon">' + o.icon + '</span>' +
+          '<span class="pf-opt-text">' +
+            '<span class="pf-opt-label">' + o.label + '</span>' +
+            '<span class="pf-opt-sub">' + o.sub + '</span>' +
+          '</span>' +
+        '</button>';
+      }).join(''),
+      '</div>'
+    ].join('');
+
+    requestAnimationFrame(function() {
+      wrap.classList.remove('enter');
+      wrap.classList.add('slide-active');
+    });
+  }
+
+  window.pfSelect = function(qId, optIndex) {
+    if (qId !== state.currentQ) return;
+    var q   = allQuestions[qId];
+    var opt = q.options[optIndex];
+
+    document.querySelectorAll('.pf-opt').forEach(function(b, i) {
+      if (i === optIndex) b.classList.add('selected');
+      else { b.style.opacity = '0.4'; b.style.pointerEvents = 'none'; }
+    });
+
+    state.answers[qId] = opt.value;
+    var shortQ = q.text.length > 55 ? q.text.slice(0, 52) + '…' : q.text;
+    state.history.push('<strong>' + shortQ + '</strong> — ' + opt.label);
+
+    setTimeout(function() {
+      var next = nextQ(qId, opt.value, state.answers);
+      if (next === 'RESULT') {
+        showResult();
+      } else {
+        state.currentQ = next;
+        var wrap = document.getElementById('pf-step-wrap');
+        wrap.classList.add('exit-left');
+        setTimeout(function() {
+          wrap.classList.remove('exit-left');
+          wrap.classList.add('enter');
+          render();
+        }, 220);
+      }
+    }, 300);
+  };
+
+  // ── Quiz result animation state ────────────────────────────────────────────
+  var quizAnimState = { token: 0 };
+
+  function qDelay(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
+
+  function startQuizAnim(tier) {
+    quizAnimState.token++;
+    var myTok = quizAnimState.token;
+    if (tier === 'essentials') runQuizEssentials(myTok);
+    else if (tier === 'leadgen') runQuizLeadGen(myTok);
+    else if (tier === 'commercial') runQuizCommercial(myTok);
+  }
+
+  // Essentials: Live Search demo
+  function runQuizEssentials(myTok) {
+    var inner = document.getElementById('pf-anim-inner');
+    if (!inner) return;
+
+    inner.innerHTML = [
+      '<div class="ls-demo">',
+        '<div class="ls-url-bar">',
+          '<div class="ls-url-dot"></div>',
+          '<span class="ls-url-text" id="qls-url"></span>',
+          '<span class="ls-url-badge" id="qls-badge">✓ Trained</span>',
+        '</div>',
+        '<div class="ls-features-list">',
+          [
+            { icon: '🌐', title: 'Website pages ingested',   sub: '47 pages scanned and indexed' },
+            { icon: '📄', title: 'Knowledge base loaded',    sub: 'FAQs, pricing, and product docs ready' },
+            { icon: '🤖', title: 'Bot is live',              sub: 'Ready to answer questions — test it now' },
+            { icon: '🔄', title: 'Auto-refresh enabled',     sub: 'Aiden stays current as your site changes' }
+          ].map(function(item, i) {
+            return '<div class="ls-feat-item" id="qls-feat-' + i + '">' +
+              '<div class="ls-feat-icon-wrap">' + item.icon + '</div>' +
+              '<div class="ls-feat-body"><strong>' + item.title + '</strong><span>' + item.sub + '</span></div>' +
+            '</div>';
+          }).join(''),
+        '</div>',
+      '</div>'
+    ].join('');
+
+    var urlEl = document.getElementById('qls-url');
+    var urlText = 'yourcompany.com';
+    var i = 0;
+    function typeUrl() {
+      if (quizAnimState.token !== myTok) return;
+      if (i <= urlText.length) {
+        urlEl.textContent = urlText.slice(0, i) + (i < urlText.length ? '|' : '');
+        i++;
+        setTimeout(typeUrl, 68);
+      } else {
+        setTimeout(function() {
+          if (quizAnimState.token !== myTok) return;
+          var badge = document.getElementById('qls-badge');
+          if (badge) badge.style.opacity = '1';
+          [0,1,2,3].forEach(function(idx) {
+            setTimeout(function() {
+              if (quizAnimState.token !== myTok) return;
+              var el = document.getElementById('qls-feat-' + idx);
+              if (el) { el.classList.add('show'); setTimeout(function() { if(el) el.classList.add('confirmed'); }, 380); }
+            }, idx * 480);
+          });
+        }, 400);
+      }
+    }
+    setTimeout(typeUrl, 300);
+  }
+
+  // Lead-Gen: Routing chat (single pass, no loop)
+  async function runQuizLeadGen(myTok) {
+    var chat = document.getElementById('pf-anim-inner');
+    if (!chat) return;
+    chat.innerHTML = '<div class="routing-demo" id="qrd-chat"></div>';
+
+    function ok() { return quizAnimState.token === myTok && document.getElementById('qrd-chat'); }
+    function getChat() { return document.getElementById('qrd-chat'); }
+
+    function rdApp(html) {
+      var c = getChat(); if (!c) return;
+      var d = document.createElement('div'); d.innerHTML = html;
+      while (d.firstChild) c.appendChild(d.firstChild);
+      c.scrollTop = c.scrollHeight;
+    }
+
+    function rdTyp() {
+      var c = getChat(); if (!c) return null;
+      var r = document.createElement('div');
+      r.className = 'rd-bubble-row';
+      r.innerHTML = '<div class="rd-avatar bot">🤖</div><div class="rd-typing"><div class="rd-typing-dot"></div><div class="rd-typing-dot"></div><div class="rd-typing-dot"></div></div>';
+      c.appendChild(r); c.scrollTop = c.scrollHeight; return r;
+    }
+
+    await qDelay(400);   if (!ok()) return;
+    var t1 = rdTyp();
+    await qDelay(1200);  if (!ok()) return;
+    if (t1 && t1.parentNode) t1.parentNode.removeChild(t1);
+
+    rdApp('<div class="rd-bubble-row"><div class="rd-avatar bot">🤖</div><div class="rd-bubble">Hi! How can I help you today? Choose one to get started:</div></div>');
+    await qDelay(500);   if (!ok()) return;
+
+    rdApp('<div class="rd-route-btns"><span class="rd-route-btn sales" id="qrd-sales">Talk to Sales</span><span class="rd-route-btn support">Get Support</span><span class="rd-route-btn info">Product Info</span></div>');
+    await qDelay(1100);  if (!ok()) return;
+
+    var sb = document.getElementById('qrd-sales');
+    if (sb) sb.classList.add('selected');
+    document.querySelectorAll('#qrd-chat .rd-route-btn:not(.selected)').forEach(function(b) { b.style.opacity='0.3'; });
+
+    await qDelay(500);   if (!ok()) return;
+    rdApp('<div class="rd-bubble-row user-row"><div class="rd-bubble user-bubble">Talk to Sales</div><div class="rd-avatar user">ME</div></div>');
+
+    await qDelay(700);   if (!ok()) return;
+    var t2 = rdTyp();
+    await qDelay(1300);  if (!ok()) return;
+    if (t2 && t2.parentNode) t2.parentNode.removeChild(t2);
+
+    rdApp('<div class="rd-bubble-row"><div class="rd-avatar bot">🤖</div><div class="rd-bubble">Quick question — where are you located so I can connect you with the right rep?</div></div>');
+    await qDelay(700);   if (!ok()) return;
+    rdApp('<div class="rd-bubble-row user-row"><div class="rd-bubble user-bubble">Northeast US</div><div class="rd-avatar user">ME</div></div>');
+
+    await qDelay(700);   if (!ok()) return;
+    var t3 = rdTyp();
+    await qDelay(900);   if (!ok()) return;
+    if (t3 && t3.parentNode) t3.parentNode.removeChild(t3);
+
+    rdApp('<div class="rd-result"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" style="stroke:var(--olark-gold);stroke-width:2;flex-shrink:0;"><circle cx="6.5" cy="6.5" r="5.5"/><polyline points="4,6.5 6,8.5 10,4.5"/></svg> Routing to Northeast Sales · Jamie is joining shortly</div>');
+  }
+
+  // Commercial: Outcome flow
+  function runQuizCommercial(myTok) {
+    var inner = document.getElementById('pf-anim-inner');
+    if (!inner) return;
+
+    var steps = [
+      { dot: 'gold', icon: '📧', title: 'Prospect clicks an email',     body: 'Aiden recognizes the campaign and opens with a personalized greeting.' },
+      { dot: 'pink', icon: '🤖', title: 'Bot qualifies intent',          body: 'Targeted questions determine buying signal, support need, or research.' },
+      { dot: 'pink', icon: '🔍', title: 'CRM record pulled',             body: 'Contact history, deal stage, and past interactions retrieved instantly.' },
+      { dot: 'pink', icon: '🔀', title: 'Routed to right rep',           body: 'Territory and department logic connect the prospect automatically.' },
+      { dot: 'teal', icon: '📊', title: 'CRM updates itself',            body: 'The record is complete before the rep even opens their dashboard.' }
+    ];
+
+    inner.innerHTML = [
+      '<div class="flow-demo">',
+        steps.map(function(s, i) {
+          return '<div class="fd-step" id="qfd-step-' + i + '">' +
+            '<div class="fd-dot ' + s.dot + '" id="qfd-dot-' + i + '">' + s.icon + '</div>' +
+            '<div class="fd-body"><h4>' + s.title + '</h4><p>' + s.body + '</p></div>' +
+          '</div>';
+        }).join(''),
+        '<div class="fd-crm-badge" id="qfd-badge"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="stroke:#5DD3B3;stroke-width:2;flex-shrink:0;"><circle cx="7" cy="7" r="6"/><polyline points="4.5,7 6.5,9 10,5"/></svg> Zero manual entry. Zero gaps. Pipeline updated.</div>',
+      '</div>'
+    ].join('');
+
+    steps.forEach(function(s, i) {
+      setTimeout(function() {
+        if (quizAnimState.token !== myTok) return;
+        var step = document.getElementById('qfd-step-' + i);
+        var dot  = document.getElementById('qfd-dot-' + i);
+        if (step) step.classList.add('show');
+        if (dot)  { dot.classList.add('pulsing'); if (s.dot !== 'gold') dot.classList.add(s.dot); }
+        setTimeout(function() { if (dot) dot.classList.remove('pulsing'); }, 900);
+        if (i === steps.length - 1) {
+          setTimeout(function() {
+            if (quizAnimState.token !== myTok) return;
+            var badge = document.getElementById('qfd-badge');
+            if (badge) badge.classList.add('show');
+          }, 600);
+        }
+      }, i * 520 + 200);
+    });
+  }
+
+  // ── Show Result ──────────────────────────────────────────────────────────
+  function showResult() {
+    var fill = document.getElementById('pf-progress-fill');
+    var quiz = document.getElementById('pf-quiz-area');
+    var res  = document.getElementById('pf-result');
+    var hist = document.getElementById('pf-history');
+
+    fill.style.width = '100%';
+
+    var key = getResult(state.answers);
+    var d   = results[key];
+
+    hist.innerHTML = state.history.map(function(h) {
+      return '<div class="pf-hist-item"><div class="pf-hist-check"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,8 8.5,2"/></svg></div><span>' + h + '</span></div>';
+    }).join('');
+
+    quiz.style.display = 'none';
+    res.style.display  = 'block';
+    res.style.animation = 'fadeUp 0.45s ease both';
+
+    var animLabels = {
+      essentials: 'Live Search — Watch It Train',
+      leadgen:    'Live Routing — Watch a Conversation',
+      commercial: 'Outcome Flow — One Lead, Start to Close'
+    };
+
+    var CAL_SVG = '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="stroke:currentColor;stroke-width:2;flex-shrink:0;"><rect x="1.5" y="2.5" width="11" height="10" rx="1.5"/><path d="M4 1v2M10 1v2M1.5 6h11"/></svg>';
+    var ARR_SVG = '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="stroke:currentColor;stroke-width:2.2;"><path d="M2 7h10M8 3l4 4-4 4"/></svg>';
+
+    res.innerHTML = [
+      // ── Centered header: icon + badge + name ──
+      '<div class="pf-result-header">',
+        '<span class="pf-result-icon">' + d.icon + '</span>',
+        '<div class="card-tier-badge ' + d.badgeClass + '">' + d.badgeText + '</div>',
+        '<div class="pf-result-name">' + d.name + '</div>',
+      '</div>',
+      // ── Two-column body: copy left, animation right ──
+      '<div class="pf-result-grid">',
+        '<div>',
+          '<p class="pf-result-desc">' + d.desc + '</p>',
+          '<div class="pf-result-bullets">',
+            d.bullets.map(function(b) { return '<div class="pf-result-bullet">' + b + '</div>'; }).join(''),
+          '</div>',
+          '<div class="pf-result-actions">',
+            '<a href="aiden-pages.html" class="pf-goto-btn ' + d.btnClass + '" onclick="handleCardClick(event,\'' + d.btnTarget + '\')">' + d.btnText + ' ' + ARR_SVG + '</a>',
+            '<a href="#" onclick="openMeetingModal();return false;" class="pf-goto-meeting">' + CAL_SVG + 'Schedule a Scoping Call</a>',
+          '</div>',
+          '<button class="pf-restart" onclick="pfRestart()">← Start over</button>',
+        '</div>',
+        '<div class="pf-result-anim-panel">',
+          '<div class="pf-result-anim-label">' + animLabels[key] + '</div>',
+          '<div id="pf-anim-inner"></div>',
+        '</div>',
+      '</div>'
+    ].join('');
+
+    setTimeout(function() { startQuizAnim(key); }, 150);
+  }
+
+  window.pfRestart = function() {
+    quizAnimState.token++;
+    state = { currentQ: 'goal', answers: {}, history: [] };
+    var res  = document.getElementById('pf-result');
+    var quiz = document.getElementById('pf-quiz-area');
+    var fill = document.getElementById('pf-progress-fill');
+    var hist = document.getElementById('pf-history');
+    res.style.display  = 'none';
+    quiz.style.display = '';
+    hist.innerHTML     = '';
+    fill.style.width   = '0%';
+    var wrap = document.getElementById('pf-step-wrap');
+    wrap.className = 'pf-step-wrap enter';
+    render();
+  };
+
+  // Init
+  render();
+
+})();
+
+// ════════════════════════════════════
+// CARD CLICK HANDLER
+// ════════════════════════════════════
+// When linking to the multi-page file, we append a hash so the
+// toggle bar on that page can read it and activate the right tab.
+window.handleCardClick = function(e, target) {
+  // Map internal keys to the toggle IDs used in the aiden-pages file
+  var tabMap = { essentials: 'essentials', leadgen: 'advanced', advanced: 'advanced', commercial: 'commercial' };
+  var tab    = tabMap[target] || 'essentials';
+  var link   = e.currentTarget;
+  if (link && link.href) {
+    e.preventDefault();
+    // Navigate to the page file with a hash hint
+    window.location.href = link.href.split('#')[0] + '?tab=' + tab;
+  }
+};
+
+</script>
+<!-- ══ PRODUCT PREVIEW MODAL ══ -->
+<div class="preview-overlay" id="preview-overlay" onclick="overlayClickClose(event)">
+  <div class="preview-shell" id="preview-shell">
+    <div class="preview-card">
+      <div class="preview-close-row">
+        <button class="preview-close-btn" onclick="closePreviewModal()">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style="stroke:var(--olark-gold);stroke-width:2.2;stroke-linecap:round;"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg>
+          Close
+        </button>
+      </div>
+      <div class="preview-grid">
+        <div class="preview-copy" id="preview-copy"></div>
+        <div class="preview-anim" id="preview-anim"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════
+// CARD HOVER CHARGE ENGINE
+// ════════════════════════════════════
+(function() {
+  var CHARGE_MS = 1000;
+  var timers    = {};
+  var tierMap   = { 'card-essentials': 'essentials', 'card-leadgen': 'leadgen', 'card-commercial': 'commercial' };
+
+  function getTier(card) {
+    for (var cls in tierMap) {
+      if (card.classList.contains(cls)) return tierMap[cls];
+    }
+    return null;
+  }
+
+  function resetBar(card) {
+    var bar = card.querySelector('.card-charge-bar');
+    if (!bar) return;
+    // Kill transition so width snaps back instantly
+    bar.style.transition = 'none';
+    bar.style.width = '0%';
+    // Re-enable transition on next frame so the next charge works
+    requestAnimationFrame(function() { bar.style.transition = ''; });
+  }
+
+  function resetIcon(card) {
+    var icon = card.querySelector('.card-icon-btn');
+    if (icon) { icon.style.transform = ''; icon.style.transition = ''; }
+  }
+
+  document.querySelectorAll('.product-card[role="button"]').forEach(function(card) {
+    var tier = getTier(card);
+    if (!tier) return;
+
+    card.addEventListener('mouseenter', function() {
+      // Don't charge if modal already open
+      if (document.getElementById('preview-overlay').classList.contains('open')) return;
+
+      card.classList.add('card-charging');
+
+      timers[tier] = setTimeout(function() {
+        card.classList.remove('card-charging');
+        resetBar(card);
+        resetIcon(card);
+        openPreviewModal(null, tier);
+      }, CHARGE_MS);
+    });
+
+    card.addEventListener('mouseleave', function() {
+      clearTimeout(timers[tier]);
+      card.classList.remove('card-charging');
+      resetBar(card);
+      resetIcon(card);
+    });
+
+    // Keyboard: Enter or Space still opens instantly
+    card.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        clearTimeout(timers[tier]);
+        card.classList.remove('card-charging');
+        resetBar(card);
+        openPreviewModal(null, tier);
+      }
+    });
+  });
+})();
+
+// ════════════════════════════════════
+// PRODUCT PREVIEW MODAL ENGINE
+// ════════════════════════════════════
+(function() {
+
+  var CHECK_SVG = '<svg viewBox="0 0 10 10"><polyline points="1.5,5 4,8 8.5,2"/></svg>';
+  var ARROW_SVG = '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="stroke:currentColor;stroke-width:2.2;"><path d="M2 7h10M8 3l4 4-4 4"/></svg>';
+
+  var modalAnims = {}; // cancellation tokens
+
+  var configs = {
+    essentials: {
+      halo:       'halo-gold',
+      badgeClass: 'badge-foundation',
+      badgeText:  'Foundation Plan',
+      headline:   'Live in 60 Seconds. No Dev Required.',
+      sub:        'Aiden Essentials is the fastest path from zero to a working AI. <strong>Paste your website URL and your bot is trained, live, and ready to test immediately.</strong> Most platforms make you wait an hour. Essentials is different.',
+      checkClass: 'check-gold',
+      features: [
+        { label: 'Live Search — Website Ingest',    detail: 'Your whole site, ingested and searchable instantly' },
+        { label: 'AI Analyst — Lead Intelligence',  detail: 'Surface high-intent visitors from your existing transcripts' },
+        { label: 'Unlimited Chats, No Caps',        detail: 'Use Aiden as much as your business demands' },
+        { label: 'Free Live Onboarding Included',   detail: 'The Olark team walks you through setup, live' }
+      ],
+      ctaClass: 'cta-gold',
+      ctaText:  'Explore Aiden Essentials',
+      ctaTarget: 'essentials',
+      animLabel: 'Live Search — Watch It Train',
+      animFn:   'animEssentials'
+    },
+    leadgen: {
+      halo:       'halo-pink',
+      badgeClass: 'badge-leadgen',
+      badgeText:  'Lead-Gen Platform',
+      headline:   'Route Every Lead to the Right Rep.',
+      sub:        'Aiden for Lead-Gen turns your chat window into a <strong>self-qualifying sales funnel.</strong> Routing buttons, prospect capture, and hot handoff — all automated, before a human says a word.',
+      checkClass: 'check-pink',
+      features: [
+        { label: 'Smart Routing Buttons',            detail: 'Visitors self-select: Sales, Support, or Product Info' },
+        { label: 'Lead Capture & Qualification',     detail: 'Aiden collects intent data before your rep joins' },
+        { label: 'Hot Handoff to Live Reps',         detail: 'Qualified prospects passed with full context attached' },
+        { label: 'Multi-Team Departmental Routing',  detail: 'Complex org? Route by team, product line, or region' }
+      ],
+      ctaClass: 'cta-pink',
+      ctaText:  'Explore Aiden for Lead-Gen',
+      ctaTarget: 'leadgen',
+      animLabel: 'Live Routing — Watch a Conversation',
+      animFn:   'animLeadGen'
+    },
+    commercial: {
+      halo:       'halo-teal',
+      badgeClass: 'badge-commercial',
+      badgeText:  'Commercial AI',
+      headline:   'Your Reps Arrive Ready. Every Time.',
+      sub:        'Aiden for Commercial Sales automates the <strong>entire intake and handoff workflow</strong> — from entry-point recognition to CRM update — so your reps walk into conversations that are already warmed up.',
+      checkClass: 'check-teal',
+      features: [
+        { label: 'Pre-Chat CRM Lookup',              detail: 'Full contact history before the rep types a word' },
+        { label: 'Geo & Territorial Routing',        detail: 'Route by region, account domain, or deal stage' },
+        { label: 'Full-Context Rep Handoff',         detail: 'Entry source, intent, history — all passed automatically' },
+        { label: 'Automatic Post-Chat CRM Update',   detail: 'The record updates itself when the conversation ends' }
+      ],
+      ctaClass: 'cta-teal',
+      ctaText:  'Explore Aiden for Commercial Sales',
+      ctaTarget: 'commercial',
+      animLabel: 'Outcome Flow — One Lead, Start to Close',
+      animFn:   'animCommercial'
+    }
+  };
+
+  window.openPreviewModal = function(e, tier) {
+    if (e) { e.preventDefault(); e.stopPropagation(); }
+    var cfg     = configs[tier];
+    var overlay = document.getElementById('preview-overlay');
+    var shell   = document.getElementById('preview-shell');
+    var copy    = document.getElementById('preview-copy');
+    var anim    = document.getElementById('preview-anim');
+
+    // Stop any running animation
+    if (modalAnims.token !== undefined) modalAnims.token++;
+    var myToken = (modalAnims.token = (modalAnims.token || 0) + 1);
+
+    // Halo
+    shell.className = 'preview-shell ' + cfg.halo;
+
+    // Copy column
+    copy.innerHTML = [
+      '<div>',
+        '<div class="preview-tier-badge ' + cfg.badgeClass + '">' + cfg.badgeText + '</div>',
+        '<h2>' + cfg.headline + '</h2>',
+        '<p class="preview-sub">' + cfg.sub + '</p>',
+        '<div class="preview-feature-list">',
+          cfg.features.map(function(f) {
+            return '<div class="preview-feat">' +
+              '<div class="preview-feat-check ' + cfg.checkClass + '">' + CHECK_SVG + '</div>' +
+              '<div><strong style="display:block;font-size:0.87rem;color:var(--olark-white);font-weight:600;margin-bottom:1px;">' + f.label + '</strong>' +
+              '<span style="font-size:0.79rem;color:var(--olark-muted);">' + f.detail + '</span></div>' +
+              '</div>';
+          }).join(''),
+        '</div>',
+      '</div>',
+      '<a href="aiden-pages.html" class="preview-cta-btn ' + cfg.ctaClass + '" onclick="handleCardClick(event,\'' + cfg.ctaTarget + '\');closePreviewModal();">' +
+        cfg.ctaText + ' ' + ARROW_SVG +
+      '</a>'
+    ].join('');
+
+    // Anim column
+    anim.innerHTML = '<div class="preview-anim-label">' + cfg.animLabel + '</div><div id="preview-anim-inner"></div>';
+
+    // Open
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+
+    // Fire animation after mount
+    setTimeout(function() {
+      if (modalAnims.token !== myToken) return;
+      window[cfg.animFn](myToken);
+    }, 120);
+  };
+
+  window.closePreviewModal = function() {
+    var overlay = document.getElementById('preview-overlay');
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+    modalAnims.token = (modalAnims.token || 0) + 1; // kill anim
+  };
+
+  window.overlayClickClose = function(e) {
+    if (e.target === document.getElementById('preview-overlay')) closePreviewModal();
+  };
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closePreviewModal();
+  });
+
+  // ── ESSENTIALS ANIMATION: Live Search ──
+  window.animEssentials = function(token) {
+    var inner = document.getElementById('preview-anim-inner');
+    if (!inner) return;
+
+    inner.innerHTML = [
+      '<div class="ls-demo">',
+        '<div class="ls-url-bar">',
+          '<div class="ls-url-dot"></div>',
+          '<span class="ls-url-text" id="ls-url-typed"></span>',
+          '<span class="ls-url-badge" id="ls-badge">✓ Trained</span>',
+        '</div>',
+        '<div class="ls-features-list" id="ls-list">',
+          [
+            { icon: '🌐', title: 'Website pages ingested', sub: '47 pages scanned and indexed' },
+            { icon: '📄', title: 'Knowledge base loaded',  sub: 'FAQs, pricing, and product docs ready' },
+            { icon: '🤖', title: 'Bot is live',            sub: 'Ready to answer questions — test it now' },
+            { icon: '🔄', title: 'Auto-refresh enabled',   sub: 'Aiden keeps itself current as you update your site' }
+          ].map(function(item, i) {
+            return '<div class="ls-feat-item" id="ls-feat-' + i + '">' +
+              '<div class="ls-feat-icon-wrap">' + item.icon + '</div>' +
+              '<div class="ls-feat-body"><strong>' + item.title + '</strong><span>' + item.sub + '</span></div>' +
+              '</div>';
+          }).join(''),
+        '</div>',
+      '</div>'
+    ].join('');
+
+    // Type the URL
+    var urlEl   = document.getElementById('ls-url-typed');
+    var urlText = 'yourcompany.com';
+    var i = 0;
+    function typeUrl() {
+      if (modalAnims.token !== token) return;
+      if (i <= urlText.length) {
+        urlEl.textContent = urlText.slice(0, i) + (i < urlText.length ? '|' : '');
+        i++;
+        setTimeout(typeUrl, 68);
+      } else {
+        // Show trained badge
+        setTimeout(function() {
+          if (modalAnims.token !== token) return;
+          document.getElementById('ls-badge').style.opacity = '1';
+          // Reveal features
+          [0,1,2,3].forEach(function(idx) {
+            setTimeout(function() {
+              if (modalAnims.token !== token) return;
+              var el = document.getElementById('ls-feat-' + idx);
+              if (el) {
+                el.classList.add('show');
+                setTimeout(function() { if(el) el.classList.add('confirmed'); }, 380);
+              }
+            }, idx * 480);
+          });
+        }, 400);
+      }
+    }
+    setTimeout(typeUrl, 300);
+  };
+
+  // ── LEAD-GEN ANIMATION: Routing Chat ──
+  window.animLeadGen = function(token) {
+    var inner = document.getElementById('preview-anim-inner');
+    if (!inner) return;
+    inner.innerHTML = '<div class="routing-demo" id="rd-chat"></div>';
+    runRoutingChat(token);
+  };
+
+  function delay(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
+
+  function rdAppend(html) {
+    var chat = document.getElementById('rd-chat');
+    if (!chat) return;
+    var div = document.createElement('div');
+    div.innerHTML = html;
+    while (div.firstChild) chat.appendChild(div.firstChild);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  function rdTyping() {
+    var chat = document.getElementById('rd-chat');
+    if (!chat) return null;
+    var row = document.createElement('div');
+    row.className = 'rd-bubble-row';
+    row.innerHTML = '<div class="rd-avatar bot">🤖</div><div class="rd-typing"><div class="rd-typing-dot"></div><div class="rd-typing-dot"></div><div class="rd-typing-dot"></div></div>';
+    chat.appendChild(row);
+    chat.scrollTop = chat.scrollHeight;
+    return row;
+  }
+
+  async function runRoutingChat(token) {
+    function ok() { return modalAnims.token === token && document.getElementById('rd-chat'); }
+
+    await delay(400);   if (!ok()) return;
+    var t1 = rdTyping();
+    await delay(1200);  if (!ok()) return;
+    if (t1 && t1.parentNode) t1.parentNode.removeChild(t1);
+
+    rdAppend('<div class="rd-bubble-row"><div class="rd-avatar bot">🤖</div><div class="rd-bubble">Hi! How can I help you today? Choose one to get started:</div></div>');
+    await delay(500);   if (!ok()) return;
+
+    rdAppend('<div class="rd-route-btns"><span class="rd-route-btn sales" id="rd-btn-sales">Talk to Sales</span><span class="rd-route-btn support">Get Support</span><span class="rd-route-btn info">Product Info</span></div>');
+    await delay(1100);  if (!ok()) return;
+
+    var salesBtn = document.getElementById('rd-btn-sales');
+    if (salesBtn) salesBtn.classList.add('selected');
+    document.querySelectorAll('.rd-route-btn:not(.selected)').forEach(function(b) { b.style.opacity='0.3'; });
+
+    await delay(500);   if (!ok()) return;
+    rdAppend('<div class="rd-bubble-row user-row"><div class="rd-avatar user">ME</div><div class="rd-bubble user-bubble">Talk to Sales</div></div>');
+
+    await delay(700);   if (!ok()) return;
+    var t2 = rdTyping();
+    await delay(1300);  if (!ok()) return;
+    if (t2 && t2.parentNode) t2.parentNode.removeChild(t2);
+
+    rdAppend('<div class="rd-bubble-row"><div class="rd-avatar bot">🤖</div><div class="rd-bubble">Quick question — where are you located so I can connect you with the right rep?</div></div>');
+    await delay(700);   if (!ok()) return;
+    rdAppend('<div class="rd-bubble-row user-row"><div class="rd-avatar user">ME</div><div class="rd-bubble user-bubble">Northeast US</div></div>');
+
+    await delay(700);   if (!ok()) return;
+    var t3 = rdTyping();
+    await delay(900);   if (!ok()) return;
+    if (t3 && t3.parentNode) t3.parentNode.removeChild(t3);
+
+    rdAppend('<div class="rd-result"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" style="stroke:var(--olark-gold);stroke-width:2;flex-shrink:0;"><circle cx="6.5" cy="6.5" r="5.5"/><polyline points="4,6.5 6,8.5 10,4.5"/></svg> Routing to Northeast Sales · Jamie is joining shortly</div>');
+
+    // Loop after pause
+    await delay(5500);  if (!ok()) return;
+    var chat = document.getElementById('rd-chat');
+    if (chat) chat.innerHTML = '';
+    runRoutingChat(token);
+  }
+
+  // ── COMMERCIAL ANIMATION: Outcome Flow ──
+  window.animCommercial = function(token) {
+    var inner = document.getElementById('preview-anim-inner');
+    if (!inner) return;
+
+    var steps = [
+      { dot: 'gold', icon: '📧', title: 'Prospect clicks an email', body: 'Aiden recognizes the campaign and opens with a personalized greeting.' },
+      { dot: 'pink', icon: '🤖', title: 'Bot qualifies intent',     body: 'Targeted questions determine buying signal, support need, or research.' },
+      { dot: 'pink', icon: '🔍', title: 'CRM record pulled',        body: 'Contact history, deal stage, and past interactions retrieved instantly.' },
+      { dot: 'pink', icon: '🔀', title: 'Routed to right rep',      body: 'Territory and department logic connect the prospect automatically.' },
+      { dot: 'teal', icon: '📊', title: 'CRM updates itself',       body: 'The record is complete before the rep even opens their dashboard.' }
+    ];
+
+    inner.innerHTML = [
+      '<div class="flow-demo">',
+        steps.map(function(s, i) {
+          return '<div class="fd-step" id="fd-step-' + i + '">' +
+            '<div class="fd-dot ' + s.dot + '" id="fd-dot-' + i + '">' + s.icon + '</div>' +
+            '<div class="fd-body"><h4>' + s.title + '</h4><p>' + s.body + '</p></div>' +
+            '</div>';
+        }).join(''),
+        '<div class="fd-crm-badge" id="fd-badge"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="stroke:#5DD3B3;stroke-width:2;flex-shrink:0;"><circle cx="7" cy="7" r="6"/><polyline points="4.5,7 6.5,9 10,5"/></svg>Zero manual entry. Zero gaps. Pipeline updated.</div>',
+      '</div>'
+    ].join('');
+
+    steps.forEach(function(s, i) {
+      setTimeout(function() {
+        if (modalAnims.token !== token) return;
+        var step = document.getElementById('fd-step-' + i);
+        var dot  = document.getElementById('fd-dot-' + i);
+        if (step) step.classList.add('show');
+        if (dot)  { dot.classList.add('pulsing'); if (s.dot !== 'gold') dot.classList.add(s.dot); }
+        // Remove pulse after a beat
+        setTimeout(function() { if (dot) dot.classList.remove('pulsing'); }, 900);
+        // Final badge after all steps
+        if (i === steps.length - 1) {
+          setTimeout(function() {
+            if (modalAnims.token !== token) return;
+            var badge = document.getElementById('fd-badge');
+            if (badge) badge.classList.add('show');
+          }, 600);
+        }
+      }, i * 520 + 200);
+    });
+  };
+
+})();
+</script>
+</body>
+</html>
