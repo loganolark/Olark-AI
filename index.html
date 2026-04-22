@@ -2901,7 +2901,7 @@ window.addEventListener('scroll', function() {
             d.bullets.map(function(b) { return '<div class="pf-result-bullet">' + b + '</div>'; }).join(''),
           '</div>',
           '<div class="pf-result-actions">',
-            '<a href="aiden-product-info.html" class="pf-goto-btn ' + d.btnClass + '" onclick="handleCardClick(event,\'' + d.btnTarget + '\')">' + d.btnText + ' ' + ARR_SVG + '</a>',
+            '<a href="aiden-product-Info.html" class="pf-goto-btn ' + d.btnClass + '" onclick="handleCardClick(event,\'' + d.btnTarget + '\')">' + d.btnText + ' ' + ARR_SVG + '</a>',
             '<a href="#" onclick="openMeetingModal();return false;" class="pf-goto-meeting">' + CAL_SVG + 'Schedule a Scoping Call</a>',
           '</div>',
           '<button class="pf-restart" onclick="pfRestart()">← Start over</button>',
@@ -2946,7 +2946,7 @@ window.handleCardClick = function(e, target) {
   var tabMap = { essentials: 'essentials', leadgen: 'advanced', advanced: 'advanced', commercial: 'commercial' };
   var tab    = tabMap[target] || 'essentials';
   var link   = e && e.currentTarget;
-  var base   = (link && link.href) ? link.href.split('?')[0].split('#')[0] : 'aiden-product-info.html';
+  var base   = (link && link.href) ? link.href.split('?')[0].split('#')[0] : 'aiden-product-Info.html';
   if (e) e.preventDefault();
   window.location.href = base + '?tab=' + tab;
 };
@@ -3140,7 +3140,7 @@ window.handleCardClick = function(e, target) {
           }).join(''),
         '</div>',
       '</div>',
-      '<a href="aiden-product-info.html" class="preview-cta-btn ' + cfg.ctaClass + '" onclick="handleCardClick(event,\'' + cfg.ctaTarget + '\');closePreviewModal();">' +
+      '<a href="aiden-product-Info.html" class="preview-cta-btn ' + cfg.ctaClass + '" onclick="handleCardClick(event,\'' + cfg.ctaTarget + '\');closePreviewModal();">' +
         cfg.ctaText + ' ' + ARROW_SVG +
       '</a>'
     ].join('');
