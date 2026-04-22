@@ -4225,6 +4225,15 @@
   }
 
   initReveal();
+
+  // ── Tab routing from homepage links ──
+  (function() {
+    var params = new URLSearchParams(window.location.search);
+    var tab    = params.get('tab');
+    if (tab && ['essentials', 'advanced', 'commercial'].indexOf(tab) > -1) {
+      showPage(tab);
+    }
+  })();
 </script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
