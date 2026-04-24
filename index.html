@@ -284,6 +284,7 @@
     color: var(--olark-white);
     letter-spacing: -0.03em;
     line-height: 1;
+    margin-bottom: 8px;
   }
 
   .stat-num .stat-accent { color: var(--olark-gold); }
@@ -1810,6 +1811,135 @@
     .pf-result-grid { grid-template-columns: 1fr; }
     .pf-result-anim-panel { min-height: 260px; }
   }
+  /* ── Hero platform tagline ── */
+  .hero-platform-tag {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--olark-muted);
+    margin-bottom: 16px;
+    animation: fadeUp 0.6s ease 0.15s both;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ══ OLARK INTRO SECTION ══ */
+  .olark-intro-section {
+    position: relative;
+    z-index: 1;
+    background: var(--olark-navy);
+    border-top: 1px solid var(--olark-border);
+    border-bottom: 1px solid var(--olark-border);
+    padding: 100px 32px;
+    overflow: hidden;
+  }
+
+  .olark-intro-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 700px 400px at 0% 50%, rgba(59,57,168,0.2) 0%, transparent 60%),
+      radial-gradient(ellipse 500px 350px at 100% 50%, rgba(245,194,0,0.05) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .olark-intro-inner {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .olark-intro-body {
+    font-size: 1rem;
+    color: var(--olark-muted);
+    line-height: 1.8;
+    font-weight: 300;
+    margin-bottom: 20px;
+  }
+
+  .olark-intro-body:last-child { margin-bottom: 0; }
+  .olark-intro-body strong { color: var(--olark-text); font-weight: 500; }
+
+  .olark-intro-stat-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    background: var(--olark-card);
+    border: 1.5px solid var(--olark-border);
+    border-left: 4px solid var(--olark-gold);
+    border-radius: 16px;
+    padding: 40px 36px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.35);
+  }
+
+  .intro-stat { padding: 20px 0; }
+
+  .intro-stat-num {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 900;
+    font-size: 3.2rem;
+    color: var(--olark-white);
+    line-height: 1;
+    letter-spacing: -0.04em;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: flex-start;
+    gap: 2px;
+  }
+
+  .intro-stat-num span:first-child { color: var(--olark-gold); }
+  .intro-stat-plus {
+    font-size: 1.6rem;
+    color: var(--olark-gold);
+    margin-top: 6px;
+  }
+
+  .intro-stat-label {
+    font-size: 0.88rem;
+    color: var(--olark-muted);
+    line-height: 1.55;
+    font-weight: 300;
+    max-width: 260px;
+  }
+
+  .intro-divider {
+    height: 1px;
+    background: var(--olark-border);
+    margin: 4px 0;
+  }
+
+  .intro-olark-line {
+    padding: 20px 0 4px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .intro-olark-logo {
+    height: 18px;
+    filter: brightness(0) invert(1);
+    opacity: 0.75;
+    flex-shrink: 0;
+  }
+
+  .intro-olark-line span {
+    font-size: 0.82rem;
+    color: var(--olark-muted);
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  @media (max-width: 900px) {
+    .olark-intro-inner { grid-template-columns: 1fr; gap: 44px; }
+  }
+
   /* ══ MEETING MODAL ══ */
   .meeting-modal-overlay {
     position: fixed;
@@ -2073,12 +2203,13 @@
 <section class="hero">
   <div class="hero-ribbon">
     <span class="dot"></span>
-    Now Live — Aiden AI for Sales & Support
+    Now Live — Aiden AI for Sales &amp; Support
   </div>
+  <p class="hero-platform-tag">One AI platform, three ways to win.</p>
   <h1 class="hero-headline">
-    Your AI Rep Is<br>
-    <span class="word-gold">Already</span> Working.<br>
-    Is Yours?
+    Your Leads Are <span class="word-pink">Hot.</span><br>
+    Stop Leaving Them<br>
+    <span class="word-gold">in the Cold.</span>
   </h1>
   <p class="hero-sub">
     Aiden qualifies leads, routes conversations, answers questions, and updates your CRM — <strong>while your team focuses on closing deals.</strong>
@@ -2090,26 +2221,56 @@
   <div class="hero-stats">
     <div class="stat-pill">
       <div>
-        <div class="stat-num"><span class="stat-accent">60</span>s</div>
-        <div class="stat-label">to a live, trained chatbot</div>
+        <div class="stat-num"><span class="stat-accent">60</span> Secs</div>
+        <div class="stat-label">to go live</div>
       </div>
     </div>
     <div class="stat-pill">
       <div>
         <div class="stat-num"><span class="stat-accent">24</span>/7</div>
-        <div class="stat-label">always-on sales coverage</div>
-      </div>
-    </div>
-    <div class="stat-pill">
-      <div>
-        <div class="stat-num"><span class="stat-accent">0</span></div>
-        <div class="stat-label">manual CRM updates required</div>
+        <div class="stat-label">always-on coverage</div>
       </div>
     </div>
     <div class="stat-pill">
       <div>
         <div class="stat-num"><span class="stat-accent">3</span></div>
-        <div class="stat-label">product tiers to fit every team</div>
+        <div class="stat-label">tiers built for every team</div>
+      </div>
+    </div>
+    <div class="stat-pill">
+      <div>
+        <div class="stat-num"><span class="stat-accent">$300</span><span style="font-size:1rem;color:var(--olark-muted);font-weight:600;letter-spacing:0;">/mo</span></div>
+        <div class="stat-label">plans starting at</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ OLARK INTRO ══ -->
+<section class="olark-intro-section">
+  <div class="olark-intro-inner">
+    <div class="olark-intro-copy reveal">
+      <div class="section-label">Why Olark Built This</div>
+      <h2 class="section-title">We've Been in the Room.<br>We Know What the Moment Costs.</h2>
+      <p class="olark-intro-subhead">We have been guided by the human moment for over 15 years.</p>
+      <p class="olark-intro-body">Our customers have had millions of sales conversations unfold in real time. We watched the ones that closed — and the ones that didn't. The lead that went cold because a rep wasn't ready. The prospect who bounced because the routing was wrong. The deal that died because context got lost in the handoff. We asked ourselves one question: <strong>how do we make sure no one gets left out in the cold again?</strong></p>
+      <p class="olark-intro-body">Aiden isn't a replacement for that human moment. <strong>It's the setup.</strong> It's everything that needs to happen before the rep says hello — the qualification, the routing, the context, the CRM lookup — done automatically, so when the human moment arrives, it actually lands.</p>
+      <p class="olark-intro-body">More real connections. Fewer people turned away. That's what a decade of live chat taught us to build.</p>
+    </div>
+    <div class="olark-intro-stat-panel reveal" style="transition-delay:0.12s;">
+      <div class="intro-stat">
+        <div class="intro-stat-num"><span>15</span><span class="intro-stat-plus">+</span></div>
+        <div class="intro-stat-label">Years of live chat expertise behind every line of Aiden</div>
+      </div>
+      <div class="intro-divider"></div>
+      <div class="intro-stat">
+        <div class="intro-stat-num"><span>∞</span></div>
+        <div class="intro-stat-label">Human conversations worth protecting — that's why we built AI that enhances the handoff, not replaces it</div>
+      </div>
+      <div class="intro-divider"></div>
+      <div class="intro-olark-line">
+        <img src="https://cdn.prod.website-files.com/646d3c484b3d75dd99420842/6633e36dd87b8cf67a0b0e22_Olark_poppins_white.svg" alt="Olark" class="intro-olark-logo">
+        <span>The live chat company that finally got AI right.</span>
       </div>
     </div>
   </div>
