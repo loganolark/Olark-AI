@@ -19,6 +19,7 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://olark.ai'),
   title: 'Aiden by Olark',
   description: 'Your leads arrive ready.',
   other: {
