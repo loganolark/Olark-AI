@@ -3,6 +3,7 @@ import SectionHero from '@/components/ui/SectionHero';
 import PillBadge from '@/components/ui/PillBadge';
 import CTAButton from '@/components/ui/CTAButton';
 import TierCard from '@/components/product/TierCard';
+import QuizResumeBanner from '@/components/quiz/QuizResumeBanner';
 
 export const metadata: Metadata = {
   title: 'AI Sales Chat for SMB Teams | Aiden Essentials by Olark',
@@ -42,6 +43,8 @@ export default function EssentialsPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
       />
+
+      <QuizResumeBanner />
 
       <SectionHero
         badge={<PillBadge variant="gold">Essentials Tier</PillBadge>}

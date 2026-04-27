@@ -3,6 +3,7 @@ import SectionHero from '@/components/ui/SectionHero';
 import PillBadge from '@/components/ui/PillBadge';
 import TierCard from '@/components/product/TierCard';
 import CrawlWalkRunTimeline from '@/components/product/CrawlWalkRunTimeline';
+import QuizResumeBanner from '@/components/quiz/QuizResumeBanner';
 
 export const metadata: Metadata = {
   title: 'AI Sales Rep for High-Volume Teams | Aiden Commercial by Olark',
@@ -42,6 +43,8 @@ export default function CommercialPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
       />
+
+      <QuizResumeBanner />
 
       <SectionHero
         badge={<PillBadge variant="muted">Commercial Tier</PillBadge>}

@@ -247,7 +247,7 @@ describe('PathFinderQuiz — localStorage resume', () => {
     expect(screen.getByText(/Step 3 of 5/i)).toBeInTheDocument();
   });
 
-  it('ignores resume state with currentStep > 3 and starts fresh', () => {
+  it('ignores corrupt resume state (currentStep > 3 without emailCaptured) and starts fresh', () => {
     vi.mocked(readQuizState).mockReturnValue({
       currentStep: 4,
       answers: { olark_company_size: '11-50' },
@@ -261,6 +261,29 @@ describe('PathFinderQuiz — localStorage resume', () => {
     ).toBeInTheDocument();
     const radios = screen.getAllByRole('radio');
     radios.forEach((r) => expect(r).toHaveAttribute('aria-checked', 'false'));
+  });
+
+  it('Story 7.2 bouncer return: resumes at step 4 (email) when currentStep>=4 and emailCaptured=true', () => {
+    vi.mocked(readQuizState).mockReturnValue({
+      currentStep: 4,
+      answers: {
+        olark_company_size: '11-50',
+        olark_use_case: 'inbound_qual',
+        olark_inbound_volume: 'medium',
+      },
+      emailCaptured: true,
+      sessionId: 'bouncer-session',
+      startedAt: '2026-04-26T00:00:00.000Z',
+    });
+    render(<PathFinderQuiz />);
+    // Step 4 = email capture; question radiogroups are absent
+    expect(screen.queryByRole('radiogroup')).not.toBeInTheDocument();
+    expect(screen.getByLabelText(/Your work email/i)).toBeInTheDocument();
+    // The email field is empty — NFR-S3 says we don't persist email; user re-enters.
+    const input = screen.getByLabelText(/Your work email/i) as HTMLInputElement;
+    expect(input.value).toBe('');
+    // All 3 prior answers are pre-loaded (visible as pills via the accumulated bar).
+    expect(screen.getByText(/Step 4 of 5/i)).toBeInTheDocument();
   });
 });
 

@@ -139,13 +139,29 @@ export default function PathFinderQuiz({ onAnswersComplete }: PathFinderQuizProp
   useEffect(() => {
     const saved = readQuizState();
     /* eslint-disable react-hooks/set-state-in-effect */
-    if (
+    // Recoverable states:
+    //   currentStep 1–3: resume at the saved question.
+    //   currentStep 4+ AND emailCaptured: resume at step 4 (Story 7.2 bouncer return).
+    //     Email is intentionally NOT re-hydrated (NFR-S3); user re-enters and proceeds.
+    // Anything else (corrupt or out-of-range): start fresh, ignore answers.
+    const recoverableQuestion =
       saved &&
       typeof saved.currentStep === 'number' &&
       saved.currentStep >= 1 &&
-      saved.currentStep <= FINAL_QUESTION_STEP
-    ) {
+      saved.currentStep <= FINAL_QUESTION_STEP;
+    const recoverableBouncer =
+      saved &&
+      typeof saved.currentStep === 'number' &&
+      saved.currentStep >= EMAIL_STEP &&
+      saved.emailCaptured === true;
+
+    if (recoverableQuestion) {
       setStep(saved.currentStep);
+      setAnswers(saved.answers ?? {});
+      setSessionId(saved.sessionId || generateSessionId());
+      setStartedAt(saved.startedAt || new Date().toISOString());
+    } else if (recoverableBouncer) {
+      setStep(EMAIL_STEP);
       setAnswers(saved.answers ?? {});
       setSessionId(saved.sessionId || generateSessionId());
       setStartedAt(saved.startedAt || new Date().toISOString());
