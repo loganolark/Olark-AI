@@ -500,6 +500,54 @@ describe('PathFinderQuiz — GA4 events (consent-gated)', () => {
   });
 });
 
+// ─── olark_quiz_state cookie write (Story 6.1) ─────────────────────────────
+
+describe('PathFinderQuiz — writes olark_quiz_state cookie at completion', () => {
+  function clearQuizCookie() {
+    document.cookie = 'olark_quiz_state=; Path=/; Max-Age=0';
+  }
+  function getQuizCookie(): string | null {
+    const match = document.cookie.split('; ').find((r) => r.startsWith('olark_quiz_state='));
+    return match ? match.split('=')[1] : null;
+  }
+
+  async function answerAllThreeAndSubmit(user: ReturnType<typeof userEvent.setup>) {
+    await user.click(screen.getByRole('radio', { name: '11–50 employees' }));
+    await screen.findByRole('radiogroup', { name: /primary job/i }, { timeout: 1500 });
+    await user.click(screen.getByRole('radio', { name: 'Qualify inbound visitors' }));
+    await screen.findByRole('radiogroup', { name: /inbound traffic/i }, { timeout: 1500 });
+    await user.click(screen.getByRole('radio', { name: 'Under 5,000 visits' }));
+    await screen.findByLabelText(/Your work email/i, undefined, { timeout: 1500 });
+    await user.type(screen.getByLabelText(/Your work email/i), 'dana@example.com');
+    await user.click(screen.getByRole('button', { name: /Send my fit report/i }));
+    await screen.findByRole('heading', { name: /Based on what you told us/i }, { timeout: 1500 });
+  }
+
+  it('writes the cookie when consent.analytics is true and the quiz completes', async () => {
+    clearQuizCookie();
+    const user = userEvent.setup();
+    render(<PathFinderQuiz />);
+    await answerAllThreeAndSubmit(user);
+    const cookie = getQuizCookie();
+    expect(cookie).not.toBeNull();
+    const decoded = JSON.parse(decodeURIComponent(cookie as string));
+    expect(decoded.tier_signal).toBe('lead_gen');
+    expect(decoded.quiz_completed).toBe(true);
+    expect(typeof decoded.demo_run).toBe('boolean');
+    clearQuizCookie();
+  });
+
+  it('does NOT write the cookie when consent.analytics is false', async () => {
+    clearQuizCookie();
+    setConsent(false);
+    const user = userEvent.setup();
+    render(<PathFinderQuiz />);
+    await answerAllThreeAndSubmit(user);
+    expect(getQuizCookie()).toBeNull();
+    clearQuizCookie();
+  });
+});
+
 // ─── Page abandonment via beforeunload ─────────────────────────────────────
 
 describe('PathFinderQuiz — beforeunload abandonment', () => {

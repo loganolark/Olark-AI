@@ -15,6 +15,11 @@ import {
   writeQuizState,
   getTierSignalFromAnswers,
 } from '@/lib/quiz-state';
+import {
+  readDemoSignals,
+  hasDemoRun,
+  readPagesVisited,
+} from '@/lib/session-signals';
 import { useConsent } from '@/lib/consent';
 import { trackEvent } from '@/lib/analytics';
 import type {
@@ -46,35 +51,29 @@ function generateSessionId(): string {
   return `quiz-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
-function readSessionString(key: string): string {
-  if (typeof window === 'undefined') return '';
+/**
+ * Writes the SSR-readable `olark_quiz_state` cookie with personalization signals.
+ *
+ * NOTE — name collision with localStorage:
+ *   localStorage `olark_quiz_state` (Story 4.2) holds the FULL QuizState (currentStep, answers, …).
+ *   The cookie of the same name (this writer) holds the SUBSET used for SSR personalization
+ *   in Epic 6's ConversionPageShell: `{ tier_signal, demo_run, quiz_completed }`.
+ *   The two artifacts share a name per the architecture spec but serve different purposes.
+ */
+function writeQuizStateCookie(payload: {
+  tier_signal: string;
+  demo_run: boolean;
+}): void {
+  if (typeof document === 'undefined') return;
   try {
-    return sessionStorage.getItem(key) ?? '';
+    const value = encodeURIComponent(
+      JSON.stringify({ ...payload, quiz_completed: true }),
+    );
+    const maxAge = 60 * 60 * 24 * 30; // 30 days
+    document.cookie = `olark_quiz_state=${value}; SameSite=Lax; Path=/; Max-Age=${maxAge}`;
   } catch {
-    return '';
+    /* defensive */
   }
-}
-
-function readDemoSignals(): { demoDepth: number; demoUrl: string } {
-  if (typeof window === 'undefined') return { demoDepth: 0, demoUrl: '' };
-  try {
-    const raw = sessionStorage.getItem('olark_demo_session');
-    if (!raw) return { demoDepth: 0, demoUrl: '' };
-    const parsed = JSON.parse(raw) as { exchangeCount?: number; url?: string };
-    return {
-      demoDepth: typeof parsed.exchangeCount === 'number' ? parsed.exchangeCount : 0,
-      demoUrl: typeof parsed.url === 'string' ? parsed.url : '',
-    };
-  } catch {
-    return { demoDepth: 0, demoUrl: '' };
-  }
-}
-
-function readPagesVisited(): string {
-  const stored = readSessionString('olark_pages_visited');
-  if (stored) return stored;
-  if (typeof window === 'undefined') return '';
-  return window.location.pathname || '';
 }
 
 function postHubSpotContact(payload: HubSpotContactPayload): void {
@@ -324,7 +323,11 @@ export default function PathFinderQuiz({ onAnswersComplete }: PathFinderQuizProp
     const tierSignal = getTierSignalFromAnswers(answers);
     sendCompletion(answers, capturedEmail);
     track('quiz_completed', { tier_signal: tierSignal });
-  }, [step, answers, capturedEmail, sendCompletion, track]);
+    // Story 6.1: write SSR-readable personalization cookie (consent-gated).
+    if (consentAnalytics && capturedEmail) {
+      writeQuizStateCookie({ tier_signal: tierSignal, demo_run: hasDemoRun() });
+    }
+  }, [step, answers, capturedEmail, consentAnalytics, sendCompletion, track]);
 
   // ─── Back navigation ───────────────────────────────────────────────────────
   const handleBack = useCallback(() => {

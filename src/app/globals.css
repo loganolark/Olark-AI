@@ -458,3 +458,42 @@ h1, h2, h3, h4, h5, h6 {
   from { opacity: 0; max-height: 0; }
   to   { opacity: 1; max-height: 240px; }
 }
+
+/* ─── HubSpotMeetingEmbed ─── */
+.hubspot-embed-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.hubspot-embed-frame {
+  width: 100%;
+  height: 600px;
+  border: 0;
+  border-radius: 16px;
+  background: var(--od-card);
+  display: block;
+}
+
+.hubspot-embed-skeleton {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(37, 34, 117, 0.4) 0%,
+      rgba(45, 43, 143, 0.6) 50%,
+      rgba(37, 34, 117, 0.4) 100%
+    );
+  background-size: 200% 100%;
+  animation: hubspot-shimmer 1.6s ease-in-out infinite;
+}
+
+@keyframes hubspot-shimmer {
+  from { background-position: 100% 0; }
+  to   { background-position: -100% 0; }
+}
+
+@media (max-width: 768px) {
+  .hubspot-embed-frame {
+    height: auto;
+    aspect-ratio: 9 / 16;
+  }
+}

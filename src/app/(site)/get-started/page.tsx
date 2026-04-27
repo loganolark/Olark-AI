@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import ConversionPageShell from '@/components/conversion/ConversionPageShell';
 
 export const metadata: Metadata = {
   title: 'Get Started | Aiden by Olark',
@@ -9,6 +10,5 @@ export const metadata: Metadata = {
 };
 
 export default function GetStartedPage() {
-  return <h1>Get Started</h1>;
-  // Replaced in Story 6.1 with ConversionPageShell
+  return <ConversionPageShell />;
 }

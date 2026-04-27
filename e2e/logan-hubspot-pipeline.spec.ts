@@ -10,7 +10,15 @@ test.describe('Logan journey: HubSpot pipeline creation', () => {
     // TODO: implement in Story 4.4 (quiz HubSpot wiring)
   });
 
-  test.skip('/get-started booking creates HubSpot deal', async ({ page }) => {
-    // TODO: implement in Story 6.2
+  test('/get-started loads with booking section + Scope My Build CTA', async ({ page }) => {
+    await page.goto('/get-started');
+    const booking = page.locator('#booking');
+    await expect(booking).toBeVisible();
+    const iframe = page.locator('iframe[title="Book a scoping call with Aiden"]');
+    const fallbackCta = page.getByRole('link', { name: /Book Your Scoping Call/i });
+    const hasIframe = await iframe.count();
+    const hasFallback = await fallbackCta.count();
+    expect(hasIframe + hasFallback).toBeGreaterThanOrEqual(1);
+    await expect(page.getByRole('link', { name: /Scope My Build/i })).toBeVisible();
   });
 });
