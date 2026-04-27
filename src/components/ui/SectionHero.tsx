@@ -1,6 +1,8 @@
 import React from 'react';
 
 export interface SectionHeroProps {
+  /** Optional badge/pill above the headline — e.g. <PillBadge variant="gold" pulse>...</PillBadge> */
+  badge?: React.ReactNode;
   /** Main headline — rendered as <h1>. Poppins weight 900, clamp(2.5rem, 5vw, 4rem) */
   headline: string;
   /** Subhead — DM Sans weight 300, color: var(--od-text) */
@@ -14,6 +16,7 @@ export interface SectionHeroProps {
 }
 
 export default function SectionHero({
+  badge,
   headline,
   subhead,
   cta,
@@ -45,6 +48,12 @@ export default function SectionHero({
           gap: '1.5rem',
         }}
       >
+        {badge && (
+          <div style={{ marginBottom: '0.75rem' }}>
+            {badge}
+          </div>
+        )}
+
         <h1
           style={{
             fontFamily: 'var(--font-poppins), ui-sans-serif, sans-serif',

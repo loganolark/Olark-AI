@@ -21,6 +21,7 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
       'next/navigation': path.resolve(__dirname, './src/__mocks__/next-navigation.ts'),
       'next/headers': path.resolve(__dirname, './src/__mocks__/next-headers.ts'),
+      'next/image': path.resolve(__dirname, './src/__mocks__/next-image.tsx'),
     },
   },
 });
