@@ -1,22 +1,41 @@
 'use client';
 
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, {
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+  useMemo,
+} from 'react';
 import CTAButton from '@/components/ui/CTAButton';
 import PillBadge from '@/components/ui/PillBadge';
 import {
   readQuizState,
   writeQuizSession,
   writeQuizState,
+  getTierSignalFromAnswers,
 } from '@/lib/quiz-state';
-import type { PathFinderQuizProps, QuizState } from '@/types/quiz';
+import { useConsent } from '@/lib/consent';
+import { trackEvent } from '@/lib/analytics';
+import type {
+  PathFinderQuizProps,
+  QuizState,
+  TierSignal,
+} from '@/types/quiz';
+import type { HubSpotContactPayload } from '@/types/hubspot';
 import {
   QUIZ_TOTAL_STEPS,
+  TIER_LABELS,
   getOptionLabel,
   getQuestionByStep,
 } from './questions';
+import QuizEmailCapture from './QuizEmailCapture';
+import QuizTierReveal from './QuizTierReveal';
 
 const ADVANCE_DELAY_MS = 300;
 const FINAL_QUESTION_STEP = 3;
+const EMAIL_STEP = 4;
+const REVEAL_STEP = 5;
 
 type Direction = 'forward' | 'back';
 
@@ -27,22 +46,97 @@ function generateSessionId(): string {
   return `quiz-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
+function readSessionString(key: string): string {
+  if (typeof window === 'undefined') return '';
+  try {
+    return sessionStorage.getItem(key) ?? '';
+  } catch {
+    return '';
+  }
+}
+
+function readDemoSignals(): { demoDepth: number; demoUrl: string } {
+  if (typeof window === 'undefined') return { demoDepth: 0, demoUrl: '' };
+  try {
+    const raw = sessionStorage.getItem('olark_demo_session');
+    if (!raw) return { demoDepth: 0, demoUrl: '' };
+    const parsed = JSON.parse(raw) as { exchangeCount?: number; url?: string };
+    return {
+      demoDepth: typeof parsed.exchangeCount === 'number' ? parsed.exchangeCount : 0,
+      demoUrl: typeof parsed.url === 'string' ? parsed.url : '',
+    };
+  } catch {
+    return { demoDepth: 0, demoUrl: '' };
+  }
+}
+
+function readPagesVisited(): string {
+  const stored = readSessionString('olark_pages_visited');
+  if (stored) return stored;
+  if (typeof window === 'undefined') return '';
+  return window.location.pathname || '';
+}
+
+function postHubSpotContact(payload: HubSpotContactPayload): void {
+  // Fire-and-forget: never await, never block the quiz UI.
+  if (typeof window === 'undefined') return;
+  try {
+    const body = JSON.stringify(payload);
+    void fetch('/api/hubspot/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body,
+      keepalive: true,
+    }).catch(() => {
+      /* swallow — Sentry capture happens server-side in the API route */
+    });
+  } catch {
+    /* JSON.stringify shouldn't fail with our payload, but be defensive */
+  }
+}
+
+function sendBeaconHubSpot(payload: HubSpotContactPayload): void {
+  if (typeof window === 'undefined') return;
+  try {
+    const body = JSON.stringify(payload);
+    if (typeof navigator !== 'undefined' && typeof navigator.sendBeacon === 'function') {
+      navigator.sendBeacon(
+        '/api/hubspot/contact',
+        new Blob([body], { type: 'application/json' }),
+      );
+      return;
+    }
+    void fetch('/api/hubspot/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body,
+      keepalive: true,
+    }).catch(() => {});
+  } catch {
+    /* defensive */
+  }
+}
+
 export default function PathFinderQuiz({ onAnswersComplete }: PathFinderQuizProps = {}) {
+  const { consent } = useConsent();
+
   const [step, setStep] = useState<number>(1);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [sessionId, setSessionId] = useState<string>('');
   const [startedAt, setStartedAt] = useState<string>('');
   const [direction, setDirection] = useState<Direction>('forward');
-  const [awaitingNext, setAwaitingNext] = useState<boolean>(false);
   const [focusedIndex, setFocusedIndex] = useState<number>(0);
   const [hydrated, setHydrated] = useState<boolean>(false);
 
+  const [capturedEmail, setCapturedEmail] = useState<string>('');
+
   const radiogroupRef = useRef<HTMLDivElement | null>(null);
+  const quizStartedFiredRef = useRef<boolean>(false);
+  const completionFiredRef = useRef<boolean>(false);
+
+  const consentAnalytics = consent.analytics;
 
   // ─── Mount: hydrate from localStorage if a partial state exists ────────────
-  // Hydration from localStorage requires a post-mount effect — the server-rendered
-  // markup cannot read browser storage, so we sync state on the client tick after mount.
-  // The setState calls below are batched into a single re-render by React.
   useEffect(() => {
     const saved = readQuizState();
     /* eslint-disable react-hooks/set-state-in-effect */
@@ -64,12 +158,22 @@ export default function PathFinderQuiz({ onAnswersComplete }: PathFinderQuizProp
     /* eslint-enable react-hooks/set-state-in-effect */
   }, []);
 
+  // ─── Consent-gated GA4 helper ──────────────────────────────────────────────
+  const track = useCallback(
+    (name: string, params?: Record<string, unknown>) => {
+      if (!consentAnalytics) return;
+      trackEvent(name, params);
+    },
+    [consentAnalytics],
+  );
+
+  // ─── Persist state ─────────────────────────────────────────────────────────
   const persist = useCallback(
-    (nextStep: number, nextAnswers: Record<string, string>) => {
+    (nextStep: number, nextAnswers: Record<string, string>, emailCaptured: boolean) => {
       const state: QuizState = {
         currentStep: nextStep,
         answers: nextAnswers,
-        emailCaptured: false,
+        emailCaptured,
         sessionId: sessionId || generateSessionId(),
         startedAt: startedAt || new Date().toISOString(),
       };
@@ -79,7 +183,68 @@ export default function PathFinderQuiz({ onAnswersComplete }: PathFinderQuizProp
     [sessionId, startedAt],
   );
 
-  // ─── Selection + auto-advance ──────────────────────────────────────────────
+  // ─── HubSpot helpers (consent-gated, fire-and-forget) ──────────────────────
+  const buildPartialPayload = useCallback(
+    (email: string, currentAnswers: Record<string, string>): HubSpotContactPayload => {
+      const allThreeAnswered =
+        Boolean(currentAnswers.olark_company_size) &&
+        Boolean(currentAnswers.olark_use_case) &&
+        Boolean(currentAnswers.olark_inbound_volume);
+      const tierSignal: TierSignal | undefined = allThreeAnswered
+        ? getTierSignalFromAnswers(currentAnswers)
+        : undefined;
+      return {
+        email,
+        olark_company_size: currentAnswers.olark_company_size,
+        olark_use_case: currentAnswers.olark_use_case,
+        olark_inbound_volume: currentAnswers.olark_inbound_volume,
+        ...(tierSignal ? { olark_tier_signal: tierSignal } : {}),
+        olark_quiz_partial: true,
+      };
+    },
+    [],
+  );
+
+  const buildCompletionPayload = useCallback(
+    (email: string, finalAnswers: Record<string, string>): HubSpotContactPayload => {
+      const tierSignal = getTierSignalFromAnswers(finalAnswers);
+      const { demoDepth, demoUrl } = readDemoSignals();
+      const pagesVisited = readPagesVisited();
+      return {
+        email,
+        olark_company_size: finalAnswers.olark_company_size,
+        olark_use_case: finalAnswers.olark_use_case,
+        olark_inbound_volume: finalAnswers.olark_inbound_volume,
+        olark_tier_signal: tierSignal,
+        olark_quiz_completed_at: new Date().toISOString(),
+        olark_demo_depth: demoDepth,
+        olark_demo_url: demoUrl,
+        olark_pages_visited: pagesVisited,
+        olark_quiz_partial: false,
+      };
+    },
+    [],
+  );
+
+  const sendPartial = useCallback(
+    (currentAnswers: Record<string, string>, email: string) => {
+      if (!consentAnalytics) return;
+      if (!email) return;
+      postHubSpotContact(buildPartialPayload(email, currentAnswers));
+    },
+    [consentAnalytics, buildPartialPayload],
+  );
+
+  const sendCompletion = useCallback(
+    (finalAnswers: Record<string, string>, email: string) => {
+      if (!consentAnalytics) return;
+      if (!email) return;
+      postHubSpotContact(buildCompletionPayload(email, finalAnswers));
+    },
+    [consentAnalytics, buildCompletionPayload],
+  );
+
+  // ─── Selection + auto-advance (steps 1–3) ──────────────────────────────────
   const handleSelect = useCallback(
     (value: string) => {
       const currentQuestion = getQuestionByStep(step);
@@ -88,40 +253,98 @@ export default function PathFinderQuiz({ onAnswersComplete }: PathFinderQuizProp
       const nextAnswers = { ...answers, [currentQuestion.propertyKey]: value };
       setAnswers(nextAnswers);
 
+      // quiz_started fires from a useEffect watching `answers`.
+      track('quiz_question_answered', {
+        step,
+        property_key: currentQuestion.propertyKey,
+        value,
+      });
+
       if (step === FINAL_QUESTION_STEP) {
-        // Final question answered: commit, fire callback, enter awaiting state.
-        persist(step, nextAnswers);
-        setAwaitingNext(true);
+        // Final question answered: persist with currentStep=4 (we're moving to email step).
+        persist(EMAIL_STEP, nextAnswers, false);
         if (onAnswersComplete) {
-          // Fire after state commit so consumers see the completed answer set.
-          // Defer slightly so React commits state before parent reacts.
+          // Backwards-compat hook for any external consumer.
           setTimeout(() => onAnswersComplete(nextAnswers), ADVANCE_DELAY_MS);
         }
+        // If email already captured (back-nav re-edit case), fire partial write.
+        if (capturedEmail) {
+          sendPartial(nextAnswers, capturedEmail);
+        }
+        setDirection('forward');
+        window.setTimeout(() => {
+          setStep(EMAIL_STEP);
+        }, ADVANCE_DELAY_MS);
         return;
       }
 
       // Steps 1 & 2: persist with the next step number, then advance after delay.
       const nextStep = step + 1;
-      persist(nextStep, nextAnswers);
+      persist(nextStep, nextAnswers, false);
+      // If email was already captured (back-nav re-edit), fire partial write.
+      if (capturedEmail) {
+        sendPartial(nextAnswers, capturedEmail);
+      }
       setDirection('forward');
       window.setTimeout(() => {
         setStep(nextStep);
         setFocusedIndex(0);
       }, ADVANCE_DELAY_MS);
     },
-    [step, answers, persist, onAnswersComplete],
+    [step, answers, persist, onAnswersComplete, track, sendPartial, capturedEmail],
   );
+
+  // ─── Email submit (step 4) ─────────────────────────────────────────────────
+  const handleEmailSubmit = useCallback(
+    (email: string) => {
+      setCapturedEmail(email);
+      track('quiz_email_captured');
+      // First HubSpot upsert with email + answers (still partial; tier reveal not seen).
+      sendPartial(answers, email);
+      persist(REVEAL_STEP, answers, true);
+      setDirection('forward');
+      setStep(REVEAL_STEP);
+    },
+    [answers, track, sendPartial, persist],
+  );
+
+  // ─── quiz_started fires once when the first answer is committed ──────────
+  useEffect(() => {
+    if (Object.keys(answers).length === 0) return;
+    if (quizStartedFiredRef.current) return;
+    quizStartedFiredRef.current = true;
+    track('quiz_started');
+  }, [answers, track]);
+
+  // ─── Completion side-effects on entering step 5 ────────────────────────────
+  useEffect(() => {
+    if (step !== REVEAL_STEP) return;
+    if (completionFiredRef.current) return;
+    completionFiredRef.current = true;
+    const tierSignal = getTierSignalFromAnswers(answers);
+    sendCompletion(answers, capturedEmail);
+    track('quiz_completed', { tier_signal: tierSignal });
+  }, [step, answers, capturedEmail, sendCompletion, track]);
 
   // ─── Back navigation ───────────────────────────────────────────────────────
   const handleBack = useCallback(() => {
-    if (awaitingNext) {
-      // Return from "awaiting 4.4" placeholder back to question 3.
-      setAwaitingNext(false);
+    if (step === REVEAL_STEP) {
+      // Step 5 → step 4: keep email pre-fill via capturedEmailRef.
+      // Reset completionFired so re-entering step 5 fires the completion write again.
+      completionFiredRef.current = false;
       setDirection('back');
+      setStep(EMAIL_STEP);
+      return;
+    }
+    if (step === EMAIL_STEP) {
+      // Step 4 → step 3: preserve all 3 answers (no answer cleared at this boundary).
+      setDirection('back');
+      setStep(FINAL_QUESTION_STEP);
       setFocusedIndex(0);
       return;
     }
     if (step <= 1) return;
+    // Step 2 or 3 → previous: drop the current step's answer.
     const prevStep = step - 1;
     const currentQuestion = getQuestionByStep(step);
     const nextAnswers = { ...answers };
@@ -129,16 +352,16 @@ export default function PathFinderQuiz({ onAnswersComplete }: PathFinderQuizProp
       delete nextAnswers[currentQuestion.propertyKey];
     }
     setAnswers(nextAnswers);
-    persist(prevStep, nextAnswers);
+    persist(prevStep, nextAnswers, Boolean(capturedEmail));
     setDirection('back');
     setStep(prevStep);
     setFocusedIndex(0);
-  }, [step, answers, persist, awaitingNext]);
+  }, [step, answers, persist, capturedEmail]);
 
-  // ─── Focus management on step change ───────────────────────────────────────
+  // ─── Focus management on step change (steps 1–3 only) ──────────────────────
   useEffect(() => {
     if (!hydrated) return;
-    if (awaitingNext) return;
+    if (step > FINAL_QUESTION_STEP) return;
     const root = radiogroupRef.current;
     if (!root) return;
     const radios = root.querySelectorAll<HTMLElement>('[role="radio"]');
@@ -154,7 +377,25 @@ export default function PathFinderQuiz({ onAnswersComplete }: PathFinderQuizProp
     }
     setFocusedIndex(targetIndex);
     radios[targetIndex]?.focus();
-  }, [step, hydrated, awaitingNext, answers]);
+  }, [step, hydrated, answers]);
+
+  // ─── Page abandonment via beforeunload ─────────────────────────────────────
+  useEffect(() => {
+    function onBeforeUnload() {
+      if (step >= REVEAL_STEP) return;
+      const hasAnyAnswer = Object.keys(answers).length > 0;
+      if (!hasAnyAnswer) return;
+      if (!consentAnalytics) return;
+
+      if (capturedEmail && step <= FINAL_QUESTION_STEP) {
+        // We have email + partial answers but never completed: send a partial via beacon.
+        sendBeaconHubSpot(buildPartialPayload(capturedEmail, answers));
+      }
+      track('quiz_abandoned', { last_step: step });
+    }
+    window.addEventListener('beforeunload', onBeforeUnload);
+    return () => window.removeEventListener('beforeunload', onBeforeUnload);
+  }, [step, answers, capturedEmail, consentAnalytics, track, buildPartialPayload]);
 
   // ─── Keyboard nav within radiogroup ────────────────────────────────────────
   const handleKeyDown = useCallback(
@@ -202,6 +443,11 @@ export default function PathFinderQuiz({ onAnswersComplete }: PathFinderQuizProp
   );
 
   // ─── Render helpers ────────────────────────────────────────────────────────
+  const tierSignal: TierSignal = useMemo(
+    () => getTierSignalFromAnswers(answers),
+    [answers],
+  );
+
   const renderProgressDots = () => (
     <div
       aria-hidden="true"
@@ -215,7 +461,7 @@ export default function PathFinderQuiz({ onAnswersComplete }: PathFinderQuizProp
     >
       {Array.from({ length: QUIZ_TOTAL_STEPS }).map((_, i) => {
         const dotStep = i + 1;
-        const isActive = awaitingNext ? dotStep <= FINAL_QUESTION_STEP : dotStep <= step;
+        const isActive = dotStep <= step;
         return (
           <span
             key={dotStep}
@@ -240,14 +486,14 @@ export default function PathFinderQuiz({ onAnswersComplete }: PathFinderQuizProp
           color: 'var(--od-muted)',
         }}
       >
-        Step {awaitingNext ? FINAL_QUESTION_STEP + 1 : step} of {QUIZ_TOTAL_STEPS}
+        Step {step} of {QUIZ_TOTAL_STEPS}
       </span>
     </div>
   );
 
   const renderAccumulatedPills = () => {
     const pills: { propertyKey: string; label: string }[] = [];
-    const upTo = awaitingNext ? FINAL_QUESTION_STEP : step - 1;
+    const upTo = step <= FINAL_QUESTION_STEP ? step - 1 : FINAL_QUESTION_STEP;
     for (let s = 1; s <= upTo; s += 1) {
       const q = getQuestionByStep(s);
       if (!q) continue;
@@ -269,6 +515,7 @@ export default function PathFinderQuiz({ onAnswersComplete }: PathFinderQuizProp
           marginTop: '1.5rem',
           fontSize: '0.8125rem',
           color: 'var(--od-muted)',
+          justifyContent: 'center',
         }}
       >
         <span style={{ marginRight: '0.25rem' }}>Your answers so far:</span>
@@ -357,54 +604,6 @@ export default function PathFinderQuiz({ onAnswersComplete }: PathFinderQuizProp
     );
   };
 
-  const renderAwaitingPlaceholder = () => (
-    <div
-      className="quiz-slide quiz-slide--forward"
-      role="status"
-      style={{
-        textAlign: 'center',
-        padding: '2rem 1rem',
-      }}
-    >
-      <p
-        style={{
-          fontSize: '0.75rem',
-          letterSpacing: '0.1em',
-          textTransform: 'uppercase',
-          fontWeight: 600,
-          color: 'var(--od-gold)',
-          marginBottom: '1rem',
-        }}
-      >
-        Almost there
-      </p>
-      <p
-        style={{
-          fontFamily: 'var(--font-poppins, Poppins, sans-serif)',
-          fontWeight: 700,
-          fontSize: 'clamp(1.25rem, 3vw, 1.75rem)',
-          lineHeight: 1.25,
-          letterSpacing: '-0.02em',
-          color: 'var(--od-white)',
-          marginBottom: '0.75rem',
-        }}
-      >
-        Coming next: tell us where to send your tier match.
-      </p>
-      <p
-        style={{
-          fontSize: '0.9375rem',
-          lineHeight: 1.6,
-          color: 'var(--od-muted)',
-          maxWidth: '420px',
-          margin: '0 auto',
-        }}
-      >
-        We&rsquo;ll show you which Aiden tier fits your team — no sales call required.
-      </p>
-    </div>
-  );
-
   // ─── Don't render anything until hydration completes (avoids SSR flash) ────
   if (!hydrated) {
     return (
@@ -417,7 +616,8 @@ export default function PathFinderQuiz({ onAnswersComplete }: PathFinderQuizProp
     );
   }
 
-  const showBack = (step > 1 && !awaitingNext) || awaitingNext;
+  const showBack = step > 1;
+  const isQuestionStep = step <= FINAL_QUESTION_STEP;
 
   return (
     <div
@@ -434,9 +634,9 @@ export default function PathFinderQuiz({ onAnswersComplete }: PathFinderQuizProp
       }}
     >
       <progress
-        value={awaitingNext ? FINAL_QUESTION_STEP + 1 : step}
+        value={step}
         max={QUIZ_TOTAL_STEPS}
-        aria-label={`Quiz progress: step ${awaitingNext ? FINAL_QUESTION_STEP + 1 : step} of ${QUIZ_TOTAL_STEPS}`}
+        aria-label={`Quiz progress: step ${step} of ${QUIZ_TOTAL_STEPS}`}
         style={{
           position: 'absolute',
           width: '1px',
@@ -452,11 +652,30 @@ export default function PathFinderQuiz({ onAnswersComplete }: PathFinderQuizProp
 
       {renderProgressDots()}
 
-      {awaitingNext ? renderAwaitingPlaceholder() : renderQuestionScreen()}
+      {isQuestionStep && renderQuestionScreen()}
+      {step === EMAIL_STEP && (
+        <QuizEmailCapture
+          initialEmail={capturedEmail}
+          onSubmit={handleEmailSubmit}
+          onBack={handleBack}
+        />
+      )}
+      {step === REVEAL_STEP && (
+        <QuizTierReveal
+          tierSignal={tierSignal}
+          onScopeClick={() =>
+            track('quiz_cta_clicked', { target: 'scope_build', tier_signal: tierSignal })
+          }
+          onTierDetailsClick={() =>
+            track('quiz_cta_clicked', { target: 'tier_details', tier_signal: tierSignal })
+          }
+          onBack={handleBack}
+        />
+      )}
 
-      {renderAccumulatedPills()}
+      {isQuestionStep && renderAccumulatedPills()}
 
-      {showBack && (
+      {showBack && isQuestionStep && (
         <div
           style={{
             marginTop: '1.5rem',
@@ -468,6 +687,17 @@ export default function PathFinderQuiz({ onAnswersComplete }: PathFinderQuizProp
             ← Back
           </CTAButton>
         </div>
+      )}
+
+      {/* Hidden helper used by tests / debugging — keeps tier label discoverable when on step 5 */}
+      {step === REVEAL_STEP && (
+        <span
+          data-testid="quiz-tier-label"
+          aria-hidden="true"
+          style={{ position: 'absolute', left: '-9999px' }}
+        >
+          {TIER_LABELS[tierSignal]}
+        </span>
       )}
     </div>
   );

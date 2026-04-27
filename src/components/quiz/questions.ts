@@ -1,4 +1,18 @@
+import type { TierSignal } from '@/types/quiz';
+
 export const QUIZ_TOTAL_STEPS = 5;
+
+export const TIER_LABELS: Record<TierSignal, string> = {
+  essentials: 'Essentials',
+  lead_gen: 'Lead-Gen',
+  commercial: 'Commercial',
+};
+
+export const TIER_PRODUCT_PATHS: Record<TierSignal, string> = {
+  essentials: '/essentials',
+  lead_gen: '/lead-gen',
+  commercial: '/commercial',
+};
 
 export interface QuizOption {
   value: string;
