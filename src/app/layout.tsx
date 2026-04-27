@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Poppins, DM_Sans } from 'next/font/google';
+import { ConsentProvider } from '@/lib/consent';
+import CookieConsentBanner from '@/components/consent/CookieConsentBanner';
 import './globals.css';
 
 const poppins = Poppins({
@@ -36,7 +38,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${poppins.variable} ${dmSans.variable}`}>
-      <body>{children}</body>
+      <body>
+        <ConsentProvider>
+          {children}
+          <CookieConsentBanner />
+        </ConsentProvider>
+      </body>
     </html>
   );
 }
