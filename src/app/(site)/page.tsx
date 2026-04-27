@@ -3,6 +3,7 @@ import CTAButton from '@/components/ui/CTAButton';
 import PillBadge from '@/components/ui/PillBadge';
 import SectionHero from '@/components/ui/SectionHero';
 import LogoStrip from '@/components/product/LogoStrip';
+import URLDemoWidgetLoader from '@/components/url-demo/URLDemoWidgetLoader';
 
 export const metadata: Metadata = {
   title: 'Your Leads Arrive Ready | Aiden by Olark',
@@ -109,7 +110,7 @@ export default function HomePage() {
         <LogoStrip />
       </section>
 
-      {/* ─── URL Demo Placeholder (replaced by URLDemoWidget in Story 3.2) ─── */}
+      {/* ─── URL Demo Widget ─── */}
       <section
         id="demo"
         style={{
@@ -118,52 +119,7 @@ export default function HomePage() {
           textAlign: 'center',
         }}
       >
-        <div
-          style={{
-            maxWidth: '680px',
-            margin: '0 auto',
-            border: '1px solid var(--od-border)',
-            borderRadius: '16px',
-            padding: '3.5rem 2rem',
-            background: 'var(--od-card)',
-            boxShadow: '0 32px 80px rgba(0,0,0,0.4)',
-          }}
-        >
-          <p
-            style={{
-              fontSize: '0.75rem',
-              letterSpacing: '0.1em',
-              textTransform: 'uppercase',
-              color: 'var(--od-gold)',
-              fontWeight: 600,
-              marginBottom: '1rem',
-            }}
-          >
-            Coming in Epic 3
-          </p>
-          <h2
-            style={{
-              fontFamily: 'var(--font-poppins), ui-sans-serif, sans-serif',
-              fontWeight: 900,
-              fontSize: 'clamp(1.5rem, 3vw, 2rem)',
-              letterSpacing: '-0.02em',
-              color: 'var(--od-white)',
-              margin: '0 0 0.75rem',
-            }}
-          >
-            See Aiden on Your Site →
-          </h2>
-          <p
-            style={{
-              color: 'var(--od-muted)',
-              fontSize: '0.9375rem',
-              lineHeight: 1.6,
-              margin: 0,
-            }}
-          >
-            Paste your company URL — watch Aiden train in ~60 seconds, then ask it a real objection from your pipeline.
-          </p>
-        </div>
+        <URLDemoWidgetLoader />
       </section>
 
       {/* ─── How It Works ─── */}

@@ -49,9 +49,10 @@ describe('HomePage — CTA bridge', () => {
 });
 
 describe('HomePage — Placeholders', () => {
-  it('renders URL demo placeholder section', () => {
+  it('renders URL demo widget section (loading state while JS loads)', () => {
     render(<HomePage />);
-    expect(screen.getByText(/See Aiden on Your Site →/i)).toBeInTheDocument();
+    // next/dynamic with ssr:false renders the loading prop in tests; loading prop shows this text
+    expect(screen.getByText(/Loading demo/i)).toBeInTheDocument();
   });
 
   it('renders quiz placeholder section', () => {
