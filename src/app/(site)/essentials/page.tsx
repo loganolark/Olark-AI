@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import SectionHero from '@/components/ui/SectionHero';
 import PillBadge from '@/components/ui/PillBadge';
@@ -44,7 +45,9 @@ export default function EssentialsPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
       />
 
-      <QuizResumeBanner />
+      <Suspense fallback={null}>
+        <QuizResumeBanner />
+      </Suspense>
 
       <SectionHero
         badge={<PillBadge variant="gold">Essentials Tier</PillBadge>}
