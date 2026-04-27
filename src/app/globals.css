@@ -47,3 +47,24 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-poppins), ui-sans-serif, sans-serif;
 }
+
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 1rem;
+  z-index: 100;
+}
+.skip-link:focus {
+  top: 1rem;
+}
+
+:focus-visible {
+  outline: 2px solid var(--od-gold);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  nav[aria-label="Main navigation"] {
+    transition: none;
+  }
+}

@@ -1,0 +1,278 @@
+'use client';
+
+import { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+
+const NAV_LINKS = [
+  { href: '/essentials', label: 'Essentials' },
+  { href: '/lead-gen', label: 'Lead-Gen' },
+  { href: '/commercial', label: 'Commercial' },
+];
+
+export default function SiteNav() {
+  const pathname = usePathname();
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const hamburgerRef = useRef<HTMLButtonElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY >= 64);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    if (mobileOpen) {
+      closeButtonRef.current?.focus();
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [mobileOpen]);
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setMobileOpen(false);
+        hamburgerRef.current?.focus();
+        return;
+      }
+      if (e.key !== 'Tab') return;
+      const overlay = overlayRef.current;
+      if (!overlay) return;
+      const focusable = Array.from(
+        overlay.querySelectorAll<HTMLElement>('a, button, [tabindex]:not([tabindex="-1"])')
+      ).filter((el) => !el.hasAttribute('disabled'));
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      } else {
+        if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [mobileOpen]);
+
+  const isActive = (href: string) =>
+    pathname === href || pathname.startsWith(href + '/');
+
+  return (
+    <header>
+      <nav
+        aria-label="Main navigation"
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 40,
+          height: '64px',
+          display: 'flex',
+          alignItems: 'center',
+          transition: 'background-color 300ms, backdrop-filter 300ms',
+          backgroundColor: scrolled ? 'rgba(15,13,46,0.85)' : 'transparent',
+          backdropFilter: scrolled ? 'blur(20px)' : 'none',
+        }}
+      >
+        <div style={{
+          maxWidth: '1280px',
+          margin: '0 auto',
+          padding: '0 1.5rem',
+          width: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}>
+          <Link
+            href="/"
+            aria-label="Aiden by Olark — home"
+            style={{
+              color: 'var(--od-white)',
+              fontFamily: 'var(--font-poppins)',
+              fontWeight: 700,
+              fontSize: '1.25rem',
+              textDecoration: 'none',
+            }}
+          >
+            Aiden
+          </Link>
+
+          <div className="hidden md:flex" style={{ alignItems: 'center', gap: '2rem' }}>
+            {NAV_LINKS.map(({ href, label }) => (
+              <Link
+                key={href}
+                href={href}
+                aria-current={isActive(href) ? 'page' : undefined}
+                style={{
+                  color: isActive(href) ? 'var(--od-gold)' : 'var(--od-text)',
+                  textDecoration: 'none',
+                  fontSize: '0.9375rem',
+                  fontWeight: 500,
+                  paddingBottom: '2px',
+                  borderBottom: isActive(href)
+                    ? '2px solid var(--od-gold)'
+                    : '2px solid transparent',
+                }}
+              >
+                {label}
+              </Link>
+            ))}
+          </div>
+
+          <div className="hidden md:flex">
+            <Link
+              href="/get-started"
+              style={{
+                backgroundColor: 'var(--od-gold)',
+                color: 'var(--od-dark)',
+                fontWeight: 700,
+                padding: '0.5rem 1.25rem',
+                borderRadius: '6px',
+                fontSize: '0.9375rem',
+                textDecoration: 'none',
+                boxShadow: '0 0 20px rgba(245,194,0,0.35)',
+              }}
+            >
+              Talk to Us →
+            </Link>
+          </div>
+
+          <button
+            ref={hamburgerRef}
+            className="md:hidden"
+            aria-label="Open navigation"
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-nav"
+            onClick={() => setMobileOpen(true)}
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: 'var(--od-text)',
+              cursor: 'pointer',
+              padding: '0.5rem',
+              minWidth: '44px',
+              minHeight: '44px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+              <rect y="5" width="24" height="2" rx="1" fill="currentColor" />
+              <rect y="11" width="24" height="2" rx="1" fill="currentColor" />
+              <rect y="17" width="24" height="2" rx="1" fill="currentColor" />
+            </svg>
+          </button>
+        </div>
+      </nav>
+
+      {mobileOpen && (
+        <div
+          ref={overlayRef}
+          id="mobile-nav"
+          role="dialog"
+          aria-label="Navigation menu"
+          aria-modal="true"
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: '#0F0D2E',
+            zIndex: 50,
+            display: 'flex',
+            flexDirection: 'column',
+            padding: '1rem 1.5rem',
+          }}
+        >
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: '2rem',
+            height: '64px',
+          }}>
+            <span style={{
+              color: 'var(--od-white)',
+              fontFamily: 'var(--font-poppins)',
+              fontWeight: 700,
+              fontSize: '1.25rem',
+            }}>
+              Aiden
+            </span>
+            <button
+              ref={closeButtonRef}
+              aria-label="Close navigation"
+              onClick={() => { setMobileOpen(false); hamburgerRef.current?.focus(); }}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: 'var(--od-text)',
+                cursor: 'pointer',
+                fontSize: '1.5rem',
+                minWidth: '44px',
+                minHeight: '44px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              ×
+            </button>
+          </div>
+
+          {NAV_LINKS.map(({ href, label }) => (
+            <Link
+              key={href}
+              href={href}
+              aria-current={isActive(href) ? 'page' : undefined}
+              onClick={() => setMobileOpen(false)}
+              style={{
+                color: isActive(href) ? 'var(--od-gold)' : 'var(--od-white)',
+                textDecoration: 'none',
+                fontSize: '1.5rem',
+                fontWeight: 600,
+                minHeight: '64px',
+                display: 'flex',
+                alignItems: 'center',
+                paddingLeft: '1rem',
+                borderLeft: isActive(href)
+                  ? '3px solid var(--od-gold)'
+                  : '3px solid transparent',
+              }}
+            >
+              {label}
+            </Link>
+          ))}
+
+          <Link
+            href="/get-started"
+            onClick={() => setMobileOpen(false)}
+            style={{
+              backgroundColor: 'var(--od-gold)',
+              color: 'var(--od-dark)',
+              textDecoration: 'none',
+              fontSize: '1.125rem',
+              fontWeight: 700,
+              padding: '1rem 1.5rem',
+              borderRadius: '8px',
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginTop: '2rem',
+              minHeight: '64px',
+            }}
+          >
+            Talk to Us →
+          </Link>
+        </div>
+      )}
+    </header>
+  );
+}
