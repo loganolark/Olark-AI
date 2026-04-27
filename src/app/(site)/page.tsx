@@ -4,6 +4,7 @@ import PillBadge from '@/components/ui/PillBadge';
 import SectionHero from '@/components/ui/SectionHero';
 import LogoStrip from '@/components/product/LogoStrip';
 import URLDemoWidgetLoader from '@/components/url-demo/URLDemoWidgetLoader';
+import PathFinderQuiz from '@/components/quiz/PathFinderQuiz';
 
 export const metadata: Metadata = {
   title: 'Your Leads Arrive Ready | Aiden by Olark',
@@ -336,61 +337,15 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ─── Quiz Placeholder (replaced by PathFinderQuiz in Epic 4) ─── */}
+      {/* ─── Path Finder Quiz ─── */}
       <section
         id="quiz"
         style={{
           backgroundColor: 'var(--od-navy)',
           padding: '5rem 1.5rem',
-          textAlign: 'center',
         }}
       >
-        <div
-          style={{
-            maxWidth: '640px',
-            margin: '0 auto',
-            border: '1px solid var(--od-border)',
-            borderRadius: '16px',
-            padding: '3.5rem 2rem',
-            background: 'rgba(37,34,117,0.5)',
-            boxShadow: '0 32px 80px rgba(0,0,0,0.4)',
-          }}
-        >
-          <p
-            style={{
-              color: 'var(--od-gold)',
-              fontSize: '0.75rem',
-              letterSpacing: '0.1em',
-              textTransform: 'uppercase',
-              fontWeight: 600,
-              marginBottom: '1rem',
-            }}
-          >
-            Coming in Epic 4
-          </p>
-          <h2
-            style={{
-              fontFamily: 'var(--font-poppins), ui-sans-serif, sans-serif',
-              fontWeight: 900,
-              fontSize: 'clamp(1.5rem, 3vw, 2rem)',
-              letterSpacing: '-0.02em',
-              color: 'var(--od-white)',
-              margin: '0 0 0.75rem',
-            }}
-          >
-            Find Your Tier →
-          </h2>
-          <p
-            style={{
-              color: 'var(--od-muted)',
-              fontSize: '0.9375rem',
-              lineHeight: 1.6,
-              margin: 0,
-            }}
-          >
-            5 questions. No email required up front. Walk away knowing exactly which Aiden tier fits your team.
-          </p>
-        </div>
+        <PathFinderQuiz />
       </section>
 
       {/* ─── CTA Bridge ─── */}

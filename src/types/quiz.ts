@@ -9,3 +9,7 @@ export interface QuizState {
   sessionId: string;
   startedAt: string;
 }
+
+export interface PathFinderQuizProps {
+  onAnswersComplete?: (answers: Record<string, string>) => void;
+}

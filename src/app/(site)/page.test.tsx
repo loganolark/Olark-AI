@@ -55,9 +55,9 @@ describe('HomePage — Placeholders', () => {
     expect(screen.getByText(/Loading demo/i)).toBeInTheDocument();
   });
 
-  it('renders quiz placeholder section', () => {
+  it('renders Path Finder Quiz section', () => {
     render(<HomePage />);
-    // Hero CTA button also says "Find Your Tier →"; target the heading specifically
-    expect(screen.getByRole('heading', { name: /Find Your Tier →/i })).toBeInTheDocument();
+    // PathFinderQuiz mounts the first question's radiogroup once hydrated.
+    expect(screen.getByRole('radiogroup', { name: /How big is your company/i })).toBeInTheDocument();
   });
 });
