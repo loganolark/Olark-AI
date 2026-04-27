@@ -11,3 +11,8 @@ export interface URLDemoWidgetProps {
   onUnlockMore?: () => void;
   apiEndpoint?: string;
 }
+
+export interface ChatMsg {
+  role: 'user' | 'aiden';
+  content: string;
+}

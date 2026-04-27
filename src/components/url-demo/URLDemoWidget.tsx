@@ -3,7 +3,15 @@
 import React, { useState } from 'react';
 import CTAButton from '@/components/ui/CTAButton';
 import TrainingStateDisplay from '@/components/url-demo/TrainingStateDisplay';
-import type { DemoStatus, URLDemoWidgetProps } from '@/types/demo';
+import ChatMessage from '@/components/url-demo/ChatMessage';
+import { trackEvent } from '@/lib/analytics';
+import type { DemoStatus, URLDemoWidgetProps, ChatMsg } from '@/types/demo';
+
+const STARTER_CHIPS = [
+  'How does pricing work?',
+  'What makes you different from competitors?',
+  'How long does implementation take?',
+];
 
 function normalizeUrl(raw: string): string {
   return raw.replace(/^https?:\/\//i, '').replace(/\/+$/, '').trim();
@@ -14,7 +22,7 @@ function isValidUrl(url: string): boolean {
   return /^[^.]+\.[^.]+/.test(normalized) && normalized.length > 3;
 }
 
-export default function URLDemoWidget({ onDemoComplete }: URLDemoWidgetProps) {
+export default function URLDemoWidget({ onDemoComplete, onUnlockMore, apiEndpoint }: URLDemoWidgetProps) {
   const [status, setStatus] = useState<DemoStatus>('idle');
   const [inputValue, setInputValue] = useState('');
   const [validationError, setValidationError] = useState<string | null>(null);
@@ -23,6 +31,10 @@ export default function URLDemoWidget({ onDemoComplete }: URLDemoWidgetProps) {
   const [sessionId, setSessionId] = useState('');
   const [fallbackEmail, setFallbackEmail] = useState('');
   const [fallbackSubmitted, setFallbackSubmitted] = useState(false);
+  const [messages, setMessages] = useState<ChatMsg[]>([]);
+  const [chatInput, setChatInput] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  const [exchangeCount, setExchangeCount] = useState(0);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -35,6 +47,7 @@ export default function URLDemoWidget({ onDemoComplete }: URLDemoWidgetProps) {
     setValidationError(null);
     const normalized = normalizeUrl(inputValue);
     setSubmittedUrl(normalized);
+    trackEvent('url_demo_submitted', { url: normalized });
     setStatus('submitting');
     try {
       const res = await fetch('/api/aiden/train', {
@@ -68,8 +81,67 @@ export default function URLDemoWidget({ onDemoComplete }: URLDemoWidgetProps) {
   }
 
   function handleTrainingComplete() {
+    setMessages([{
+      role: 'aiden',
+      content: `I've reviewed ${submittedUrl}. I know your product and I'm ready to answer questions your prospects actually ask. What would you like to test?`,
+    }]);
     setStatus('ready');
+    trackEvent('url_demo_training_complete');
     onDemoComplete?.(sessionId);
+  }
+
+  async function handleSendMessage(text: string) {
+    const trimmed = text.trim();
+    if (!trimmed) return;
+
+    const isFirstMessage = messages.filter((m) => m.role === 'user').length === 0;
+    setMessages((prev) => [...prev, { role: 'user', content: trimmed }]);
+    setChatInput('');
+    setStatus('active');
+    setIsTyping(true);
+    if (isFirstMessage) trackEvent('url_demo_first_message');
+
+    try {
+      const chatEndpoint = apiEndpoint ?? '/api/aiden/chat';
+      const res = await fetch(chatEndpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId, message: trimmed }),
+      });
+      let aidenContent = '';
+      const contentType = res.headers.get('Content-Type') ?? '';
+      if (contentType.includes('application/json')) {
+        const data = (await res.json()) as {
+          data: { content?: string; message?: string; response?: string } | null;
+          error: unknown;
+        };
+        aidenContent =
+          data.data?.content ??
+          data.data?.message ??
+          data.data?.response ??
+          "I'm ready to help — ask me anything about your site.";
+      } else {
+        aidenContent = (await res.text()) || "I'm ready to help — ask me anything about your site.";
+      }
+      const newCount = exchangeCount + 1;
+      setExchangeCount(newCount);
+      setMessages((prev) => [...prev, { role: 'aiden', content: aidenContent }]);
+      trackEvent('url_demo_message_count', { count: newCount });
+    } catch {
+      setMessages((prev) => [
+        ...prev,
+        { role: 'aiden', content: "I'm having trouble responding right now. Please try again." },
+      ]);
+    } finally {
+      setIsTyping(false);
+    }
+  }
+
+  function handleChatKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      void handleSendMessage(chatInput);
+    }
   }
 
   return (
@@ -83,6 +155,10 @@ export default function URLDemoWidget({ onDemoComplete }: URLDemoWidgetProps) {
           80% { transform: translateX(6px); }
         }
         .input-shake { animation: shake 400ms ease-out; }
+        @keyframes fade-in {
+          from { opacity: 0; transform: translateY(8px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
       `}</style>
 
       <div
@@ -142,11 +218,120 @@ export default function URLDemoWidget({ onDemoComplete }: URLDemoWidgetProps) {
           <TrainingStateDisplay url={submittedUrl} onComplete={handleTrainingComplete} />
         )}
 
-        {/* ─── Ready (training complete — chat UI added in Story 3.3) ─── */}
-        {status === 'ready' && (
-          <p style={{ color: 'var(--od-text)', fontSize: '0.9375rem', margin: 0 }}>
-            Aiden is ready. Chat coming soon.
-          </p>
+        {/* ─── Ready / Active (chat UI) ─── */}
+        {(status === 'ready' || status === 'active') && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {/* Chat thread */}
+            <div
+              role="log"
+              aria-live="polite"
+              aria-label="Conversation with Aiden"
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.75rem',
+                maxHeight: '320px',
+                overflowY: 'auto',
+                paddingRight: '0.25rem',
+              }}
+            >
+              {messages.map((msg, i) => (
+                <ChatMessage key={i} role={msg.role} content={msg.content} />
+              ))}
+              {isTyping && <ChatMessage role="aiden" content="" isTyping />}
+            </div>
+
+            {/* Post-demo soft prompt (after 2+ exchanges) */}
+            {exchangeCount >= 2 && (
+              <div
+                style={{
+                  borderTop: '1px solid var(--od-border)',
+                  paddingTop: '1rem',
+                  animation: 'fade-in 300ms ease-in both',
+                }}
+              >
+                <p style={{ color: 'var(--od-text)', fontSize: '0.875rem', margin: '0 0 0.5rem' }}>
+                  Want to see what Aiden does with your full CRM and inbound pipeline?
+                </p>
+                <a
+                  href="/get-started"
+                  onClick={() => {
+                    trackEvent('url_demo_unlock_more');
+                    onUnlockMore?.();
+                  }}
+                  style={{
+                    color: 'var(--od-gold)',
+                    fontWeight: 600,
+                    fontSize: '0.875rem',
+                    textDecoration: 'none',
+                  }}
+                >
+                  See the full platform →
+                </a>
+              </div>
+            )}
+
+            {/* Starter chips (visible in ready state only) */}
+            {status === 'ready' && (
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                {STARTER_CHIPS.map((chip) => (
+                  <button
+                    key={chip}
+                    role="button"
+                    aria-label={chip}
+                    onClick={() => void handleSendMessage(chip)}
+                    style={{
+                      padding: '0.375rem 0.875rem',
+                      fontSize: '0.8125rem',
+                      borderRadius: '100px',
+                      border: '1px solid var(--od-border)',
+                      background: 'transparent',
+                      color: 'var(--od-text)',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {chip}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* Chat input */}
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                void handleSendMessage(chatInput);
+              }}
+              style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-end' }}
+            >
+              <textarea
+                value={chatInput}
+                onChange={(e) => setChatInput(e.target.value)}
+                onKeyDown={handleChatKeyDown}
+                placeholder="Ask Aiden anything..."
+                aria-label="Chat with Aiden"
+                rows={1}
+                // eslint-disable-next-line jsx-a11y/no-autofocus
+                autoFocus={status === 'ready'}
+                style={{
+                  flex: 1,
+                  padding: '0.75rem 1rem',
+                  fontSize: '0.9375rem',
+                  borderRadius: '8px',
+                  background: 'var(--od-dark)',
+                  color: 'var(--od-white)',
+                  border: '1.5px solid var(--od-border)',
+                  outline: 'none',
+                  resize: 'none',
+                  boxSizing: 'border-box',
+                  fontFamily: 'inherit',
+                }}
+              />
+              <CTAButton variant="primary" size="md" type="submit" loading={isTyping}>
+                Send
+              </CTAButton>
+            </form>
+          </div>
         )}
 
         {/* ─── Fallback ─── */}
