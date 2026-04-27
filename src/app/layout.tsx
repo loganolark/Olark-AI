@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from 'next';
 import { Poppins, DM_Sans } from 'next/font/google';
 import { ConsentProvider } from '@/lib/consent';
 import CookieConsentBanner from '@/components/consent/CookieConsentBanner';
+import GA4Script from '@/components/analytics/GA4Script';
+import PageViewTracker from '@/components/analytics/PageViewTracker';
 import './globals.css';
 
 const poppins = Poppins({
@@ -41,6 +43,8 @@ export default function RootLayout({
     <html lang="en" className={`${poppins.variable} ${dmSans.variable}`}>
       <body>
         <ConsentProvider>
+          <GA4Script />
+          <PageViewTracker />
           {children}
           <CookieConsentBanner />
         </ConsentProvider>
