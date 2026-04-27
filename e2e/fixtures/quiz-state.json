@@ -1,0 +1,10 @@
+{
+  "step": 3,
+  "answers": {
+    "company_size": "51-200",
+    "use_case": "inbound_qual",
+    "inbound_volume": "high"
+  },
+  "tier_signal": null,
+  "completed_at": null
+}

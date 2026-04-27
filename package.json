@@ -8,15 +8,21 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest",
-    "test:run": "vitest run"
+    "test:run": "vitest run",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:axe": "playwright test --grep @axe"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",
+    "@sentry/nextjs": "^10.50.0",
     "next": "16.2.4",
     "react": "19.2.4",
     "react-dom": "19.2.4"
   },
   "devDependencies": {
+    "@lhci/cli": "^0.15.1",
+    "@playwright/test": "1.59.1",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
@@ -24,6 +30,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "^6.0.1",
+    "axe-playwright": "^2.2.2",
     "eslint": "^9",
     "eslint-config-next": "16.2.4",
     "jsdom": "^29.1.0",
