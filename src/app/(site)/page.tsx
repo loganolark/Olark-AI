@@ -1,18 +1,20 @@
 import type { Metadata } from 'next';
-// Temporary smoke test imports — remove before Story 2.2 begins
 import CTAButton from '@/components/ui/CTAButton';
 import PillBadge from '@/components/ui/PillBadge';
 import SectionHero from '@/components/ui/SectionHero';
+import LogoStrip from '@/components/product/LogoStrip';
 
 export const metadata: Metadata = {
   title: 'Your Leads Arrive Ready | Aiden by Olark',
-  description: 'Aiden is your AI sales rep. It qualifies and routes every chat visitor so your team focuses on deals, not conversations.',
+  description:
+    'Aiden is your AI sales chat — it qualifies every visitor before they reach your team. The AI sales rep that turns browsers into briefed buyers.',
   alternates: {
     canonical: '/',
   },
   openGraph: {
     title: 'Your Leads Arrive Ready | Aiden by Olark',
-    description: 'Aiden is your AI sales rep. It qualifies and routes every chat visitor so your team focuses on deals, not conversations.',
+    description:
+      'Aiden is your AI sales chat — it qualifies every visitor before they reach your team. The AI sales rep that turns browsers into briefed buyers.',
     images: [{ url: '/og-image.png', width: 1200, height: 630 }],
     type: 'website',
   },
@@ -31,6 +33,30 @@ const organizationJsonLd = {
   ],
 };
 
+const TIERS = [
+  {
+    id: 'essentials',
+    name: 'Essentials',
+    borderGradient: 'linear-gradient(90deg, #F5C200, #FFD533)',
+    positioning: 'Live in 48 hours. Every visitor qualified, routed, and ready for your rep.',
+    href: '/essentials',
+  },
+  {
+    id: 'lead-gen',
+    name: 'Lead-Gen',
+    borderGradient: 'linear-gradient(90deg, #E8325A, #FF6B8A)',
+    positioning: 'Your leads arrive with a context brief. Your reps just got a teammate.',
+    href: '/lead-gen',
+  },
+  {
+    id: 'commercial',
+    name: 'Commercial',
+    borderGradient: 'linear-gradient(90deg, #00D4AA, #00ECBD)',
+    positioning: 'Full pipeline signal. Provable ROI, direct team access, no ticket queue.',
+    href: '/commercial',
+  },
+];
+
 export default function HomePage() {
   return (
     <>
@@ -38,9 +64,16 @@ export default function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
       />
+
+      {/* ─── Hero ─── */}
       <SectionHero
+        badge={
+          <PillBadge variant="gold" pulse>
+            16 years of live chat · Now AI-first
+          </PillBadge>
+        }
         headline="Your Leads Arrive Ready"
-        subhead="Aiden turns browsers into briefed buyers — before your rep says hello."
+        subhead="Aiden turns browsers into briefed buyers — before your rep says hello. No replacement. Pure augmentation."
         cta={
           <>
             <CTAButton variant="primary" size="lg" href="#demo">
@@ -51,19 +84,408 @@ export default function HomePage() {
             </CTAButton>
           </>
         }
-      >
-        <PillBadge variant="gold" pulse>Live Demo</PillBadge>
-        <div style={{
-          border: '1px dashed var(--od-border)',
-          borderRadius: '12px',
+      />
+
+      {/* ─── Social Proof ─── */}
+      <section
+        style={{
+          backgroundColor: 'var(--od-navy)',
           padding: '3rem 1.5rem',
-          color: 'var(--od-muted)',
-          fontSize: '0.9375rem',
-          marginTop: '1rem',
-        }}>
-          URL Demo Widget — coming in Epic 3
+          textAlign: 'center',
+        }}
+      >
+        <p
+          style={{
+            fontSize: '0.8125rem',
+            letterSpacing: '0.08em',
+            textTransform: 'uppercase',
+            color: 'var(--od-muted)',
+            marginBottom: '2rem',
+            fontWeight: 500,
+          }}
+        >
+          Trusted by teams already winning with live chat
+        </p>
+        <LogoStrip />
+      </section>
+
+      {/* ─── URL Demo Placeholder (replaced by URLDemoWidget in Story 3.2) ─── */}
+      <section
+        id="demo"
+        style={{
+          backgroundColor: 'var(--od-dark)',
+          padding: '5rem 1.5rem',
+          textAlign: 'center',
+        }}
+      >
+        <div
+          style={{
+            maxWidth: '680px',
+            margin: '0 auto',
+            border: '1px solid var(--od-border)',
+            borderRadius: '16px',
+            padding: '3.5rem 2rem',
+            background: 'var(--od-card)',
+            boxShadow: '0 32px 80px rgba(0,0,0,0.4)',
+          }}
+        >
+          <p
+            style={{
+              fontSize: '0.75rem',
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+              color: 'var(--od-gold)',
+              fontWeight: 600,
+              marginBottom: '1rem',
+            }}
+          >
+            Coming in Epic 3
+          </p>
+          <h2
+            style={{
+              fontFamily: 'var(--font-poppins), ui-sans-serif, sans-serif',
+              fontWeight: 900,
+              fontSize: 'clamp(1.5rem, 3vw, 2rem)',
+              letterSpacing: '-0.02em',
+              color: 'var(--od-white)',
+              margin: '0 0 0.75rem',
+            }}
+          >
+            See Aiden on Your Site →
+          </h2>
+          <p
+            style={{
+              color: 'var(--od-muted)',
+              fontSize: '0.9375rem',
+              lineHeight: 1.6,
+              margin: 0,
+            }}
+          >
+            Paste your company URL — watch Aiden train in ~60 seconds, then ask it a real objection from your pipeline.
+          </p>
         </div>
-      </SectionHero>
+      </section>
+
+      {/* ─── How It Works ─── */}
+      <section
+        style={{
+          backgroundColor: 'var(--od-navy)',
+          padding: '5rem 1.5rem',
+          textAlign: 'center',
+        }}
+      >
+        <p
+          style={{
+            color: 'var(--od-gold)',
+            fontSize: '0.75rem',
+            letterSpacing: '0.1em',
+            textTransform: 'uppercase',
+            fontWeight: 600,
+            marginBottom: '1rem',
+          }}
+        >
+          Three ways to deploy
+        </p>
+        <h2
+          style={{
+            fontFamily: 'var(--font-poppins), ui-sans-serif, sans-serif',
+            fontWeight: 900,
+            fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)',
+            letterSpacing: '-0.025em',
+            color: 'var(--od-white)',
+            margin: '0 0 0.5rem',
+          }}
+        >
+          How Aiden Works for Your Team
+        </h2>
+        <p
+          style={{
+            color: 'var(--od-muted)',
+            fontSize: '0.9375rem',
+            marginBottom: '0',
+          }}
+        >
+          Pick the tier that matches where your team is today.
+        </p>
+        <div
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '1.5rem',
+            justifyContent: 'center',
+            maxWidth: '1100px',
+            margin: '2.5rem auto 0',
+          }}
+        >
+          {TIERS.map((tier) => (
+            // Wrapper provides the 3px gradient top strip
+            <div
+              key={tier.id}
+              style={{
+                flex: '1 1 240px',
+                background: tier.borderGradient,
+                borderRadius: '12px 12px 0 0',
+                padding: '3px 0 0',
+              }}
+            >
+              <div
+                style={{
+                  background: 'var(--od-card)',
+                  borderRadius: '0 0 12px 12px',
+                  border: '1px solid var(--od-border)',
+                  borderTop: 'none',
+                  padding: '2rem',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.75rem',
+                  height: '100%',
+                }}
+              >
+                <span
+                  style={{
+                    fontFamily: 'var(--font-poppins), ui-sans-serif, sans-serif',
+                    fontWeight: 700,
+                    color: 'var(--od-white)',
+                    fontSize: '1.0625rem',
+                  }}
+                >
+                  {tier.name}
+                </span>
+                <p
+                  style={{
+                    color: 'var(--od-text)',
+                    fontSize: '0.9375rem',
+                    lineHeight: 1.6,
+                    flex: 1,
+                    margin: 0,
+                  }}
+                >
+                  {tier.positioning}
+                </p>
+                <a
+                  href={tier.href}
+                  style={{
+                    color: 'var(--od-gold)',
+                    fontWeight: 600,
+                    fontSize: '0.875rem',
+                    textDecoration: 'none',
+                  }}
+                >
+                  Learn more →
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ─── Rep Section ─── */}
+      <section
+        style={{
+          backgroundColor: 'var(--od-card)',
+          padding: '5rem 1.5rem',
+          textAlign: 'center',
+        }}
+      >
+        <div style={{ maxWidth: '720px', margin: '0 auto' }}>
+          <p
+            style={{
+              color: 'var(--od-gold)',
+              fontSize: '0.8125rem',
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              fontWeight: 600,
+              marginBottom: '1rem',
+            }}
+          >
+            For the rep in the room
+          </p>
+          <h2
+            style={{
+              fontFamily: 'var(--font-poppins), ui-sans-serif, sans-serif',
+              fontWeight: 900,
+              fontSize: 'clamp(2rem, 4vw, 3rem)',
+              letterSpacing: '-0.025em',
+              color: 'var(--od-white)',
+              margin: '0 0 2rem',
+            }}
+          >
+            All You Have to Do Is Eat.
+          </h2>
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '1.5rem',
+              justifyContent: 'center',
+              marginBottom: '2rem',
+            }}
+          >
+            <div
+              style={{
+                flex: '1 1 260px',
+                background: 'rgba(15,13,46,0.6)',
+                borderRadius: '12px',
+                padding: '1.5rem',
+                textAlign: 'left',
+              }}
+            >
+              <p
+                style={{
+                  color: 'var(--od-muted)',
+                  fontWeight: 600,
+                  fontSize: '0.8125rem',
+                  letterSpacing: '0.06em',
+                  textTransform: 'uppercase',
+                  marginBottom: '0.75rem',
+                  margin: '0 0 0.75rem',
+                }}
+              >
+                Before Aiden
+              </p>
+              <p style={{ color: 'var(--od-text)', lineHeight: 1.7, margin: 0 }}>
+                45-minute discovery calls. 12 tabs open. Context scattered across emails, Slack, and sticky notes. The first 20 minutes are just catching up.
+              </p>
+            </div>
+            <div
+              style={{
+                flex: '1 1 260px',
+                background: 'rgba(245,194,0,0.08)',
+                border: '1px solid rgba(245,194,0,0.2)',
+                borderRadius: '12px',
+                padding: '1.5rem',
+                textAlign: 'left',
+              }}
+            >
+              <p
+                style={{
+                  color: 'var(--od-gold)',
+                  fontWeight: 600,
+                  fontSize: '0.8125rem',
+                  letterSpacing: '0.06em',
+                  textTransform: 'uppercase',
+                  margin: '0 0 0.75rem',
+                }}
+              >
+                With Aiden
+              </p>
+              <p style={{ color: 'var(--od-text)', lineHeight: 1.7, margin: 0 }}>
+                Your leads arrive with a context brief — company size, use case, objections already handled. You walk in knowing what they need. The conversation starts at the close.
+              </p>
+            </div>
+          </div>
+          <p style={{ color: 'var(--od-muted)', fontSize: '0.9375rem', margin: 0 }}>
+            Aiden doesn&apos;t replace you. It handles the work that kept you from the work.
+          </p>
+        </div>
+      </section>
+
+      {/* ─── Quiz Placeholder (replaced by PathFinderQuiz in Epic 4) ─── */}
+      <section
+        id="quiz"
+        style={{
+          backgroundColor: 'var(--od-navy)',
+          padding: '5rem 1.5rem',
+          textAlign: 'center',
+        }}
+      >
+        <div
+          style={{
+            maxWidth: '640px',
+            margin: '0 auto',
+            border: '1px solid var(--od-border)',
+            borderRadius: '16px',
+            padding: '3.5rem 2rem',
+            background: 'rgba(37,34,117,0.5)',
+            boxShadow: '0 32px 80px rgba(0,0,0,0.4)',
+          }}
+        >
+          <p
+            style={{
+              color: 'var(--od-gold)',
+              fontSize: '0.75rem',
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+              fontWeight: 600,
+              marginBottom: '1rem',
+            }}
+          >
+            Coming in Epic 4
+          </p>
+          <h2
+            style={{
+              fontFamily: 'var(--font-poppins), ui-sans-serif, sans-serif',
+              fontWeight: 900,
+              fontSize: 'clamp(1.5rem, 3vw, 2rem)',
+              letterSpacing: '-0.02em',
+              color: 'var(--od-white)',
+              margin: '0 0 0.75rem',
+            }}
+          >
+            Find Your Tier →
+          </h2>
+          <p
+            style={{
+              color: 'var(--od-muted)',
+              fontSize: '0.9375rem',
+              lineHeight: 1.6,
+              margin: 0,
+            }}
+          >
+            5 questions. No email required up front. Walk away knowing exactly which Aiden tier fits your team.
+          </p>
+        </div>
+      </section>
+
+      {/* ─── CTA Bridge ─── */}
+      <section
+        style={{
+          backgroundColor: 'var(--od-dark)',
+          padding: '5rem 1.5rem',
+          textAlign: 'center',
+          borderTop: '1px solid var(--od-border)',
+        }}
+      >
+        <h2
+          style={{
+            fontFamily: 'var(--font-poppins), ui-sans-serif, sans-serif',
+            fontWeight: 900,
+            fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)',
+            letterSpacing: '-0.025em',
+            color: 'var(--od-white)',
+            margin: '0 0 1rem',
+          }}
+        >
+          Find Your Tier
+        </h2>
+        <p
+          style={{
+            color: 'var(--od-muted)',
+            marginBottom: '2.5rem',
+            fontSize: '0.9375rem',
+          }}
+        >
+          Three ways to deploy Aiden. One fits your team right now.
+        </p>
+        <div
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '1rem',
+            justifyContent: 'center',
+          }}
+        >
+          <CTAButton variant="secondary" size="md" href="/essentials">
+            Start Today, See Results This Week →
+          </CTAButton>
+          <CTAButton variant="secondary" size="md" href="/lead-gen">
+            Give Your Reps a Teammate →
+          </CTAButton>
+          <CTAButton variant="secondary" size="md" href="/commercial">
+            Build Your Full Pipeline Signal →
+          </CTAButton>
+        </div>
+      </section>
     </>
   );
 }
