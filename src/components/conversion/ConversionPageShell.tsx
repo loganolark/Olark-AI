@@ -93,7 +93,9 @@ export default async function ConversionPageShell() {
             gap: '0.875rem',
           }}
         >
-          <CTAButton variant="primary" size="lg" href="/get-started/account">
+          {/* Primary CTA points at the on-page booking embed until the dedicated
+              account-creation flow ships. AC kept the "Start Your Account" copy. */}
+          <CTAButton variant="primary" size="lg" href="#booking">
             Start Your Account →
           </CTAButton>
           <CTAButton variant="secondary" size="lg" href="#booking">

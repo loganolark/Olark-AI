@@ -22,6 +22,23 @@ function isValidUrl(url: string): boolean {
   return /^[^.]+\.[^.]+/.test(normalized) && normalized.length > 3;
 }
 
+/**
+ * Writes the URL demo session to sessionStorage so downstream components
+ * (PathFinderQuiz on completion, ConversionPageShell variant selection,
+ * HubSpotMeetingEmbed on booking) can include demo signals in their writes.
+ *
+ * Shape consumed by `src/lib/session-signals.ts` helpers:
+ *   { sessionId: string, url: string, exchangeCount: number }
+ */
+function writeDemoSession(payload: { sessionId: string; url: string; exchangeCount: number }): void {
+  if (typeof window === 'undefined') return;
+  try {
+    sessionStorage.setItem('olark_demo_session', JSON.stringify(payload));
+  } catch {
+    /* defensive — sessionStorage unavailable (private browsing edge cases) */
+  }
+}
+
 export default function URLDemoWidget({ onDemoComplete, onUnlockMore, apiEndpoint }: URLDemoWidgetProps) {
   const [status, setStatus] = useState<DemoStatus>('idle');
   const [inputValue, setInputValue] = useState('');
@@ -87,6 +104,7 @@ export default function URLDemoWidget({ onDemoComplete, onUnlockMore, apiEndpoin
     }]);
     setStatus('ready');
     trackEvent('url_demo_training_complete');
+    writeDemoSession({ sessionId, url: submittedUrl, exchangeCount: 0 });
     onDemoComplete?.(sessionId);
   }
 
@@ -127,6 +145,7 @@ export default function URLDemoWidget({ onDemoComplete, onUnlockMore, apiEndpoin
       setExchangeCount(newCount);
       setMessages((prev) => [...prev, { role: 'aiden', content: aidenContent }]);
       trackEvent('url_demo_message_count', { count: newCount });
+      writeDemoSession({ sessionId, url: submittedUrl, exchangeCount: newCount });
     } catch {
       setMessages((prev) => [
         ...prev,
@@ -311,7 +330,6 @@ export default function URLDemoWidget({ onDemoComplete, onUnlockMore, apiEndpoin
                 placeholder="Ask Aiden anything..."
                 aria-label="Chat with Aiden"
                 rows={1}
-                // eslint-disable-next-line jsx-a11y/no-autofocus
                 autoFocus={status === 'ready'}
                 style={{
                   flex: 1,

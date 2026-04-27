@@ -164,6 +164,20 @@ describe('URLDemoWidget — ready state (after training)', () => {
     await renderToReady(makeTrainFetch());
     expect(vi.mocked(trackEvent)).toHaveBeenCalledWith('url_demo_submitted', { url: 'example.com' });
   });
+
+  it('writes olark_demo_session to sessionStorage with sessionId, url, and exchangeCount=0', async () => {
+    sessionStorage.removeItem('olark_demo_session');
+    await renderToReady(makeTrainFetch());
+    const raw = sessionStorage.getItem('olark_demo_session');
+    expect(raw).not.toBeNull();
+    const parsed = JSON.parse(raw as string);
+    expect(parsed).toMatchObject({
+      url: 'example.com',
+      exchangeCount: 0,
+    });
+    expect(typeof parsed.sessionId).toBe('string');
+    expect(parsed.sessionId.length).toBeGreaterThan(0);
+  });
 });
 
 describe('URLDemoWidget — active state (chat)', () => {

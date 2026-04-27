@@ -100,11 +100,12 @@ describe('ConversionPageShell — variant selection', () => {
 });
 
 describe('ConversionPageShell — dual CTA', () => {
-  it('renders "Start Your Account →" primary CTA routing to /get-started/account', async () => {
+  it('renders "Start Your Account →" primary CTA scrolling to the on-page booking embed', async () => {
     vi.mocked(cookies).mockReturnValue(makeCookieStore() as never);
     await renderShell();
     const primary = screen.getByRole('link', { name: /Start Your Account/i });
-    expect(primary).toHaveAttribute('href', '/get-started/account');
+    // Until a dedicated account-creation flow exists, both CTAs route to the booking embed.
+    expect(primary).toHaveAttribute('href', '#booking');
   });
 
   it('renders "Scope My Build →" secondary CTA routing to #booking', async () => {

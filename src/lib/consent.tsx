@@ -51,11 +51,15 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
   const [hasInteracted, setHasInteracted] = useState(false);
 
   useEffect(() => {
+    // Hydration from cookie requires post-mount; SSR cannot read browser cookies
+    // for the client component tree. Two batched setState calls = one re-render.
+    /* eslint-disable react-hooks/set-state-in-effect */
     const stored = readConsentCookie();
     if (stored) {
       setConsent(stored);
       setHasInteracted(true);
     }
+    /* eslint-enable react-hooks/set-state-in-effect */
   }, []);
 
   const acceptAll = () => {

@@ -5,6 +5,8 @@ import SectionHero from '@/components/ui/SectionHero';
 import LogoStrip from '@/components/product/LogoStrip';
 import URLDemoWidgetLoader from '@/components/url-demo/URLDemoWidgetLoader';
 import PathFinderQuiz from '@/components/quiz/PathFinderQuiz';
+import TierCard from '@/components/product/TierCard';
+import type { TierVariant } from '@/types/tier';
 
 export const metadata: Metadata = {
   title: 'Your Leads Arrive Ready | Aiden by Olark',
@@ -35,25 +37,29 @@ const organizationJsonLd = {
   ],
 };
 
-const TIERS = [
+interface HomepageTier {
+  tier: TierVariant;
+  name: string;
+  positioning: string;
+  href: string;
+}
+
+const TIERS: HomepageTier[] = [
   {
-    id: 'essentials',
+    tier: 'essentials',
     name: 'Essentials',
-    borderGradient: 'linear-gradient(90deg, #F5C200, #FFD533)',
     positioning: 'Live in 48 hours. Every visitor qualified, routed, and ready for your rep.',
     href: '/essentials',
   },
   {
-    id: 'lead-gen',
+    tier: 'lead-gen',
     name: 'Lead-Gen',
-    borderGradient: 'linear-gradient(90deg, #E8325A, #FF6B8A)',
     positioning: 'Your leads arrive with a context brief. Your reps just got a teammate.',
     href: '/lead-gen',
   },
   {
-    id: 'commercial',
+    tier: 'commercial',
     name: 'Commercial',
-    borderGradient: 'linear-gradient(90deg, #00D4AA, #00ECBD)',
     positioning: 'Full pipeline signal. Provable ROI, direct team access, no ticket queue.',
     href: '/commercial',
   },
@@ -166,72 +172,24 @@ export default function HomePage() {
         </p>
         <div
           style={{
-            display: 'flex',
-            flexWrap: 'wrap',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
             gap: '1.5rem',
-            justifyContent: 'center',
             maxWidth: '1100px',
             margin: '2.5rem auto 0',
+            textAlign: 'left',
           }}
         >
-          {TIERS.map((tier) => (
-            // Wrapper provides the 3px gradient top strip
-            <div
-              key={tier.id}
-              style={{
-                flex: '1 1 240px',
-                background: tier.borderGradient,
-                borderRadius: '12px 12px 0 0',
-                padding: '3px 0 0',
-              }}
-            >
-              <div
-                style={{
-                  background: 'var(--od-card)',
-                  borderRadius: '0 0 12px 12px',
-                  border: '1px solid var(--od-border)',
-                  borderTop: 'none',
-                  padding: '2rem',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '0.75rem',
-                  height: '100%',
-                }}
-              >
-                <span
-                  style={{
-                    fontFamily: 'var(--font-poppins), ui-sans-serif, sans-serif',
-                    fontWeight: 700,
-                    color: 'var(--od-white)',
-                    fontSize: '1.0625rem',
-                  }}
-                >
-                  {tier.name}
-                </span>
-                <p
-                  style={{
-                    color: 'var(--od-text)',
-                    fontSize: '0.9375rem',
-                    lineHeight: 1.6,
-                    flex: 1,
-                    margin: 0,
-                  }}
-                >
-                  {tier.positioning}
-                </p>
-                <a
-                  href={tier.href}
-                  style={{
-                    color: 'var(--od-gold)',
-                    fontWeight: 600,
-                    fontSize: '0.875rem',
-                    textDecoration: 'none',
-                  }}
-                >
-                  Learn more →
-                </a>
-              </div>
-            </div>
+          {TIERS.map((t) => (
+            <TierCard
+              key={t.tier}
+              tier={t.tier}
+              headline={t.name}
+              tagline={t.positioning}
+              capabilities={[]}
+              ctaHref={t.href}
+              ctaLabel="Learn more →"
+            />
           ))}
         </div>
       </section>
