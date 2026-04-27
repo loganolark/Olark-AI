@@ -1,4 +1,8 @@
 import type { Metadata } from 'next';
+import SectionHero from '@/components/ui/SectionHero';
+import PillBadge from '@/components/ui/PillBadge';
+import TierCard from '@/components/product/TierCard';
+import CrawlWalkRunTimeline from '@/components/product/CrawlWalkRunTimeline';
 
 export const metadata: Metadata = {
   title: 'AI Sales Rep for High-Volume Teams | Aiden Commercial by Olark',
@@ -23,6 +27,14 @@ const productJsonLd = {
   url: 'https://olark.ai/commercial',
 };
 
+const COMMERCIAL_CAPABILITIES = [
+  'Full signal trail — every visitor interaction logged and queryable',
+  'Rep intelligence brief on every contact — context, objections, stated needs',
+  'Deep HubSpot CRM integration — deals, activities, segmented routing',
+  'Objection-handling flows tuned to your product and sales motion',
+  'Tier-segmented routing gives your reps better leads, not more leads',
+];
+
 export default function CommercialPage() {
   return (
     <>
@@ -30,8 +42,70 @@ export default function CommercialPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
       />
-      <h1>Commercial</h1>
-      {/* Replaced in Story 5.4 */}
+
+      <SectionHero
+        badge={<PillBadge variant="muted">Commercial Tier</PillBadge>}
+        headline="Provable Pipeline. Full Signal Trail."
+        subhead="Implementation in days, not quarters. Every visitor logged, every handoff briefed, every rep equipped."
+      />
+
+      <section
+        id="implementation-timeline"
+        style={{
+          backgroundColor: 'var(--od-card)',
+          padding: '5rem 1.5rem',
+        }}
+      >
+        <div style={{ maxWidth: '960px', margin: '0 auto' }}>
+          <p
+            style={{
+              fontSize: '0.75rem',
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+              fontWeight: 600,
+              color: 'var(--od-gold)',
+              textAlign: 'center',
+              marginBottom: '1rem',
+            }}
+          >
+            Implementation timeline
+          </p>
+          <h2
+            style={{
+              fontFamily: 'var(--font-poppins, Poppins, sans-serif)',
+              fontWeight: 900,
+              fontSize: 'clamp(1.5rem, 4vw, 2.25rem)',
+              letterSpacing: '-0.03em',
+              lineHeight: 1.15,
+              color: 'var(--od-white)',
+              textAlign: 'center',
+              margin: '0 0 2.5rem',
+            }}
+          >
+            Crawl. Walk. Run.
+          </h2>
+          <CrawlWalkRunTimeline />
+        </div>
+      </section>
+
+      <section
+        id="capabilities"
+        style={{
+          backgroundColor: 'var(--od-navy)',
+          padding: '5rem 1.5rem',
+        }}
+      >
+        <div style={{ maxWidth: '720px', margin: '0 auto' }}>
+          <TierCard
+            tier="commercial"
+            headline="Commercial"
+            tagline="For teams that need provable pipeline impact — full signal trail, rep intelligence on every contact, and an implementation timeline you can hand to engineering."
+            capabilities={COMMERCIAL_CAPABILITIES}
+            ctaHref="/get-started"
+            ctaLabel="Scope Your Build →"
+          />
+        </div>
+      </section>
     </>
   );
 }
