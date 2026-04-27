@@ -63,8 +63,77 @@ h1, h2, h3, h4, h5, h6 {
   outline-offset: 2px;
 }
 
+/* ─── Animation keyframes ─── */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(0.85); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ─── Global prefers-reduced-motion override ─── */
+/* Collapses ALL animations and transitions to near-instant for users
+   who have enabled the OS-level "Reduce Motion" preference.
+   The 0.01ms value (not 0) preserves animationend/transitionend events
+   so JavaScript listeners that depend on them still fire correctly. */
 @media (prefers-reduced-motion: reduce) {
-  nav[aria-label="Main navigation"] {
-    transition: none;
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
+}
+
+/* ─── Page route transition classes ─── */
+/* Used as className on the <main> wrapper when navigating.
+   Implementation: add class on routeChangeStart, remove on routeChangeComplete.
+   Since Next.js App Router does not expose router events the same way as
+   Pages Router, the actual JS wiring is deferred — these classes are defined
+   here as CSS-only contracts so components can reference them immediately. */
+.page-transition-exit {
+  animation: page-fade-out 100ms ease-in forwards;
+}
+
+.page-transition-enter {
+  animation: page-fade-in 200ms ease-out forwards;
+}
+
+@keyframes page-fade-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+@keyframes page-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ─── CTAButton hover / active states ─── */
+/* Primary variant hover: intensify glow + scale up */
+[data-ctabtn-variant="primary"]:not([aria-disabled="true"]):hover {
+  box-shadow: 0 0 60px rgba(245,194,0,0.5), 0 4px 16px rgba(0,0,0,0.4) !important;
+  transform: scale(1.02);
+}
+
+[data-ctabtn-variant="primary"]:not([aria-disabled="true"]):active {
+  transform: scale(0.98);
+}
+
+/* Secondary variant hover */
+[data-ctabtn-variant="secondary"]:not([aria-disabled="true"]):hover {
+  background-color: rgba(240,238,255,0.08);
+  transform: scale(1.02);
+}
+
+[data-ctabtn-variant="secondary"]:not([aria-disabled="true"]):active {
+  transform: scale(0.98);
+}
+
+/* Ghost variant hover */
+[data-ctabtn-variant="ghost"]:not([aria-disabled="true"]):hover {
+  color: var(--od-white);
+  transform: scale(1.01);
 }

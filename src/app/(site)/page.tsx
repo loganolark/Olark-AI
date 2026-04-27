@@ -1,4 +1,8 @@
 import type { Metadata } from 'next';
+// Temporary smoke test imports — remove before Story 2.2 begins
+import CTAButton from '@/components/ui/CTAButton';
+import PillBadge from '@/components/ui/PillBadge';
+import SectionHero from '@/components/ui/SectionHero';
 
 export const metadata: Metadata = {
   title: 'Your Leads Arrive Ready | Aiden by Olark',
@@ -34,12 +38,32 @@ export default function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
       />
-      <main className="flex min-h-screen flex-col items-center justify-center">
-        <h1 className="font-heading text-4xl" style={{ color: 'var(--od-gold)' }}>
-          Aiden by Olark
-        </h1>
-        <p style={{ color: 'var(--od-muted)' }}>Coming soon.</p>
-      </main>
+      <SectionHero
+        headline="Your Leads Arrive Ready"
+        subhead="Aiden turns browsers into briefed buyers — before your rep says hello."
+        cta={
+          <>
+            <CTAButton variant="primary" size="lg" href="#demo">
+              See Aiden on Your Site
+            </CTAButton>
+            <CTAButton variant="secondary" size="lg" href="#quiz">
+              Find Your Tier →
+            </CTAButton>
+          </>
+        }
+      >
+        <PillBadge variant="gold" pulse>Live Demo</PillBadge>
+        <div style={{
+          border: '1px dashed var(--od-border)',
+          borderRadius: '12px',
+          padding: '3rem 1.5rem',
+          color: 'var(--od-muted)',
+          fontSize: '0.9375rem',
+          marginTop: '1rem',
+        }}>
+          URL Demo Widget — coming in Epic 3
+        </div>
+      </SectionHero>
     </>
   );
 }
