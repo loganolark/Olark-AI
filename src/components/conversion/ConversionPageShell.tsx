@@ -2,6 +2,7 @@ import React from 'react';
 import { cookies } from 'next/headers';
 import CTAButton from '@/components/ui/CTAButton';
 import PillBadge from '@/components/ui/PillBadge';
+import Reveal from '@/components/ui/Reveal';
 import HubSpotMeetingEmbed from '@/components/conversion/HubSpotMeetingEmbed';
 import {
   parseSessionSignalsCookie,
@@ -126,7 +127,12 @@ export default async function ConversionPageShell() {
           textAlign: 'center',
         }}
       >
-        <div style={{ maxWidth: '760px', margin: '0 auto' }}>
+        <Reveal
+          threshold={0.05}
+          offset={16}
+          duration={600}
+          style={{ maxWidth: '760px', margin: '0 auto' }}
+        >
           {copy.badge && (
             <div
               data-testid="conversion-tier-badge"
@@ -193,7 +199,7 @@ export default async function ConversionPageShell() {
           <CTAButton variant="primary" size="lg" href="#booking">
             {copy.cta}
           </CTAButton>
-        </div>
+        </Reveal>
       </section>
 
       <section
@@ -243,9 +249,13 @@ export default async function ConversionPageShell() {
               gap: '1rem',
             }}
           >
-            {WHAT_HAPPENS_NEXT.map((s) => (
-              <li
+            {WHAT_HAPPENS_NEXT.map((s, i) => (
+              <Reveal
                 key={s.step}
+                as="li"
+                threshold={0.2}
+                delay={i * 100}
+                offset={12}
                 style={{
                   background: 'var(--od-card)',
                   border: '1px solid var(--od-border)',
@@ -289,13 +299,16 @@ export default async function ConversionPageShell() {
                 >
                   {s.body}
                 </p>
-              </li>
+              </Reveal>
             ))}
           </ol>
 
-          <div
+          <Reveal
             id="booking"
             data-testid="conversion-booking-card"
+            threshold={0.1}
+            offset={20}
+            duration={650}
             style={{
               background: 'var(--od-card)',
               border: '1px solid var(--od-border)',
@@ -304,7 +317,7 @@ export default async function ConversionPageShell() {
             }}
           >
             <HubSpotMeetingEmbed variant={variant} />
-          </div>
+          </Reveal>
         </div>
       </section>
     </div>

@@ -12,6 +12,7 @@ import PipelineVisual from '@/components/product/PipelineVisual';
 import AutomationVisual from '@/components/product/AutomationVisual';
 import QuizResumeBanner from '@/components/quiz/QuizResumeBanner';
 import QuoteSection from '@/components/quote/QuoteSection';
+import Reveal from '@/components/ui/Reveal';
 
 export const metadata: Metadata = {
   title: 'Qualify Leads Before They Talk to You | Aiden Lead-Gen by Olark',
@@ -185,7 +186,7 @@ export default function LeadGenPage() {
           borderTop: '1px solid var(--od-border)',
         }}
       >
-        <div style={{ maxWidth: '720px', margin: '0 auto' }}>
+        <Reveal style={{ maxWidth: '720px', margin: '0 auto' }}>
           <p
             style={{
               fontSize: '0.75rem',
@@ -254,7 +255,7 @@ export default function LeadGenPage() {
           >
             Aiden does the qualifying. You do what you’re great at — closing the conversation a real human is owed.
           </p>
-        </div>
+        </Reveal>
       </section>
     </>
   );

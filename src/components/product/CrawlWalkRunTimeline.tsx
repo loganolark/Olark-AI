@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Reveal from '@/components/ui/Reveal';
 
 export interface TimelinePhase {
   id: 'crawl' | 'walk' | 'run';
@@ -38,11 +39,18 @@ export default function CrawlWalkRunTimeline() {
 
   return (
     <div role="list" className="cwr-timeline">
-      {PHASES.map((phase) => {
+      {PHASES.map((phase, i) => {
         const isOpen = openPhase === phase.id;
         const detailId = `cwr-detail-${phase.id}`;
         return (
-          <div role="listitem" key={phase.id} className="cwr-phase">
+          <Reveal
+            as="div"
+            key={phase.id}
+            delay={i * 110}
+            offset={14}
+            threshold={0.15}
+          >
+          <div role="listitem" className="cwr-phase">
             <button
               type="button"
               aria-expanded={isOpen}
@@ -66,6 +74,7 @@ export default function CrawlWalkRunTimeline() {
               {phase.detail}
             </div>
           </div>
+          </Reveal>
         );
       })}
     </div>

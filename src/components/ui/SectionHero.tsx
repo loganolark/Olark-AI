@@ -1,4 +1,5 @@
 import React from 'react';
+import Reveal from './Reveal';
 
 export interface SectionHeroProps {
   /** Optional badge/pill above the headline — e.g. <PillBadge variant="gold" pulse>...</PillBadge> */
@@ -38,7 +39,10 @@ export default function SectionHero({
         textAlign: 'center',
       }}
     >
-      <div
+      <Reveal
+        threshold={0.05}
+        offset={16}
+        duration={600}
         style={{
           maxWidth: '800px',
           margin: '0 auto',
@@ -103,7 +107,7 @@ export default function SectionHero({
             {children}
           </div>
         )}
-      </div>
+      </Reveal>
     </section>
   );
 }

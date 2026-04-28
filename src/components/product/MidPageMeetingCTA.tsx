@@ -3,6 +3,7 @@
 import React from 'react';
 import CTAButton from '@/components/ui/CTAButton';
 import PillBadge from '@/components/ui/PillBadge';
+import Reveal from '@/components/ui/Reveal';
 import { trackEvent } from '@/lib/analytics';
 
 export type MidPageMeetingCTAPage = 'essentials' | 'lead-gen' | 'commercial';
@@ -80,7 +81,8 @@ export default function MidPageMeetingCTA({
         borderTop: '1px solid var(--od-border)',
       }}
     >
-      <div
+      <Reveal
+        threshold={0.2}
         style={{
           maxWidth: '720px',
           margin: '0 auto',
@@ -154,7 +156,7 @@ export default function MidPageMeetingCTA({
             Schedule to Learn More About Aiden
           </CTAButton>
         </div>
-      </div>
+      </Reveal>
     </section>
   );
 }

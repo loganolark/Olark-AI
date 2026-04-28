@@ -1,4 +1,5 @@
 import React from 'react';
+import Reveal from '@/components/ui/Reveal';
 
 export default function CommercialAidenQuote() {
   return (
@@ -6,7 +7,7 @@ export default function CommercialAidenQuote() {
       className="product-section"
       style={{ backgroundColor: 'var(--od-navy)' }}
     >
-      <div
+      <Reveal
         data-testid="commercial-aiden-quote"
         style={{
           maxWidth: '720px',
@@ -44,7 +45,7 @@ export default function CommercialAidenQuote() {
         >
           &mdash; From the Commercial Presales Desk at Olark
         </cite>
-      </div>
+      </Reveal>
     </section>
   );
 }

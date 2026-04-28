@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import CTAButton from '@/components/ui/CTAButton';
+import Reveal from '@/components/ui/Reveal';
 import QuoteBuilder from './QuoteBuilder';
 import type { QuizTier } from '@/types/quote';
 
@@ -56,7 +57,7 @@ export default function QuoteSection({
         scrollMarginTop: '80px',
       }}
     >
-      <div style={{ maxWidth: '720px', margin: '0 auto' }}>
+      <Reveal style={{ maxWidth: '720px', margin: '0 auto' }} threshold={0.15}>
         {!expanded && (
           <div
             data-testid="quote-trigger"
@@ -115,7 +116,7 @@ export default function QuoteSection({
           </div>
         )}
         {expanded && <QuoteBuilder tier={tier} />}
-      </div>
+      </Reveal>
     </section>
   );
 }

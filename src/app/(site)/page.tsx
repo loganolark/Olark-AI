@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import CTAButton from '@/components/ui/CTAButton';
 import PillBadge from '@/components/ui/PillBadge';
 import SectionHero from '@/components/ui/SectionHero';
+import Reveal from '@/components/ui/Reveal';
 import LogoStrip from '@/components/product/LogoStrip';
 import URLDemoWidgetLoader from '@/components/url-demo/URLDemoWidgetLoader';
 import PathFinderQuiz from '@/components/quiz/PathFinderQuiz';
@@ -118,19 +119,21 @@ export default function HomePage() {
           textAlign: 'center',
         }}
       >
-        <p
-          style={{
-            fontSize: '0.8125rem',
-            letterSpacing: '0.08em',
-            textTransform: 'uppercase',
-            color: 'var(--od-muted)',
-            marginBottom: '2rem',
-            fontWeight: 500,
-          }}
-        >
-          Trusted by teams already winning with live chat
-        </p>
-        <LogoStrip />
+        <Reveal>
+          <p
+            style={{
+              fontSize: '0.8125rem',
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              color: 'var(--od-muted)',
+              marginBottom: '2rem',
+              fontWeight: 500,
+            }}
+          >
+            Trusted by teams already winning with live chat
+          </p>
+          <LogoStrip />
+        </Reveal>
       </section>
 
       {/* ─── URL Demo Widget ─── */}
@@ -153,39 +156,41 @@ export default function HomePage() {
           textAlign: 'center',
         }}
       >
-        <p
-          style={{
-            color: 'var(--od-gold)',
-            fontSize: '0.75rem',
-            letterSpacing: '0.1em',
-            textTransform: 'uppercase',
-            fontWeight: 600,
-            marginBottom: '1rem',
-          }}
-        >
-          Three ways to deploy
-        </p>
-        <h2
-          style={{
-            fontFamily: 'var(--font-poppins), ui-sans-serif, sans-serif',
-            fontWeight: 900,
-            fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)',
-            letterSpacing: '-0.025em',
-            color: 'var(--od-white)',
-            margin: '0 0 0.5rem',
-          }}
-        >
-          How Aiden Works for Your Team
-        </h2>
-        <p
-          style={{
-            color: 'var(--od-muted)',
-            fontSize: '0.9375rem',
-            marginBottom: '0',
-          }}
-        >
-          Pick the tier that matches where your team is today.
-        </p>
+        <Reveal>
+          <p
+            style={{
+              color: 'var(--od-gold)',
+              fontSize: '0.75rem',
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+              fontWeight: 600,
+              marginBottom: '1rem',
+            }}
+          >
+            Three ways to deploy
+          </p>
+          <h2
+            style={{
+              fontFamily: 'var(--font-poppins), ui-sans-serif, sans-serif',
+              fontWeight: 900,
+              fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)',
+              letterSpacing: '-0.025em',
+              color: 'var(--od-white)',
+              margin: '0 0 0.5rem',
+            }}
+          >
+            How Aiden Works for Your Team
+          </h2>
+          <p
+            style={{
+              color: 'var(--od-muted)',
+              fontSize: '0.9375rem',
+              marginBottom: '0',
+            }}
+          >
+            Pick the tier that matches where your team is today.
+          </p>
+        </Reveal>
         <div
           style={{
             display: 'grid',
@@ -220,7 +225,7 @@ export default function HomePage() {
           textAlign: 'center',
         }}
       >
-        <div style={{ maxWidth: '720px', margin: '0 auto' }}>
+        <Reveal style={{ maxWidth: '720px', margin: '0 auto' }}>
           <p
             style={{
               color: 'var(--od-gold)',
@@ -310,7 +315,7 @@ export default function HomePage() {
           <p style={{ color: 'var(--od-muted)', fontSize: '0.9375rem', margin: 0 }}>
             Aiden doesn&apos;t replace you. It handles the work that kept you from the work.
           </p>
-        </div>
+        </Reveal>
       </section>
 
       {/* ─── Path Finder Quiz ─── */}
@@ -333,34 +338,36 @@ export default function HomePage() {
           borderTop: '1px solid var(--od-border)',
         }}
       >
-        <h2
-          style={{
-            fontFamily: 'var(--font-poppins), ui-sans-serif, sans-serif',
-            fontWeight: 900,
-            fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)',
-            letterSpacing: '-0.025em',
-            color: 'var(--od-white)',
-            margin: '0 0 1rem',
-          }}
-        >
-          Still Not Sure Which Tier Fits?
-        </h2>
-        <p
-          style={{
-            color: 'var(--od-muted)',
-            marginBottom: '2.5rem',
-            fontSize: '0.9375rem',
-            maxWidth: '480px',
-            marginLeft: 'auto',
-            marginRight: 'auto',
-          }}
-        >
-          A few quick questions about your team and we&rsquo;ll match you to the
-          right tier. Sixty seconds, then you decide.
-        </p>
-        <CTAButton variant="primary" size="lg" href="#quiz">
-          Take the 60-Second Quiz →
-        </CTAButton>
+        <Reveal>
+          <h2
+            style={{
+              fontFamily: 'var(--font-poppins), ui-sans-serif, sans-serif',
+              fontWeight: 900,
+              fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)',
+              letterSpacing: '-0.025em',
+              color: 'var(--od-white)',
+              margin: '0 0 1rem',
+            }}
+          >
+            Still Not Sure Which Tier Fits?
+          </h2>
+          <p
+            style={{
+              color: 'var(--od-muted)',
+              marginBottom: '2.5rem',
+              fontSize: '0.9375rem',
+              maxWidth: '480px',
+              marginLeft: 'auto',
+              marginRight: 'auto',
+            }}
+          >
+            A few quick questions about your team and we&rsquo;ll match you to the
+            right tier. Sixty seconds, then you decide.
+          </p>
+          <CTAButton variant="primary" size="lg" href="#quiz">
+            Take the 60-Second Quiz →
+          </CTAButton>
+        </Reveal>
       </section>
     </>
   );

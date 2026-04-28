@@ -1,4 +1,5 @@
 import React from 'react';
+import Reveal from '@/components/ui/Reveal';
 
 type LabelVariant = 'gold' | 'pink';
 type PillVariant = 'default' | 'pink' | 'muted';
@@ -146,7 +147,7 @@ export default function FeatureSpotlight({
       className="product-section"
       style={{ backgroundColor: accentBg[accent] }}
     >
-      <div
+      <Reveal
         className="fs-grid"
         style={{ maxWidth: '1080px', margin: '0 auto' }}
       >
@@ -161,7 +162,7 @@ export default function FeatureSpotlight({
             {visual}
           </>
         )}
-      </div>
+      </Reveal>
     </section>
   );
 }

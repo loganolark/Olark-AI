@@ -1,5 +1,6 @@
 import React from 'react';
 import ProductIcon, { type ProductIconName } from '@/components/ui/ProductIcon';
+import Reveal from '@/components/ui/Reveal';
 
 type FeatureGroup = 'training' | 'features' | 'usage';
 
@@ -152,9 +153,12 @@ export default function EssentialsFeatureGroups() {
                 />
               </div>
               <div className="efg-grid">
-                {groupCards.map((card) => (
-                  <div
+                {groupCards.map((card, cardIdx) => (
+                  <Reveal
                     key={card.title}
+                    threshold={0.15}
+                    delay={cardIdx * 80}
+                    offset={10}
                     style={{
                       backgroundColor: 'var(--od-navy)',
                       border: '1px solid var(--od-border)',
@@ -202,7 +206,7 @@ export default function EssentialsFeatureGroups() {
                     >
                       {card.body}
                     </p>
-                  </div>
+                  </Reveal>
                 ))}
               </div>
             </div>

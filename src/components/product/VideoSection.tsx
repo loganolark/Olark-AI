@@ -1,5 +1,6 @@
 import React from 'react';
 import VideoEmbedThumbnail from './VideoEmbedThumbnail';
+import Reveal from '@/components/ui/Reveal';
 import type { VideoLightboxPage } from '@/components/ui/VideoLightbox';
 
 export interface VideoChecklistItem {
@@ -159,7 +160,7 @@ export default function VideoSection({
         data-variant="solo"
         style={{ backgroundColor: 'var(--od-dark)' }}
       >
-        <div style={{ maxWidth: '960px', margin: '0 auto', textAlign: 'center' }}>
+        <Reveal style={{ maxWidth: '960px', margin: '0 auto', textAlign: 'center' }}>
           <p
             style={{
               fontSize: '0.75rem',
@@ -197,7 +198,7 @@ export default function VideoSection({
             {intro}
           </p>
           <div style={{ maxWidth: '760px', margin: '0 auto' }}>{thumbnail}</div>
-        </div>
+        </Reveal>
       </section>
     );
   }
@@ -209,10 +210,10 @@ export default function VideoSection({
       data-variant="split"
       style={{ backgroundColor: 'var(--od-dark)' }}
     >
-      <div className="fs-grid" style={{ maxWidth: '1080px', margin: '0 auto' }}>
+      <Reveal className="fs-grid" style={{ maxWidth: '1080px', margin: '0 auto' }}>
         {copy}
         {thumbnail}
-      </div>
+      </Reveal>
     </section>
   );
 }

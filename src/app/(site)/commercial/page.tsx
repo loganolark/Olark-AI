@@ -13,6 +13,7 @@ import MidPageMeetingCTA from '@/components/product/MidPageMeetingCTA';
 import VideoSection from '@/components/product/VideoSection';
 import QuizResumeBanner from '@/components/quiz/QuizResumeBanner';
 import QuoteSection from '@/components/quote/QuoteSection';
+import Reveal from '@/components/ui/Reveal';
 
 export const metadata: Metadata = {
   title: 'AI Sales Rep for High-Volume Teams | Aiden Commercial by Olark',
@@ -93,33 +94,35 @@ export default function CommercialPage() {
         }}
       >
         <div style={{ maxWidth: '960px', margin: '0 auto' }}>
-          <p
-            style={{
-              fontSize: '0.75rem',
-              letterSpacing: '0.1em',
-              textTransform: 'uppercase',
-              fontWeight: 600,
-              color: 'var(--od-gold)',
-              textAlign: 'center',
-              marginBottom: '1rem',
-            }}
-          >
-            Implementation timeline
-          </p>
-          <h2
-            style={{
-              fontFamily: 'var(--font-poppins, Poppins, sans-serif)',
-              fontWeight: 900,
-              fontSize: 'clamp(1.5rem, 4vw, 2.25rem)',
-              letterSpacing: '-0.03em',
-              lineHeight: 1.15,
-              color: 'var(--od-white)',
-              textAlign: 'center',
-              margin: '0 0 2.5rem',
-            }}
-          >
-            Crawl. Walk. Run.
-          </h2>
+          <Reveal>
+            <p
+              style={{
+                fontSize: '0.75rem',
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                fontWeight: 600,
+                color: 'var(--od-gold)',
+                textAlign: 'center',
+                marginBottom: '1rem',
+              }}
+            >
+              Implementation timeline
+            </p>
+            <h2
+              style={{
+                fontFamily: 'var(--font-poppins, Poppins, sans-serif)',
+                fontWeight: 900,
+                fontSize: 'clamp(1.5rem, 4vw, 2.25rem)',
+                letterSpacing: '-0.03em',
+                lineHeight: 1.15,
+                color: 'var(--od-white)',
+                textAlign: 'center',
+                margin: '0 0 2.5rem',
+              }}
+            >
+              Crawl. Walk. Run.
+            </h2>
+          </Reveal>
           <CrawlWalkRunTimeline />
         </div>
       </section>

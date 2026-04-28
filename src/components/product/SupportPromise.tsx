@@ -1,5 +1,6 @@
 import React from 'react';
 import PillBadge from '@/components/ui/PillBadge';
+import Reveal from '@/components/ui/Reveal';
 
 const PROMISES: string[] = [
   'Free live onboarding included with every Essentials plan',
@@ -25,7 +26,7 @@ export default function SupportPromise({
         borderTop: '1px solid var(--od-border)',
       }}
     >
-      <div style={{ maxWidth: '720px', margin: '0 auto' }}>
+      <Reveal style={{ maxWidth: '720px', margin: '0 auto' }} threshold={0.15}>
         <p
           style={{
             fontSize: '0.75rem',
@@ -133,7 +134,7 @@ export default function SupportPromise({
             ))}
           </ul>
         </div>
-      </div>
+      </Reveal>
     </section>
   );
 }
