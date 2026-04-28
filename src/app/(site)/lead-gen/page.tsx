@@ -5,6 +5,10 @@ import PillBadge from '@/components/ui/PillBadge';
 import TierCard from '@/components/product/TierCard';
 import FeatureSpotlight from '@/components/product/FeatureSpotlight';
 import MidPageMeetingCTA from '@/components/product/MidPageMeetingCTA';
+import VideoSection from '@/components/product/VideoSection';
+import RoutingVisual from '@/components/product/RoutingVisual';
+import PipelineVisual from '@/components/product/PipelineVisual';
+import AutomationVisual from '@/components/product/AutomationVisual';
 import QuizResumeBanner from '@/components/quiz/QuizResumeBanner';
 import QuoteSection from '@/components/quote/QuoteSection';
 
@@ -57,6 +61,29 @@ export default function LeadGenPage() {
         subhead="Every visitor pre-qualified. Every handoff context-loaded. Your reps walk into conversations already briefed."
       />
 
+      <VideoSection
+        label="See It In Action"
+        title="Watch Aiden Work"
+        intro="See how Aiden handles the full pre-sales and support workflow, from routing to handoff, in a single conversation."
+        mediaId="tx6su2gamj"
+        page="lead-gen"
+        checklistStyle="chat"
+        checklist={[
+          {
+            title: '“I have a few questions about pricing.”',
+            body: 'Aiden routes to Sales with full context and a qualified handoff brief.',
+          },
+          {
+            title: '“Where can I find docs on the API?”',
+            body: 'Aiden serves the right help article instantly — no agent needed.',
+          },
+          {
+            title: '“I’m looking for an enterprise demo.”',
+            body: 'Aiden qualifies the visitor and books the meeting on the spot.',
+          },
+        ]}
+      />
+
       <FeatureSpotlight
         label="Routing"
         labelVariant="pink"
@@ -74,6 +101,7 @@ export default function LeadGenPage() {
           { label: 'Self-Selection', variant: 'pink' },
           { label: 'Zero Manual Triage', variant: 'muted' },
         ]}
+        graphic={<RoutingVisual />}
       />
 
       <FeatureSpotlight
@@ -95,6 +123,7 @@ export default function LeadGenPage() {
           { label: 'Prospect Qualification' },
           { label: 'Hot Handoff', variant: 'pink' },
         ]}
+        graphic={<PipelineVisual />}
       />
 
       <FeatureSpotlight
@@ -115,6 +144,7 @@ export default function LeadGenPage() {
           { label: 'Zero Wait Times', variant: 'pink' },
           { label: 'Team Time Saved', variant: 'muted' },
         ]}
+        graphic={<AutomationVisual />}
       />
 
       <section

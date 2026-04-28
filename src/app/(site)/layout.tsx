@@ -1,9 +1,10 @@
 import SiteNav from '@/components/layout/SiteNav';
 import ConsentSpacer from '@/components/layout/ConsentSpacer';
+import { VideoLightboxProvider } from '@/components/ui/VideoLightbox';
 
 export default function SiteLayout({ children }: { children: React.ReactNode }) {
   return (
-    <>
+    <VideoLightboxProvider>
       <a
         href="#main-content"
         style={{
@@ -37,6 +38,6 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
           Privacy Policy
         </a>
       </footer>
-    </>
+    </VideoLightboxProvider>
   );
 }

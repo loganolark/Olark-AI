@@ -5,6 +5,7 @@ import PillBadge from '@/components/ui/PillBadge';
 import TierCard from '@/components/product/TierCard';
 import CrawlWalkRunTimeline from '@/components/product/CrawlWalkRunTimeline';
 import MidPageMeetingCTA from '@/components/product/MidPageMeetingCTA';
+import VideoSection from '@/components/product/VideoSection';
 import QuizResumeBanner from '@/components/quiz/QuizResumeBanner';
 import QuoteSection from '@/components/quote/QuoteSection';
 
@@ -55,6 +56,15 @@ export default function CommercialPage() {
         badge={<PillBadge variant="muted">Commercial Tier</PillBadge>}
         headline="Provable Pipeline. Full Signal Trail."
         subhead="Implementation in days, not quarters. Every visitor logged, every handoff briefed, every rep equipped."
+      />
+
+      <VideoSection
+        variant="solo"
+        label="See It In Action"
+        title="Watch Aiden Handle the Entire Pre-Sales Workflow"
+        intro="From entry-point recognition to CRM update, in a single automated conversation."
+        mediaId="ttc5obl4nd"
+        page="commercial"
       />
 
       <section
