@@ -77,3 +77,50 @@ describe('SiteNav', () => {
     expect(screen.getByRole('navigation', { name: /main navigation/i })).toBeInTheDocument();
   });
 });
+
+// ─── Story 8.2: product-page-only "Get a Quote" CTA ───────────────────────
+
+describe('SiteNav — "Get a Quote" CTA visibility (Story 8.2)', () => {
+  beforeEach(() => {
+    document.cookie = 'olark_consent=; Max-Age=0; Path=/';
+  });
+
+  it('renders the CTA when on /essentials, linking to #quote-section', () => {
+    vi.mocked(usePathname).mockReturnValue('/essentials');
+    renderNav();
+    const cta = screen.getByTestId('nav-get-a-quote');
+    expect(cta).toBeInTheDocument();
+    expect(cta).toHaveAttribute('href', '#quote-section');
+  });
+
+  it('renders the CTA when on /lead-gen', () => {
+    vi.mocked(usePathname).mockReturnValue('/lead-gen');
+    renderNav();
+    expect(screen.getByTestId('nav-get-a-quote')).toBeInTheDocument();
+  });
+
+  it('renders the CTA when on /commercial', () => {
+    vi.mocked(usePathname).mockReturnValue('/commercial');
+    renderNav();
+    expect(screen.getByTestId('nav-get-a-quote')).toBeInTheDocument();
+  });
+
+  it('does NOT render the CTA on /', () => {
+    vi.mocked(usePathname).mockReturnValue('/');
+    renderNav();
+    expect(screen.queryByTestId('nav-get-a-quote')).not.toBeInTheDocument();
+  });
+
+  it('does NOT render the CTA on /get-started', () => {
+    vi.mocked(usePathname).mockReturnValue('/get-started');
+    renderNav();
+    expect(screen.queryByTestId('nav-get-a-quote')).not.toBeInTheDocument();
+  });
+
+  it('always renders the primary "Talk to Us" CTA alongside Get a Quote', () => {
+    vi.mocked(usePathname).mockReturnValue('/essentials');
+    renderNav();
+    expect(screen.getByRole('link', { name: /Talk to Us/i })).toBeInTheDocument();
+    expect(screen.getByTestId('nav-get-a-quote')).toBeInTheDocument();
+  });
+});

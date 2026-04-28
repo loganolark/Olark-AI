@@ -5,6 +5,7 @@ import PillBadge from '@/components/ui/PillBadge';
 import TierCard from '@/components/product/TierCard';
 import CrawlWalkRunTimeline from '@/components/product/CrawlWalkRunTimeline';
 import QuizResumeBanner from '@/components/quiz/QuizResumeBanner';
+import QuoteSection from '@/components/quote/QuoteSection';
 
 export const metadata: Metadata = {
   title: 'AI Sales Rep for High-Volume Teams | Aiden Commercial by Olark',
@@ -112,6 +113,8 @@ export default function CommercialPage() {
           />
         </div>
       </section>
+
+      <QuoteSection tier="commercial" />
     </>
   );
 }

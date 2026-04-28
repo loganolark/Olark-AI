@@ -40,7 +40,12 @@ describe('CommercialPage — Crawl/Walk/Run timeline', () => {
 
   it('phases default to collapsed (aria-expanded="false")', () => {
     render(<CommercialPage />);
-    const triggers = screen.getAllByRole('button');
+    // Scope to the timeline triggers only — Story 8.2 added a "Get My Custom
+    // Quote" button via <QuoteSection> that doesn't carry aria-expanded.
+    const triggers = screen
+      .getAllByRole('button')
+      .filter((b) => b.hasAttribute('aria-expanded'));
+    expect(triggers).toHaveLength(3);
     triggers.forEach((t) => expect(t).toHaveAttribute('aria-expanded', 'false'));
   });
 });

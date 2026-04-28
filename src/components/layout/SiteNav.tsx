@@ -64,6 +64,13 @@ export default function SiteNav() {
   const isActive = (href: string) =>
     pathname === href || pathname.startsWith(href + '/');
 
+  // Story 8.2: product-page-only "Get a Quote" CTA — scrolls to #quote-section
+  // (the QuoteSection wrapper sets that anchor on each product page).
+  const isProductPage =
+    pathname === '/essentials' ||
+    pathname === '/lead-gen' ||
+    pathname === '/commercial';
+
   return (
     <header>
       <nav
@@ -127,7 +134,25 @@ export default function SiteNav() {
             ))}
           </div>
 
-          <div className="hidden md:flex">
+          <div className="hidden md:flex" style={{ alignItems: 'center', gap: '0.875rem' }}>
+            {isProductPage && (
+              <a
+                href="#quote-section"
+                data-testid="nav-get-a-quote"
+                style={{
+                  color: 'var(--od-gold)',
+                  fontWeight: 600,
+                  padding: '0.5rem 1rem',
+                  borderRadius: '6px',
+                  fontSize: '0.9375rem',
+                  textDecoration: 'none',
+                  border: '1px solid var(--od-gold)',
+                  background: 'transparent',
+                }}
+              >
+                Get a Quote
+              </a>
+            )}
             <Link
               href="/get-started"
               style={{

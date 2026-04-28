@@ -5,6 +5,7 @@ import PillBadge from '@/components/ui/PillBadge';
 import CTAButton from '@/components/ui/CTAButton';
 import TierCard from '@/components/product/TierCard';
 import QuizResumeBanner from '@/components/quiz/QuizResumeBanner';
+import QuoteSection from '@/components/quote/QuoteSection';
 
 export const metadata: Metadata = {
   title: 'AI Sales Chat for SMB Teams | Aiden Essentials by Olark',
@@ -73,6 +74,8 @@ export default function EssentialsPage() {
           />
         </div>
       </section>
+
+      <QuoteSection tier="essentials" />
 
       <section
         style={{

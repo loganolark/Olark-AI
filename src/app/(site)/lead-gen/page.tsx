@@ -4,6 +4,7 @@ import SectionHero from '@/components/ui/SectionHero';
 import PillBadge from '@/components/ui/PillBadge';
 import TierCard from '@/components/product/TierCard';
 import QuizResumeBanner from '@/components/quiz/QuizResumeBanner';
+import QuoteSection from '@/components/quote/QuoteSection';
 
 export const metadata: Metadata = {
   title: 'Qualify Leads Before They Talk to You | Aiden Lead-Gen by Olark',
@@ -73,6 +74,8 @@ export default function LeadGenPage() {
           />
         </div>
       </section>
+
+      <QuoteSection tier="advanced" />
 
       <section
         id="rep-section"
