@@ -72,10 +72,8 @@ export default function EssentialsFeatureGroups() {
   return (
     <section
       id="essentials-features"
-      style={{
-        backgroundColor: 'var(--od-card)',
-        padding: '5rem 1.5rem',
-      }}
+      className="product-section"
+      style={{ backgroundColor: 'var(--od-card)' }}
     >
       <div style={{ maxWidth: '960px', margin: '0 auto' }}>
         <p
@@ -152,15 +150,9 @@ export default function EssentialsFeatureGroups() {
                   }}
                 />
               </div>
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-                  gap: '1rem',
-                }}
-              >
+              <div className="efg-grid">
                 {groupCards.map((card) => (
-                  <article
+                  <div
                     key={card.title}
                     style={{
                       backgroundColor: 'var(--od-navy)',
@@ -204,7 +196,7 @@ export default function EssentialsFeatureGroups() {
                     >
                       {card.body}
                     </p>
-                  </article>
+                  </div>
                 ))}
               </div>
             </div>

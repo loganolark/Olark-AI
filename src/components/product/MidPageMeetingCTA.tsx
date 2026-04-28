@@ -25,12 +25,12 @@ const COPY: Record<MidPageMeetingCTAPage, CopyEntry> = {
   'lead-gen': {
     title: 'Put Aiden to Work as Your New Sales & Support Rep',
     intro:
-      "We'll answer your questions about AI setup, go-live timelines, and how to get the most revenue and support value out of Aiden.",
+      'We’ll answer your questions about AI setup, go-live timelines, and how to get the most revenue and support value out of Aiden.',
   },
   commercial: {
     title: 'Ready to Put Aiden to Work as Your Commercial Sales Engine?',
     intro:
-      "We'll walk you through AI setup, live routing logic, and exactly how to get maximum revenue out of Aiden Signature and Aiden Bespoke.",
+      'We’ll walk you through AI setup, live routing logic, and exactly how to get maximum revenue out of Aiden Signature and Aiden Bespoke.',
   },
 };
 
@@ -65,9 +65,9 @@ export default function MidPageMeetingCTA({ page }: MidPageMeetingCTAProps) {
 
   return (
     <section
+      className="product-section"
       style={{
         backgroundColor: 'var(--od-dark)',
-        padding: '5rem 1.5rem',
         borderTop: '1px solid var(--od-border)',
       }}
     >

@@ -18,9 +18,9 @@ export default function SupportPromise({
   return (
     <section
       id="support-promise"
+      className="product-section"
       style={{
         backgroundColor: 'var(--od-dark)',
-        padding: '5rem 1.5rem',
         borderTop: '1px solid var(--od-border)',
       }}
     >

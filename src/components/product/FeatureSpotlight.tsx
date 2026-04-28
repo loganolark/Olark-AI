@@ -143,20 +143,12 @@ export default function FeatureSpotlight({
 
   return (
     <section
-      style={{
-        backgroundColor: accentBg[accent],
-        padding: '5rem 1.5rem',
-      }}
+      className="product-section"
+      style={{ backgroundColor: accentBg[accent] }}
     >
       <div
-        style={{
-          maxWidth: '1080px',
-          margin: '0 auto',
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-          gap: '3rem',
-          alignItems: 'center',
-        }}
+        className="fs-grid"
+        style={{ maxWidth: '1080px', margin: '0 auto' }}
       >
         {reverse ? (
           <>
