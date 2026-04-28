@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-04-28T00:00:00.000Z",
+  "title": "Design System: Olark.ai",
+  "extensions": {
+    "colorMeta": {
+      "od-dark":      { "role": "neutral",   "displayName": "Cosmos Black",       "canonical": "#0F0D2E", "tonalRamp": ["#06051A", "#09081F", "#0C0B25", "#0F0D2E", "#1A1740", "#2A2660", "#3F3A85", "#5852A8"] },
+      "od-navy":      { "role": "neutral",   "displayName": "Midnight Navy",      "canonical": "#141250", "tonalRamp": ["#08072A", "#0C0A37", "#100E45", "#141250", "#1F1B6E", "#2F2A8C", "#4A45B0", "#6E69C9"] },
+      "od-card":      { "role": "neutral",   "displayName": "Persian Velvet",     "canonical": "#252275", "tonalRamp": ["#100F38", "#181645", "#1E1C5C", "#252275", "#2D2B8F", "#3F3DA5", "#5957C0", "#7B79D6"] },
+      "od-card-hover":{ "role": "neutral",   "displayName": "Persian Velvet Hover","canonical":"#2D2B8F", "tonalRamp": ["#13123F", "#1B1A55", "#23226F", "#2D2B8F", "#3935AC", "#4F4CC0", "#7270D2", "#9C9BE3"] },
+      "od-border":    { "role": "neutral",   "displayName": "Iris Border",        "canonical": "rgba(120,115,220,0.45)", "tonalRamp": [] },
+      "od-gold":      { "role": "primary",   "displayName": "Filament Gold",      "canonical": "#F5C200", "tonalRamp": ["#3F2E00", "#5C4500", "#825F00", "#A87B00", "#D29C00", "#F5C200", "#FFD533", "#FFE676"] },
+      "od-gold-lt":   { "role": "primary",   "displayName": "Bright Gold",        "canonical": "#FFD533", "tonalRamp": [] },
+      "od-pink":      { "role": "secondary", "displayName": "Beacon Pink",        "canonical": "#E8325A", "tonalRamp": ["#3D0F18", "#5A1623", "#7E1F32", "#A12942", "#C42E50", "#E8325A", "#EE5A78", "#F58CA0"] },
+      "od-white":     { "role": "neutral",   "displayName": "Pearl Ice",          "canonical": "#F0EEFF", "tonalRamp": [] },
+      "od-text":      { "role": "neutral",   "displayName": "Lavender Mist",      "canonical": "#D8D5F5", "tonalRamp": [] },
+      "od-muted":     { "role": "neutral",   "displayName": "Muted Periwinkle",   "canonical": "#A09DD8", "tonalRamp": [] }
+    },
+    "typographyMeta": {
+      "display":  { "displayName": "Display",  "purpose": "Hero h1 and primary section h2s. Print-masthead weight." },
+      "headline": { "displayName": "Headline", "purpose": "Secondary section h2s in constrained columns or accordions." },
+      "title":    { "displayName": "Title",    "purpose": "Card titles, list-item h3/h4. Semibold, never display weight." },
+      "body":     { "displayName": "Body",     "purpose": "All paragraph copy. Line-height 1.7 is non-negotiable on the navy field." },
+      "label":    { "displayName": "Section Label", "purpose": "Gold uppercase eyebrow above an h2. Cap at ~4 instances per page." }
+    },
+    "shadows": [
+      { "name": "cta-gold-glow",   "value": "0 0 40px rgba(245,194,0,0.35), 0 4px 16px rgba(0,0,0,0.4)", "purpose": "Applied only to primary CTAs — the gold haze IS the affordance." },
+      { "name": "modal-gold-halo", "value": "0 0 60px rgba(245,194,0,0.25)", "purpose": "Video lightbox modal shell only — creates a soft golden vignette." }
+    ],
+    "motion": [
+      { "name": "ease-house",  "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Default exponential easing for every state transition and reveal." },
+      { "name": "duration-fast","value": "200ms", "purpose": "Hover state changes." },
+      { "name": "duration-mid", "value": "400ms", "purpose": "Reveal-on-scroll fades and translateY." },
+      { "name": "duration-slow","value": "500ms", "purpose": "Final summary panel reveals after staggered children." }
+    ],
+    "breakpoints": [
+      { "name": "mobile",   "value": "≤768px" },
+      { "name": "desktop",  "value": "≥769px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary CTA Button",
+      "kind": "button",
+      "refersTo": "cta-primary",
+      "description": "The only button with the gold glow shadow. Used for the single most important action on a screen.",
+      "html": "<button class=\"ds-btn-primary\">Schedule a Demo</button>",
+      "css": ".ds-btn-primary { background: #F5C200; color: #0F0D2E; height: 44px; padding: 0 1.25rem; border: none; border-radius: 100px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.9375rem; font-weight: 600; cursor: pointer; box-shadow: 0 0 40px rgba(245,194,0,0.35), 0 4px 16px rgba(0,0,0,0.4); transition: background 200ms cubic-bezier(0.16, 1, 0.3, 1), transform 200ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-btn-primary:hover { background: #FFD533; transform: translateY(-1px); } .ds-btn-primary:focus-visible { outline: 2px solid #F5C200; outline-offset: 3px; }"
+    },
+    {
+      "name": "Secondary CTA Button",
+      "kind": "button",
+      "refersTo": "cta-secondary",
+      "description": "Outlined button for secondary actions. No shadow, transparent background.",
+      "html": "<button class=\"ds-btn-secondary\">Learn More</button>",
+      "css": ".ds-btn-secondary { background: transparent; color: #F0EEFF; height: 44px; padding: 0 1.25rem; border: 1.5px solid #F0EEFF; border-radius: 100px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.9375rem; font-weight: 600; cursor: pointer; transition: background 200ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-btn-secondary:hover { background: rgba(240,238,255,0.08); }"
+    },
+    {
+      "name": "Pill Badge (Gold)",
+      "kind": "chip",
+      "refersTo": "pill-gold",
+      "description": "Small status badge. Tinted background + 1px tinted border, never solid.",
+      "html": "<span class=\"ds-pill-gold\">Start Today</span>",
+      "css": ".ds-pill-gold { display: inline-flex; align-items: center; gap: 0.4rem; background: rgba(245,194,0,0.15); color: #F5C200; border: 1px solid rgba(245,194,0,0.3); border-radius: 100px; padding: 0.25rem 0.625rem; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.75rem; font-weight: 600; }"
+    },
+    {
+      "name": "Content Card",
+      "kind": "card",
+      "refersTo": "card-surface",
+      "description": "Default card surface. Flat (no shadow), 1px iris border, 14px radius. Hover treatment lifts via translateY only.",
+      "html": "<article class=\"ds-card\"><h3 class=\"ds-card-title\">Card Title</h3><p class=\"ds-card-body\">Card body copy goes here on the navy field.</p></article>",
+      "css": ".ds-card { background: #252275; border: 1px solid rgba(120,115,220,0.45); border-radius: 14px; padding: 1.5rem; transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1), border-color 200ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-card:hover { transform: translateY(-2px); border-color: #F5C200; } .ds-card-title { font-family: 'Poppins', system-ui, sans-serif; font-weight: 700; font-size: 1rem; color: #F0EEFF; letter-spacing: -0.01em; margin: 0 0 0.5rem; } .ds-card-body { font-family: 'DM Sans', system-ui, sans-serif; color: #A09DD8; font-size: 0.9375rem; line-height: 1.6; margin: 0; }"
+    },
+    {
+      "name": "Section Hero Heading",
+      "kind": "custom",
+      "refersTo": "display",
+      "description": "The signature h1/h2 pattern: gold uppercase eyebrow + Poppins 900 -0.03em headline.",
+      "html": "<header class=\"ds-section-hero\"><p class=\"ds-eyebrow\">Section Label</p><h2 class=\"ds-headline\">A Confident Headline That Sets the Tone.</h2></header>",
+      "css": ".ds-section-hero { text-align: center; max-width: 720px; margin: 0 auto; } .ds-eyebrow { font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.75rem; font-weight: 600; color: #F5C200; letter-spacing: 0.1em; text-transform: uppercase; margin: 0 0 1rem; } .ds-headline { font-family: 'Poppins', system-ui, sans-serif; font-weight: 900; font-size: clamp(1.75rem, 4.5vw, 2.5rem); letter-spacing: -0.03em; line-height: 1.15; color: #F0EEFF; margin: 0; }"
+    },
+    {
+      "name": "Inline SVG Icon",
+      "kind": "custom",
+      "refersTo": "card-surface",
+      "description": "Decorative inline SVG icon in a tinted square container. Replaces emoji-as-icon throughout.",
+      "html": "<span class=\"ds-icon-wrap\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 20 20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"10\" cy=\"10\" r=\"7.5\" /><path d=\"M10 5.5V10l3 2\" /></svg></span>",
+      "css": ".ds-icon-wrap { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 8px; background: rgba(245,194,0,0.12); color: #F5C200; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Warm Authority",
+    "overview": "Olark.ai dresses serious enterprise software in confident, almost editorial type. The page is dark not because dark looks tech but because the brand sells calm in a category full of shouting — a navy-saturated control room where the gold accent is rare enough to mean something. Every surface is a layer of indigo, every accent is a deliberate punctuation mark. The voice is operator-grade: short sentences, em-dashes used as breath, never as filler.",
+    "keyCharacteristics": [
+      "Dark navy palette layered for depth",
+      "Gold and pink used sparingly as semantic punctuation",
+      "Poppins 900 with tight letter-spacing for masthead headlines",
+      "DM Sans body that breathes (line-height 1.7)",
+      "Em-dashes treated as a brand-voice rhythm device",
+      "Reduced-motion is a first-class consideration",
+      "Inline SVG icons over emoji"
+    ],
+    "rules": [
+      { "name": "The Punctuation Rule", "body": "Filament Gold and Beacon Pink combined never cover more than ~10% of any visible viewport.", "section": "colors" },
+      { "name": "The No-Black Rule", "body": "#000 is forbidden. #FFFFFF is forbidden. Every neutral is hue-tinted toward indigo.", "section": "colors" },
+      { "name": "The Single-Hue Doctrine", "body": "The palette is one hue family (deep indigo) plus two accents. Resist any pull toward teal, lime, or 'tech blue'.", "section": "colors" },
+      { "name": "The Em-Dash Rule", "body": "Em-dashes are treated as a brand-voice rhythm device, not as an AI tell. Override impeccable's default ban for this project.", "section": "typography" },
+      { "name": "The Eyebrow Restraint Rule", "body": "Cap the gold uppercase section-label pattern at ~4 instances per page.", "section": "typography" },
+      { "name": "The Tonal-Depth Rule", "body": "Surfaces are elevated by stepping up the navy ramp, not by adding shadows.", "section": "elevation" },
+      { "name": "The Two-Shadow Doctrine", "body": "Only two shadows exist: CTA gold glow and modal backdrop halo.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do use the navy ramp for depth instead of shadows",
+      "Do treat Filament Gold as semantic — it means action. Beacon Pink means signal",
+      "Do use Poppins 900 with -0.03em letter-spacing for every h1 and h2",
+      "Do cap line length at 65–75ch on long-form copy",
+      "Do respect prefers-reduced-motion: reduce",
+      "Do use inline SVG for icons; lift CommercialIcon and extend the family before reaching for emoji",
+      "Do use em-dashes deliberately as a brand-voice rhythm device",
+      "Do ensure every interactive element meets WCAG AA touch targets (44×44px minimum)"
+    ],
+    "donts": [
+      "Don't use border-left/right greater than 1px as a colored accent — the side-stripe is the most recognizable AI tell",
+      "Don't use #000000 or #FFFFFF anywhere",
+      "Don't use emoji as icons",
+      "Don't use bounce or elastic easing — only exponential cubic-bezier(0.16, 1, 0.3, 1)",
+      "Don't use gradient text",
+      "Don't use glassmorphism / blur cards as decorative chrome",
+      "Don't copy the SaaS hero-metric template",
+      "Don't stack identical card grids more than twice on a single page",
+      "Don't introduce a light-mode variant",
+      "Don't use the section-label gold uppercase eyebrow more than 4 times on a single page",
+      "Don't have more than 3 terminal CTAs on a single page"
+    ]
+  }
+}
