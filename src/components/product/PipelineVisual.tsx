@@ -85,7 +85,7 @@ export default function PipelineVisual() {
           letterSpacing: '0.1em',
           textTransform: 'uppercase',
           fontWeight: 600,
-          color: 'var(--od-gold)',
+          color: 'var(--od-pink)',
           marginBottom: '1rem',
         }}
       >

@@ -36,10 +36,10 @@ describe('LeadGenPage — structure', () => {
   });
 });
 
-describe('LeadGenPage — featured TierCard', () => {
-  it('renders the "Most Popular" pill (featured=true)', () => {
+describe('LeadGenPage — TierCard', () => {
+  it('does NOT render the "Most Popular" pill (single-tier page; badge removed per critique)', () => {
     renderPage();
-    expect(screen.getByText(/Most Popular/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Most Popular/i)).toBeNull();
   });
 
   it('lists Lead-Gen-tier capabilities', () => {

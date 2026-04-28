@@ -6,9 +6,15 @@ import PillBadge from '@/components/ui/PillBadge';
 import { trackEvent } from '@/lib/analytics';
 
 export type MidPageMeetingCTAPage = 'essentials' | 'lead-gen' | 'commercial';
+export type MidPageMeetingCTAVariant = 'primary' | 'secondary';
 
 export interface MidPageMeetingCTAProps {
   page: MidPageMeetingCTAPage;
+  /** Visual treatment for the CTA. Defaults to 'primary' (gold).
+   * Use 'secondary' on pages where another gold CTA above (e.g. TierCard
+   * primary) would otherwise create a competing-conversion situation
+   * — see DESIGN.md's Punctuation Rule. */
+  ctaVariant?: MidPageMeetingCTAVariant;
 }
 
 interface CopyEntry {
@@ -56,7 +62,10 @@ function CheckIcon() {
   );
 }
 
-export default function MidPageMeetingCTA({ page }: MidPageMeetingCTAProps) {
+export default function MidPageMeetingCTA({
+  page,
+  ctaVariant = 'primary',
+}: MidPageMeetingCTAProps) {
   const { title, intro } = COPY[page];
 
   const handleClick = () => {
@@ -137,7 +146,7 @@ export default function MidPageMeetingCTA({ page }: MidPageMeetingCTAProps) {
         </ul>
         <div style={{ marginTop: '0.75rem' }}>
           <CTAButton
-            variant="primary"
+            variant={ctaVariant}
             size="lg"
             href="/get-started"
             onClick={handleClick}

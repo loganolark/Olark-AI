@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import SectionHero from '@/components/ui/SectionHero';
 import PillBadge from '@/components/ui/PillBadge';
+import CTAButton from '@/components/ui/CTAButton';
 import CommercialAidenQuote from '@/components/commercial/CommercialAidenQuote';
 import CommercialBuiltFor from '@/components/commercial/CommercialBuiltFor';
 import CommercialHowItWorks from '@/components/commercial/CommercialHowItWorks';
@@ -60,6 +61,11 @@ export default function CommercialPage() {
         badge={<PillBadge variant="muted">Commercial Tier</PillBadge>}
         headline="Provable Pipeline. Full Signal Trail."
         subhead="Implementation in days, not quarters. Every visitor logged, every handoff briefed, every rep equipped."
+        cta={
+          <CTAButton variant="secondary" size="md" href="#quote-section">
+            See Pricing →
+          </CTAButton>
+        }
       />
 
       <VideoSection

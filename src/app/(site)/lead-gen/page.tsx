@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import SectionHero from '@/components/ui/SectionHero';
 import PillBadge from '@/components/ui/PillBadge';
+import CTAButton from '@/components/ui/CTAButton';
 import TierCard from '@/components/product/TierCard';
 import FeatureSpotlight from '@/components/product/FeatureSpotlight';
 import MidPageMeetingCTA from '@/components/product/MidPageMeetingCTA';
@@ -59,6 +60,11 @@ export default function LeadGenPage() {
         badge={<PillBadge variant="pink">Lead-Gen Tier</PillBadge>}
         headline="Your Team Just Got an Extra SDR"
         subhead="Every visitor pre-qualified. Every handoff context-loaded. Your reps walk into conversations already briefed."
+        cta={
+          <CTAButton variant="secondary" size="md" href="#quote-section">
+            See Pricing →
+          </CTAButton>
+        }
       />
 
       <VideoSection
@@ -134,7 +140,7 @@ export default function LeadGenPage() {
         paragraphs={[
           <>
             Repetitive questions don&rsquo;t need your team&rsquo;s time.{' '}
-            <strong>Aiden provides instant, accurate answers from your own content</strong>, freeing your staff can focus
+            <strong>Aiden provides instant, accurate answers from your own content</strong>, freeing your staff to focus
             on complex issues and meaningful connections.
           </>,
           'Customers get quick help. Your team gets their time back. Everyone wins. Except the support backlog.',
@@ -157,7 +163,6 @@ export default function LeadGenPage() {
         <div style={{ maxWidth: '720px', margin: '0 auto' }}>
           <TierCard
             tier="lead-gen"
-            featured
             headline="Lead-Gen"
             tagline="For growth-stage teams whose pipeline is bigger than their bandwidth — give every rep a teammate that does the qualifying upstream."
             capabilities={LEAD_GEN_CAPABILITIES}
@@ -168,6 +173,8 @@ export default function LeadGenPage() {
       </section>
 
       <QuoteSection tier="advanced" />
+
+      <MidPageMeetingCTA page="lead-gen" ctaVariant="secondary" />
 
       <section
         id="rep-section"
@@ -249,8 +256,6 @@ export default function LeadGenPage() {
           </p>
         </div>
       </section>
-
-      <MidPageMeetingCTA page="lead-gen" />
     </>
   );
 }
