@@ -8,7 +8,7 @@ import ConversionPageShell from './ConversionPageShell';
 function makeCookieStore(quizCookieValue?: string) {
   return {
     get: vi.fn((name: string) =>
-      name === 'olark_quiz_state' && quizCookieValue !== undefined
+      name === 'olark_session_signals' && quizCookieValue !== undefined
         ? { value: quizCookieValue }
         : undefined,
     ),

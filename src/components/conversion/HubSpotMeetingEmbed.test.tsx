@@ -32,7 +32,7 @@ beforeEach(() => {
       headers: { 'Content-Type': 'application/json' },
     }),
   );
-  document.cookie = 'olark_quiz_state=; Path=/; Max-Age=0';
+  document.cookie = 'olark_session_signals=; Path=/; Max-Age=0';
 });
 
 afterEach(() => {
@@ -89,7 +89,7 @@ describe('HubSpotMeetingEmbed — postMessage booking handler', () => {
   }
 
   it('fires the HubSpot upsert with full session context on booking', async () => {
-    document.cookie = `olark_quiz_state=${encodeURIComponent(
+    document.cookie = `olark_session_signals=${encodeURIComponent(
       JSON.stringify({ tier_signal: 'commercial', demo_run: true, quiz_completed: true }),
     )}; Path=/`;
     render(<HubSpotMeetingEmbed variant="commercial-high-intent" />);

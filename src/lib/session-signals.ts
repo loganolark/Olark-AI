@@ -1,5 +1,5 @@
-import { parseQuizStateCookie } from './conversion-variant';
-import type { QuizStateCookie } from '@/types/conversion';
+import { parseSessionSignalsCookie } from './conversion-variant';
+import type { SessionSignalsCookie } from '@/types/conversion';
 
 export function readDemoSignals(): { demoDepth: number; demoUrl: string } {
   if (typeof window === 'undefined') return { demoDepth: 0, demoUrl: '' };
@@ -39,11 +39,11 @@ export function readPagesVisited(): string {
   return window.location.pathname || '';
 }
 
-export function readQuizCookie(): QuizStateCookie | null {
+export function readSessionSignalsCookie(): SessionSignalsCookie | null {
   if (typeof document === 'undefined') return null;
   const match = document.cookie
     .split('; ')
-    .find((row) => row.startsWith('olark_quiz_state='));
+    .find((row) => row.startsWith('olark_session_signals='));
   if (!match) return null;
-  return parseQuizStateCookie(match.split('=')[1]);
+  return parseSessionSignalsCookie(match.split('=')[1]);
 }

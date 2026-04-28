@@ -523,14 +523,14 @@ describe('PathFinderQuiz — GA4 events (consent-gated)', () => {
   });
 });
 
-// ─── olark_quiz_state cookie write (Story 6.1) ─────────────────────────────
+// ─── olark_session_signals cookie write (Story 6.1) ─────────────────────────────
 
-describe('PathFinderQuiz — writes olark_quiz_state cookie at completion', () => {
+describe('PathFinderQuiz — writes olark_session_signals cookie at completion', () => {
   function clearQuizCookie() {
-    document.cookie = 'olark_quiz_state=; Path=/; Max-Age=0';
+    document.cookie = 'olark_session_signals=; Path=/; Max-Age=0';
   }
   function getQuizCookie(): string | null {
-    const match = document.cookie.split('; ').find((r) => r.startsWith('olark_quiz_state='));
+    const match = document.cookie.split('; ').find((r) => r.startsWith('olark_session_signals='));
     return match ? match.split('=')[1] : null;
   }
 

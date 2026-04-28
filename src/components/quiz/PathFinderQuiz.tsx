@@ -52,15 +52,14 @@ function generateSessionId(): string {
 }
 
 /**
- * Writes the SSR-readable `olark_quiz_state` cookie with personalization signals.
+ * Writes the SSR-readable `olark_session_signals` cookie with personalization
+ * signals. Read at request time by Epic 6's ConversionPageShell to select
+ * the variant rendered on `/get-started`.
  *
- * NOTE — name collision with localStorage:
- *   localStorage `olark_quiz_state` (Story 4.2) holds the FULL QuizState (currentStep, answers, …).
- *   The cookie of the same name (this writer) holds the SUBSET used for SSR personalization
- *   in Epic 6's ConversionPageShell: `{ tier_signal, demo_run, quiz_completed }`.
- *   The two artifacts share a name per the architecture spec but serve different purposes.
+ * Distinct from `localStorage['olark_quiz_state']` (Story 4.2) — that artifact
+ * holds the full QuizState for cross-session quiz resume.
  */
-function writeQuizStateCookie(payload: {
+function writeSessionSignalsCookie(payload: {
   tier_signal: string;
   demo_run: boolean;
 }): void {
@@ -70,7 +69,7 @@ function writeQuizStateCookie(payload: {
       JSON.stringify({ ...payload, quiz_completed: true }),
     );
     const maxAge = 60 * 60 * 24 * 30; // 30 days
-    document.cookie = `olark_quiz_state=${value}; SameSite=Lax; Path=/; Max-Age=${maxAge}`;
+    document.cookie = `olark_session_signals=${value}; SameSite=Lax; Path=/; Max-Age=${maxAge}`;
   } catch {
     /* defensive */
   }
@@ -341,7 +340,7 @@ export default function PathFinderQuiz({ onAnswersComplete }: PathFinderQuizProp
     track('quiz_completed', { tier_signal: tierSignal });
     // Story 6.1: write SSR-readable personalization cookie (consent-gated).
     if (consentAnalytics && capturedEmail) {
-      writeQuizStateCookie({ tier_signal: tierSignal, demo_run: hasDemoRun() });
+      writeSessionSignalsCookie({ tier_signal: tierSignal, demo_run: hasDemoRun() });
     }
   }, [step, answers, capturedEmail, consentAnalytics, sendCompletion, track]);
 

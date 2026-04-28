@@ -7,7 +7,7 @@ import { trackEvent } from '@/lib/analytics';
 import {
   readDemoSignals,
   readPagesVisited,
-  readQuizCookie,
+  readSessionSignalsCookie,
 } from '@/lib/session-signals';
 import type { ConversionVariant } from '@/types/conversion';
 import type { HubSpotContactPayload } from '@/types/hubspot';
@@ -131,7 +131,7 @@ export default function HubSpotMeetingEmbed({ variant }: HubSpotMeetingEmbedProp
       const email = extractEmail(data);
       if (!email) return;
 
-      const cookie = readQuizCookie();
+      const cookie = readSessionSignalsCookie();
       const { demoDepth, demoUrl } = readDemoSignals();
       const pagesVisited = readPagesVisited();
 

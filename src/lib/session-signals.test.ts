@@ -3,7 +3,7 @@ import {
   readDemoSignals,
   hasDemoRun,
   readPagesVisited,
-  readQuizCookie,
+  readSessionSignalsCookie,
 } from './session-signals';
 
 function makeMockSessionStorage() {
@@ -22,7 +22,7 @@ function makeMockSessionStorage() {
 beforeEach(() => {
   vi.unstubAllGlobals();
   vi.stubGlobal('sessionStorage', makeMockSessionStorage());
-  document.cookie = 'olark_quiz_state=; Path=/; Max-Age=0';
+  document.cookie = 'olark_session_signals=; Path=/; Max-Age=0';
 });
 
 describe('readDemoSignals', () => {
@@ -74,17 +74,17 @@ describe('readPagesVisited', () => {
   });
 });
 
-describe('readQuizCookie', () => {
+describe('readSessionSignalsCookie', () => {
   it('returns null when cookie is absent', () => {
-    expect(readQuizCookie()).toBeNull();
+    expect(readSessionSignalsCookie()).toBeNull();
   });
 
   it('parses a valid cookie value', () => {
     const value = encodeURIComponent(
       JSON.stringify({ tier_signal: 'commercial', demo_run: true, quiz_completed: true }),
     );
-    document.cookie = `olark_quiz_state=${value}; Path=/`;
-    expect(readQuizCookie()).toEqual({
+    document.cookie = `olark_session_signals=${value}; Path=/`;
+    expect(readSessionSignalsCookie()).toEqual({
       tier_signal: 'commercial',
       demo_run: true,
       quiz_completed: true,

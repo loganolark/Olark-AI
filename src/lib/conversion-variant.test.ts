@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { selectVariant, parseQuizStateCookie } from './conversion-variant';
+import { selectVariant, parseSessionSignalsCookie } from './conversion-variant';
 
 describe('selectVariant', () => {
   it('returns "anonymous" when cookie is null', () => {
@@ -31,22 +31,22 @@ describe('selectVariant', () => {
   });
 });
 
-describe('parseQuizStateCookie', () => {
+describe('parseSessionSignalsCookie', () => {
   it('returns null for undefined input', () => {
-    expect(parseQuizStateCookie(undefined)).toBeNull();
+    expect(parseSessionSignalsCookie(undefined)).toBeNull();
   });
 
   it('returns null for empty string', () => {
-    expect(parseQuizStateCookie('')).toBeNull();
+    expect(parseSessionSignalsCookie('')).toBeNull();
   });
 
   it('returns null on malformed JSON', () => {
-    expect(parseQuizStateCookie('not-json')).toBeNull();
+    expect(parseSessionSignalsCookie('not-json')).toBeNull();
   });
 
   it('returns null when quiz_completed is missing', () => {
     expect(
-      parseQuizStateCookie(
+      parseSessionSignalsCookie(
         encodeURIComponent(JSON.stringify({ tier_signal: 'commercial', demo_run: false })),
       ),
     ).toBeNull();
@@ -54,7 +54,7 @@ describe('parseQuizStateCookie', () => {
 
   it('returns null on invalid tier_signal', () => {
     expect(
-      parseQuizStateCookie(
+      parseSessionSignalsCookie(
         encodeURIComponent(
           JSON.stringify({ tier_signal: 'foo', demo_run: false, quiz_completed: true }),
         ),
@@ -64,7 +64,7 @@ describe('parseQuizStateCookie', () => {
 
   it('returns null when demo_run is non-boolean', () => {
     expect(
-      parseQuizStateCookie(
+      parseSessionSignalsCookie(
         encodeURIComponent(
           JSON.stringify({ tier_signal: 'commercial', demo_run: 'yes', quiz_completed: true }),
         ),
@@ -76,7 +76,7 @@ describe('parseQuizStateCookie', () => {
     const raw = encodeURIComponent(
       JSON.stringify({ tier_signal: 'commercial', demo_run: true, quiz_completed: true }),
     );
-    expect(parseQuizStateCookie(raw)).toEqual({
+    expect(parseSessionSignalsCookie(raw)).toEqual({
       tier_signal: 'commercial',
       demo_run: true,
       quiz_completed: true,

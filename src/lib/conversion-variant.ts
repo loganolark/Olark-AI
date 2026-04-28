@@ -1,6 +1,6 @@
-import type { ConversionVariant, QuizStateCookie } from '@/types/conversion';
+import type { ConversionVariant, SessionSignalsCookie } from '@/types/conversion';
 
-export function selectVariant(cookie: QuizStateCookie | null): ConversionVariant {
+export function selectVariant(cookie: SessionSignalsCookie | null): ConversionVariant {
   if (!cookie) return 'anonymous';
   if (cookie.tier_signal === 'commercial' && cookie.demo_run === true) {
     return 'commercial-high-intent';
@@ -11,10 +11,10 @@ export function selectVariant(cookie: QuizStateCookie | null): ConversionVariant
   return 'anonymous';
 }
 
-export function parseQuizStateCookie(raw: string | undefined): QuizStateCookie | null {
+export function parseSessionSignalsCookie(raw: string | undefined): SessionSignalsCookie | null {
   if (!raw) return null;
   try {
-    const parsed = JSON.parse(decodeURIComponent(raw)) as Partial<QuizStateCookie>;
+    const parsed = JSON.parse(decodeURIComponent(raw)) as Partial<SessionSignalsCookie>;
     if (!parsed || typeof parsed !== 'object') return null;
     if (parsed.quiz_completed !== true) return null;
     if (

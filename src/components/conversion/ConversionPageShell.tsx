@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 import CTAButton from '@/components/ui/CTAButton';
 import HubSpotMeetingEmbed from '@/components/conversion/HubSpotMeetingEmbed';
 import {
-  parseQuizStateCookie,
+  parseSessionSignalsCookie,
   selectVariant,
 } from '@/lib/conversion-variant';
 import type { ConversionVariant } from '@/types/conversion';
@@ -39,8 +39,8 @@ const VARIANT_COPY: Record<ConversionVariant, VariantCopy> = {
 
 export default async function ConversionPageShell() {
   const cookieStore = await cookies();
-  const raw = cookieStore.get('olark_quiz_state')?.value;
-  const parsed = parseQuizStateCookie(raw);
+  const raw = cookieStore.get('olark_session_signals')?.value;
+  const parsed = parseSessionSignalsCookie(raw);
   const variant = selectVariant(parsed);
   const copy = VARIANT_COPY[variant];
 
