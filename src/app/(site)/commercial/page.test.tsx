@@ -147,3 +147,93 @@ describe('CommercialPage — Story 8.5 video section', () => {
     expect(timelineIdx).toBeGreaterThan(videoIdx);
   });
 });
+
+describe('CommercialPage — Story 8.6 narrative sections', () => {
+  it('renders the problem section blockquote', () => {
+    renderPage();
+    expect(
+      screen.getByText(
+        /How much of your team’s day is spent on work that happens/i,
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it('renders all 3 problem-signal cards', () => {
+    renderPage();
+    const signals = screen.getAllByTestId('commercial-problem-signal');
+    expect(signals).toHaveLength(3);
+  });
+
+  it('renders the Aiden quote attribution', () => {
+    renderPage();
+    expect(
+      screen.getByText(/From the Commercial Presales Desk at Olark/i),
+    ).toBeInTheDocument();
+  });
+
+  it('renders the How It Works h2 and all 7 step cards', () => {
+    renderPage();
+    expect(
+      screen.getByRole('heading', {
+        level: 2,
+        name: /Seven Steps From First Click to Closed Deal/i,
+      }),
+    ).toBeInTheDocument();
+    const stepCards = screen.getAllByTestId('commercial-step-card');
+    expect(stepCards).toHaveLength(7);
+  });
+
+  it('renders the Outcome flow h2 and all 5 flow steps + summary panel', () => {
+    renderPage();
+    expect(
+      screen.getByRole('heading', {
+        level: 2,
+        name: /What This Looks Like in Practice/i,
+      }),
+    ).toBeInTheDocument();
+    const flowSteps = screen.getAllByTestId('commercial-flow-step');
+    expect(flowSteps).toHaveLength(5);
+    expect(
+      screen.getByRole('heading', {
+        level: 3,
+        name: /SDR Prep Is Nearly Eliminated\./i,
+      }),
+    ).toBeInTheDocument();
+  });
+
+  it('renders the Built For h2 and all 3 who-cards', () => {
+    renderPage();
+    const builtForHeading = screen.getByRole('heading', {
+      level: 2,
+      name: /This Is a Commercial Product\./i,
+    });
+    expect(builtForHeading.textContent).toContain('Here’s Who We Built It For.');
+    const whoCards = screen.getAllByTestId('commercial-who-card');
+    expect(whoCards).toHaveLength(3);
+  });
+
+  it('places narrative sections in the correct DOM order between video and timeline', () => {
+    renderPage();
+    const headings = screen
+      .getAllByRole('heading', { level: 2 })
+      .map((h) => h.textContent ?? '');
+
+    const expectedOrder = [
+      /Watch Aiden Handle the Entire Pre-Sales Workflow/i,
+      /Seven Steps From First Click to Closed Deal/i,
+      /What This Looks Like in Practice/i,
+      /This Is a Commercial Product\./i,
+      /Crawl\. Walk\. Run\./i,
+      /Build a Commercial Quote in 60 Seconds\./i,
+      /Ready to Put Aiden to Work as Your Commercial Sales Engine/i,
+    ];
+
+    const indexes = expectedOrder.map((re) =>
+      headings.findIndex((t) => re.test(t)),
+    );
+    indexes.forEach((idx) => expect(idx).toBeGreaterThan(-1));
+    for (let i = 1; i < indexes.length; i++) {
+      expect(indexes[i]).toBeGreaterThan(indexes[i - 1]);
+    }
+  });
+});

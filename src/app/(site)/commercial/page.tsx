@@ -2,6 +2,11 @@ import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import SectionHero from '@/components/ui/SectionHero';
 import PillBadge from '@/components/ui/PillBadge';
+import CommercialAidenQuote from '@/components/commercial/CommercialAidenQuote';
+import CommercialBuiltFor from '@/components/commercial/CommercialBuiltFor';
+import CommercialHowItWorks from '@/components/commercial/CommercialHowItWorks';
+import CommercialOutcomeFlow from '@/components/commercial/CommercialOutcomeFlow';
+import CommercialProblemSection from '@/components/commercial/CommercialProblemSection';
 import TierCard from '@/components/product/TierCard';
 import CrawlWalkRunTimeline from '@/components/product/CrawlWalkRunTimeline';
 import MidPageMeetingCTA from '@/components/product/MidPageMeetingCTA';
@@ -66,6 +71,16 @@ export default function CommercialPage() {
         mediaId="ttc5obl4nd"
         page="commercial"
       />
+
+      <CommercialProblemSection />
+
+      <CommercialAidenQuote />
+
+      <CommercialHowItWorks />
+
+      <CommercialOutcomeFlow />
+
+      <CommercialBuiltFor />
 
       <section
         id="implementation-timeline"
