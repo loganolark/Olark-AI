@@ -4,6 +4,9 @@ import SectionHero from '@/components/ui/SectionHero';
 import PillBadge from '@/components/ui/PillBadge';
 import CTAButton from '@/components/ui/CTAButton';
 import TierCard from '@/components/product/TierCard';
+import EssentialsFeatureGroups from '@/components/product/EssentialsFeatureGroups';
+import SupportPromise from '@/components/product/SupportPromise';
+import MidPageMeetingCTA from '@/components/product/MidPageMeetingCTA';
 import QuizResumeBanner from '@/components/quiz/QuizResumeBanner';
 import QuoteSection from '@/components/quote/QuoteSection';
 
@@ -56,6 +59,8 @@ export default function EssentialsPage() {
         subhead="Live in 48 hours. Every visitor qualified, routed, and ready for your rep."
       />
 
+      <EssentialsFeatureGroups />
+
       <section
         id="capabilities"
         style={{
@@ -77,6 +82,8 @@ export default function EssentialsPage() {
 
       <QuoteSection tier="essentials" />
 
+      <SupportPromise />
+
       <section
         style={{
           backgroundColor: 'var(--od-card)',
@@ -97,6 +104,8 @@ export default function EssentialsPage() {
           See Lead-Gen →
         </CTAButton>
       </section>
+
+      <MidPageMeetingCTA page="essentials" />
     </>
   );
 }

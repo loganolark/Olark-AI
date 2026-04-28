@@ -4,6 +4,7 @@ import SectionHero from '@/components/ui/SectionHero';
 import PillBadge from '@/components/ui/PillBadge';
 import TierCard from '@/components/product/TierCard';
 import CrawlWalkRunTimeline from '@/components/product/CrawlWalkRunTimeline';
+import MidPageMeetingCTA from '@/components/product/MidPageMeetingCTA';
 import QuizResumeBanner from '@/components/quiz/QuizResumeBanner';
 import QuoteSection from '@/components/quote/QuoteSection';
 
@@ -115,6 +116,8 @@ export default function CommercialPage() {
       </section>
 
       <QuoteSection tier="commercial" />
+
+      <MidPageMeetingCTA page="commercial" />
     </>
   );
 }

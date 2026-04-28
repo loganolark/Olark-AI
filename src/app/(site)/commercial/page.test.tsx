@@ -76,3 +76,21 @@ describe('CommercialPage — CTA', () => {
     expect(cta).toHaveAttribute('href', '/get-started');
   });
 });
+
+describe('CommercialPage — Story 8.4 mid-page meeting CTA', () => {
+  it('renders the MidPageMeetingCTA with the Commercial title', () => {
+    render(<CommercialPage />);
+    expect(
+      screen.getByRole('heading', {
+        level: 2,
+        name: /Ready to Put Aiden to Work as Your Commercial Sales Engine/i,
+      }),
+    ).toBeInTheDocument();
+  });
+
+  it('mid-page CTA links to /get-started', () => {
+    render(<CommercialPage />);
+    const cta = screen.getByRole('link', { name: /Schedule to Learn More About Aiden/i });
+    expect(cta).toHaveAttribute('href', '/get-started');
+  });
+});

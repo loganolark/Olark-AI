@@ -66,3 +66,43 @@ describe('LeadGenPage — rep section', () => {
     expect(text).not.toMatch(/AI closes for you/i);
   });
 });
+
+describe('LeadGenPage — Story 8.4 feature spotlights + meeting CTA', () => {
+  it('renders all 3 FeatureSpotlight headings (Routing, Pipeline, Automation)', () => {
+    render(<LeadGenPage />);
+    expect(
+      screen.getByRole('heading', { level: 2, name: /Guide Every Conversation From the Start/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { level: 2, name: /Turn Chats Into Sales Opportunities/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { level: 2, name: /Automate the Routine\. Elevate the Human\./i }),
+    ).toBeInTheDocument();
+  });
+
+  it('renders representative pills from each spotlight', () => {
+    render(<LeadGenPage />);
+    expect(screen.getByText('Smart Routing')).toBeInTheDocument();
+    expect(screen.getByText('Hot Handoff')).toBeInTheDocument();
+    expect(screen.getByText('Knowledge Base Answers')).toBeInTheDocument();
+  });
+
+  it('renders the MidPageMeetingCTA with the Lead-Gen title', () => {
+    render(<LeadGenPage />);
+    expect(
+      screen.getByRole('heading', { level: 2, name: /Put Aiden to Work as Your New Sales/i }),
+    ).toBeInTheDocument();
+  });
+
+  it('feature spotlights render before the rep section in the DOM', () => {
+    render(<LeadGenPage />);
+    const headings = screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent);
+    const routingIdx = headings.findIndex((t) =>
+      /Guide Every Conversation From the Start/i.test(t ?? ''),
+    );
+    const repIdx = headings.findIndex((t) => /All You Have to Do Is Eat/i.test(t ?? ''));
+    expect(routingIdx).toBeGreaterThan(-1);
+    expect(repIdx).toBeGreaterThan(routingIdx);
+  });
+});

@@ -3,6 +3,8 @@ import type { Metadata } from 'next';
 import SectionHero from '@/components/ui/SectionHero';
 import PillBadge from '@/components/ui/PillBadge';
 import TierCard from '@/components/product/TierCard';
+import FeatureSpotlight from '@/components/product/FeatureSpotlight';
+import MidPageMeetingCTA from '@/components/product/MidPageMeetingCTA';
 import QuizResumeBanner from '@/components/quiz/QuizResumeBanner';
 import QuoteSection from '@/components/quote/QuoteSection';
 
@@ -53,6 +55,66 @@ export default function LeadGenPage() {
         badge={<PillBadge variant="pink">Lead-Gen Tier</PillBadge>}
         headline="Your Team Just Got an Extra SDR"
         subhead="Every visitor pre-qualified. Every handoff context-loaded. Your reps walk into conversations already briefed."
+      />
+
+      <FeatureSpotlight
+        label="Routing"
+        labelVariant="pink"
+        title="Guide Every Conversation From the Start"
+        accent="navy"
+        paragraphs={[
+          <>
+            With routing buttons at the beginning of every chat, Aiden helps customers self-select the right path:{' '}
+            <strong>sales, support, or product details.</strong> Every interaction starts in the right place.
+          </>,
+          'That reduces friction, boosts engagement, and means your team never fields a conversation that was never theirs to begin with.',
+        ]}
+        pills={[
+          { label: 'Smart Routing' },
+          { label: 'Self-Selection', variant: 'pink' },
+          { label: 'Zero Manual Triage', variant: 'muted' },
+        ]}
+      />
+
+      <FeatureSpotlight
+        label="Pipeline"
+        labelVariant="gold"
+        title="Turn Chats Into Sales Opportunities"
+        accent="card"
+        reverse
+        paragraphs={[
+          <>
+            Aiden doesn&rsquo;t just deflect tickets. It{' '}
+            <strong>captures lead info, qualifies prospects, and passes hot opportunities straight to your sales team</strong>
+            , automatically and without a single manual step.
+          </>,
+          'In e-commerce, that means helping customers navigate to the right product. In B2B, it means surfacing high-value conversations without wasting anyone’s time.',
+        ]}
+        pills={[
+          { label: 'Lead Capture' },
+          { label: 'Prospect Qualification' },
+          { label: 'Hot Handoff', variant: 'pink' },
+        ]}
+      />
+
+      <FeatureSpotlight
+        label="Automation"
+        labelVariant="pink"
+        title="Automate the Routine. Elevate the Human."
+        accent="navy"
+        paragraphs={[
+          <>
+            Repetitive questions don&rsquo;t need your team&rsquo;s time.{' '}
+            <strong>Aiden provides instant, accurate answers from your own content</strong>, freeing your staff can focus
+            on complex issues and meaningful connections.
+          </>,
+          'Customers get quick help. Your team gets their time back. Everyone wins. Except the support backlog.',
+        ]}
+        pills={[
+          { label: 'Knowledge Base Answers' },
+          { label: 'Zero Wait Times', variant: 'pink' },
+          { label: 'Team Time Saved', variant: 'muted' },
+        ]}
       />
 
       <section
@@ -157,6 +219,8 @@ export default function LeadGenPage() {
           </p>
         </div>
       </section>
+
+      <MidPageMeetingCTA page="lead-gen" />
     </>
   );
 }
