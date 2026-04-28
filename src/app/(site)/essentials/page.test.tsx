@@ -89,9 +89,8 @@ describe('EssentialsPage — Story 8.4 content expansion', () => {
     expect(
       screen.getByRole('heading', { level: 2, name: /You.re Never on Your Own/i }),
     ).toBeInTheDocument();
-    expect(
-      screen.getByRole('heading', { level: 3, name: /Support That Comes Standard/i }),
-    ).toBeInTheDocument();
+    // PillBadge text (no longer also rendered as <h3>)
+    expect(screen.getByText(/Support That Comes Standard/i)).toBeInTheDocument();
   });
 
   it('renders the MidPageMeetingCTA with the Essentials title', () => {

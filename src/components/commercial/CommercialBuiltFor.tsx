@@ -3,12 +3,10 @@
 import React, { useRef } from 'react';
 import { useInView } from '@/lib/hooks/use-in-view';
 import { useReducedMotion } from '@/lib/hooks/use-reduced-motion';
-import CommercialIcon, {
-  type CommercialIconName,
-} from './CommercialIcon';
+import ProductIcon, { type ProductIconName } from '@/components/ui/ProductIcon';
 
 interface WhoCard {
-  icon: CommercialIconName;
+  icon: ProductIconName;
   title: string;
   body: string;
 }
@@ -116,7 +114,7 @@ export default function CommercialBuiltFor() {
                     marginBottom: '0.875rem',
                   }}
                 >
-                  <CommercialIcon name={card.icon} size={22} />
+                  <ProductIcon name={card.icon} size={22} />
                 </span>
                 <h3
                   style={{

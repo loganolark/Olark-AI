@@ -1,9 +1,10 @@
 import React from 'react';
+import ProductIcon, { type ProductIconName } from '@/components/ui/ProductIcon';
 
 type FeatureGroup = 'training' | 'features' | 'usage';
 
 interface FeatureCard {
-  icon: string;
+  icon: ProductIconName;
   title: string;
   body: string;
   group: FeatureGroup;
@@ -11,49 +12,49 @@ interface FeatureCard {
 
 const CARDS: FeatureCard[] = [
   {
-    icon: '🤖',
+    icon: 'bot',
     title: 'Aiden Chatbot for One Website',
     body: 'Your dedicated AI, trained on your business and answering customer questions 24 hours a day, 7 days a week.',
     group: 'training',
   },
   {
-    icon: '⚡',
+    icon: 'bolt',
     title: 'Live Search — Website Ingest',
     body: 'Paste your URL and Aiden learns your entire site instantly. It stays current automatically. No manual updates, ever.',
     group: 'training',
   },
   {
-    icon: '📄',
+    icon: 'document',
     title: 'Document Ingest',
     body: 'Upload product docs, FAQs, guides, or knowledge bases. Your bot learns from everything you give it.',
     group: 'training',
   },
   {
-    icon: '🧠',
+    icon: 'brain',
     title: 'AI Analyst',
     body: 'Your chat history is untapped intelligence. Aiden surfaces your highest-intent visitors, ranks them by purchase likelihood, and generates content ideas from what your customers are actually asking about — trained on your transcripts, your website, and your business.',
     group: 'features',
   },
   {
-    icon: '💬',
+    icon: 'chat',
     title: 'Stock Answers',
     body: 'Pre-set instant responses to your most common questions, delivered consistently, every single time, without fail.',
     group: 'features',
   },
   {
-    icon: '🌍',
+    icon: 'globe',
     title: 'Multilingual Chatbot',
     body: 'Serve customers in their own language, automatically. No extra setup. No translation tools required.',
     group: 'features',
   },
   {
-    icon: '🔓',
+    icon: 'unlock',
     title: 'Unlimited Chats & Knowledge Uploads',
     body: 'No caps. No throttling. No surprise overage fees. Use Aiden as much as your business demands.',
     group: 'usage',
   },
   {
-    icon: '📊',
+    icon: 'chart',
     title: 'AI Admin Portal & Reporting',
     body: 'Manage your AI and track performance from one clean, intuitive dashboard. No training required to get started.',
     group: 'usage',
@@ -165,14 +166,19 @@ export default function EssentialsFeatureGroups() {
                     }}
                   >
                     <span
-                      aria-hidden="true"
                       style={{
-                        fontSize: '1.75rem',
-                        lineHeight: 1,
-                        marginBottom: '0.25rem',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: '36px',
+                        height: '36px',
+                        borderRadius: '9px',
+                        background: 'rgba(245,194,0,0.12)',
+                        color: 'var(--od-gold)',
+                        marginBottom: '0.5rem',
                       }}
                     >
-                      {card.icon}
+                      <ProductIcon name={card.icon} size={20} />
                     </span>
                     <h3
                       style={{

@@ -3,12 +3,10 @@
 import React, { useRef } from 'react';
 import { useInView } from '@/lib/hooks/use-in-view';
 import { useReducedMotion } from '@/lib/hooks/use-reduced-motion';
-import CommercialIcon, {
-  type CommercialIconName,
-} from './CommercialIcon';
+import ProductIcon, { type ProductIconName } from '@/components/ui/ProductIcon';
 
 interface Signal {
-  icon: CommercialIconName;
+  icon: ProductIconName;
   title: string;
   body: string;
   tag: string;
@@ -114,7 +112,7 @@ export default function CommercialProblemSection() {
                     background: 'rgba(232,50,90,0.1)',
                   }}
                 >
-                  <CommercialIcon name={s.icon} size={20} />
+                  <ProductIcon name={s.icon} size={20} />
                 </span>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <h3

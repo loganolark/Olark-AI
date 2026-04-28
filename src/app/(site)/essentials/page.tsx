@@ -133,6 +133,28 @@ export default function EssentialsPage() {
             ctaHref="/get-started"
             ctaLabel="Get Started Today →"
           />
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.5rem',
+              flexWrap: 'wrap',
+              marginTop: '1.5rem',
+            }}
+          >
+            <span
+              style={{
+                fontSize: '0.875rem',
+                color: 'var(--od-muted)',
+              }}
+            >
+              Scaling past 3 reps?
+            </span>
+            <CTAButton variant="ghost" size="sm" href="/lead-gen">
+              See Lead-Gen →
+            </CTAButton>
+          </div>
         </div>
       </section>
 
@@ -140,28 +162,7 @@ export default function EssentialsPage() {
 
       <SupportPromise />
 
-      <section
-        style={{
-          backgroundColor: 'var(--od-card)',
-          padding: '4rem 1.5rem',
-          textAlign: 'center',
-        }}
-      >
-        <p
-          style={{
-            fontSize: '0.9375rem',
-            color: 'var(--od-muted)',
-            marginBottom: '1rem',
-          }}
-        >
-          Your team scaling fast?
-        </p>
-        <CTAButton variant="ghost" size="md" href="/lead-gen">
-          See Lead-Gen →
-        </CTAButton>
-      </section>
-
-      <MidPageMeetingCTA page="essentials" />
+      <MidPageMeetingCTA page="essentials" ctaVariant="secondary" />
     </>
   );
 }

@@ -41,11 +41,13 @@ describe('SupportPromise', () => {
     expect(screen.getByText(/Go live the same day you get access/i)).toBeInTheDocument();
   });
 
-  it('renders the card sub-headline', () => {
+  it('renders the "Support That Comes Standard" PillBadge above the promise list', () => {
     render(<SupportPromise />);
+    expect(screen.getByText(/Support That Comes Standard/i)).toBeInTheDocument();
+    // Confirms the duplicate <h3> from the prior layout is gone
     expect(
-      screen.getByRole('heading', { level: 3, name: /Support That Comes Standard/i }),
-    ).toBeInTheDocument();
+      screen.queryByRole('heading', { level: 3, name: /Support That Comes Standard/i }),
+    ).toBeNull();
   });
 
   it('accepts an optional headline override', () => {

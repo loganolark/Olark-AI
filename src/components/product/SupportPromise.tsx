@@ -86,21 +86,9 @@ export default function SupportPromise({
             padding: '2rem 1.75rem',
           }}
         >
-          <div style={{ marginBottom: '1rem' }}>
+          <div style={{ marginBottom: '1.25rem' }}>
             <PillBadge variant="gold">Support That Comes Standard</PillBadge>
           </div>
-          <h3
-            style={{
-              fontFamily: 'var(--font-poppins, Poppins, sans-serif)',
-              fontWeight: 700,
-              fontSize: '1.125rem',
-              letterSpacing: '-0.01em',
-              color: 'var(--od-white)',
-              margin: '0 0 1.25rem',
-            }}
-          >
-            Support That Comes Standard.
-          </h3>
           <ul
             style={{
               listStyle: 'none',
@@ -123,17 +111,23 @@ export default function SupportPromise({
                   lineHeight: 1.6,
                 }}
               >
-                <span
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 14 14"
+                  fill="none"
                   aria-hidden="true"
                   style={{
-                    color: 'var(--od-gold)',
-                    fontWeight: 700,
+                    stroke: 'var(--od-gold)',
+                    strokeWidth: 2,
+                    strokeLinecap: 'round',
+                    strokeLinejoin: 'round',
                     flexShrink: 0,
-                    marginTop: '0.125rem',
+                    marginTop: '0.3125rem',
                   }}
                 >
-                  ✓
-                </span>
+                  <polyline points="3,7.5 6,10 11,4.5" />
+                </svg>
                 <span>{p}</span>
               </li>
             ))}
