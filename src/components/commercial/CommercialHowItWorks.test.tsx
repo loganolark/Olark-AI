@@ -26,7 +26,7 @@ describe('CommercialHowItWorks', () => {
     ).toBeInTheDocument();
     expect(
       screen.getByText(
-        /Aiden Signature and Aiden Bespoke automate the entire intake/i,
+        /Aiden automates the entire intake and handoff workflow/i,
       ),
     ).toBeInTheDocument();
   });
@@ -85,5 +85,26 @@ describe('CommercialHowItWorks', () => {
       expect(c.style.opacity).toBe('1');
       expect(c.style.transform).toBe('translateY(0)');
     });
+  });
+
+  it('renders the Net Result callout with PillBadge label and 6 outcome bullets', () => {
+    render(<CommercialHowItWorks />);
+    const callout = screen.getByTestId('commercial-net-result');
+    expect(callout).toBeInTheDocument();
+    expect(callout.textContent).toContain('Net Result');
+    expect(callout.textContent).toContain('SDR Prep Is Nearly Eliminated.');
+    const bullets = callout.querySelectorAll('li');
+    expect(bullets).toHaveLength(6);
+    const bulletTexts = Array.from(bullets).map(
+      (b) => b.querySelector('span:last-child')?.textContent,
+    );
+    expect(bulletTexts).toEqual([
+      'No missed context at handoff, ever',
+      'No dead ends for customers mid-conversation',
+      'No CRM gaps from manual entry failures',
+      'Faster speed-to-lead',
+      'Reps spend more time closing, less time context-switching',
+      'Every conversation ends in a pipeline action',
+    ]);
   });
 });

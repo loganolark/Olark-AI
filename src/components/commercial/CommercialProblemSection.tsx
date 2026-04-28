@@ -3,9 +3,12 @@
 import React, { useRef } from 'react';
 import { useInView } from '@/lib/hooks/use-in-view';
 import { useReducedMotion } from '@/lib/hooks/use-reduced-motion';
+import CommercialIcon, {
+  type CommercialIconName,
+} from './CommercialIcon';
 
 interface Signal {
-  icon: string;
+  icon: CommercialIconName;
   title: string;
   body: string;
   tag: string;
@@ -13,19 +16,19 @@ interface Signal {
 
 const SIGNALS: Signal[] = [
   {
-    icon: '🕐',
+    icon: 'clock',
     title: 'Pre-Chat CRM Lookup',
     body: "Time lost to manual data look-up before every chat, and that's assuming the rep can find it at all.",
     tag: 'Time Lost',
   },
   {
-    icon: '🔀',
+    icon: 'shuffle',
     title: 'Routing to the Right Rep',
     body: 'Misrouted conversations burn time on both sides and create dead ends for prospects who just wanted a quick answer.',
     tag: 'Misdirected',
   },
   {
-    icon: '📭',
+    icon: 'inbox-x',
     title: 'Missing Context at Handoff',
     body: 'Most live chat treats every visitor the same. Your reps start every single conversation from zero.',
     tag: 'Zero Context',
@@ -99,14 +102,19 @@ export default function CommercialProblemSection() {
                 }}
               >
                 <span
-                  aria-hidden="true"
                   style={{
-                    fontSize: '1.5rem',
-                    lineHeight: 1,
                     flexShrink: 0,
+                    color: 'var(--od-pink)',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '8px',
+                    background: 'rgba(232,50,90,0.1)',
                   }}
                 >
-                  {s.icon}
+                  <CommercialIcon name={s.icon} size={20} />
                 </span>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <h3

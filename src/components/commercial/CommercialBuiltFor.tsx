@@ -3,26 +3,29 @@
 import React, { useRef } from 'react';
 import { useInView } from '@/lib/hooks/use-in-view';
 import { useReducedMotion } from '@/lib/hooks/use-reduced-motion';
+import CommercialIcon, {
+  type CommercialIconName,
+} from './CommercialIcon';
 
 interface WhoCard {
-  icon: string;
+  icon: CommercialIconName;
   title: string;
   body: string;
 }
 
 const WHO_CARDS: WhoCard[] = [
   {
-    icon: '🗺️',
+    icon: 'map',
     title: 'Regional Sales Teams',
     body: 'Organizations with multiple territories, departments, or routing rules that need clean delineation between them — without manual triage at every touchpoint.',
   },
   {
-    icon: '🏆',
+    icon: 'trophy',
     title: 'High-Value, High-Consideration Products',
     body: 'Companies with long sales cycles and multiple stakeholder touchpoints, where every conversation needs to move a deal forward.',
   },
   {
-    icon: '⚙️',
+    icon: 'gear',
     title: 'Live Chat at Scale',
     body: 'Teams running live chat as a serious revenue channel who need every conversation to end in a pipeline action, not a dead end.',
   },
@@ -101,15 +104,19 @@ export default function CommercialBuiltFor() {
                 }}
               >
                 <span
-                  aria-hidden="true"
                   style={{
-                    display: 'inline-block',
-                    fontSize: '2rem',
-                    lineHeight: 1,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '10px',
+                    background: 'rgba(245,194,0,0.12)',
+                    color: 'var(--od-gold)',
                     marginBottom: '0.875rem',
                   }}
                 >
-                  {card.icon}
+                  <CommercialIcon name={card.icon} size={22} />
                 </span>
                 <h3
                   style={{

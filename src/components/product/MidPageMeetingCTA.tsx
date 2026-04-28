@@ -30,7 +30,7 @@ const COPY: Record<MidPageMeetingCTAPage, CopyEntry> = {
   commercial: {
     title: 'Ready to Put Aiden to Work as Your Commercial Sales Engine?',
     intro:
-      'We’ll walk you through AI setup, live routing logic, and exactly how to get maximum revenue out of Aiden Signature and Aiden Bespoke.',
+      'We’ll walk you through AI setup, live routing logic, and exactly how to get maximum revenue out of Aiden Commercial.',
   },
 };
 

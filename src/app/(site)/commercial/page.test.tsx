@@ -183,22 +183,18 @@ describe('CommercialPage — Story 8.6 narrative sections', () => {
     expect(stepCards).toHaveLength(7);
   });
 
-  it('renders the Outcome flow h2 and all 5 flow steps + summary panel', () => {
+  it('renders the Net Result callout (merged from former OutcomeFlow) inside HowItWorks', () => {
     renderPage();
-    expect(
-      screen.getByRole('heading', {
-        level: 2,
-        name: /What This Looks Like in Practice/i,
-      }),
-    ).toBeInTheDocument();
-    const flowSteps = screen.getAllByTestId('commercial-flow-step');
-    expect(flowSteps).toHaveLength(5);
+    const callout = screen.getByTestId('commercial-net-result');
+    expect(callout).toBeInTheDocument();
     expect(
       screen.getByRole('heading', {
         level: 3,
         name: /SDR Prep Is Nearly Eliminated\./i,
       }),
     ).toBeInTheDocument();
+    const bullets = callout.querySelectorAll('li');
+    expect(bullets).toHaveLength(6);
   });
 
   it('renders the Built For h2 and all 3 who-cards', () => {
@@ -221,12 +217,12 @@ describe('CommercialPage — Story 8.6 narrative sections', () => {
     const expectedOrder = [
       /Watch Aiden Handle the Entire Pre-Sales Workflow/i,
       /Seven Steps From First Click to Closed Deal/i,
-      /What This Looks Like in Practice/i,
       /This Is a Commercial Product\./i,
       /Crawl\. Walk\. Run\./i,
       /Build a Commercial Quote in 60 Seconds\./i,
       /Ready to Put Aiden to Work as Your Commercial Sales Engine/i,
     ];
+    // Note: TierCard renders no h2 of its own; sequence above reflects only h2s.
 
     const indexes = expectedOrder.map((re) =>
       headings.findIndex((t) => re.test(t)),

@@ -5,7 +5,6 @@ import PillBadge from '@/components/ui/PillBadge';
 import CommercialAidenQuote from '@/components/commercial/CommercialAidenQuote';
 import CommercialBuiltFor from '@/components/commercial/CommercialBuiltFor';
 import CommercialHowItWorks from '@/components/commercial/CommercialHowItWorks';
-import CommercialOutcomeFlow from '@/components/commercial/CommercialOutcomeFlow';
 import CommercialProblemSection from '@/components/commercial/CommercialProblemSection';
 import TierCard from '@/components/product/TierCard';
 import CrawlWalkRunTimeline from '@/components/product/CrawlWalkRunTimeline';
@@ -78,8 +77,6 @@ export default function CommercialPage() {
 
       <CommercialHowItWorks />
 
-      <CommercialOutcomeFlow />
-
       <CommercialBuiltFor />
 
       <section
@@ -121,6 +118,8 @@ export default function CommercialPage() {
         </div>
       </section>
 
+      <QuoteSection tier="commercial" />
+
       <section
         id="capabilities"
         style={{
@@ -139,8 +138,6 @@ export default function CommercialPage() {
           />
         </div>
       </section>
-
-      <QuoteSection tier="commercial" />
 
       <MidPageMeetingCTA page="commercial" />
     </>

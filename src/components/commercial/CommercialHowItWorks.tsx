@@ -3,8 +3,18 @@
 import React, { useRef } from 'react';
 import { useInView } from '@/lib/hooks/use-in-view';
 import { useReducedMotion } from '@/lib/hooks/use-reduced-motion';
+import PillBadge from '@/components/ui/PillBadge';
 
 type Phase = 1 | 2 | 3;
+
+const NET_RESULT_BULLETS = [
+  'No missed context at handoff, ever',
+  'No dead ends for customers mid-conversation',
+  'No CRM gaps from manual entry failures',
+  'Faster speed-to-lead',
+  'Reps spend more time closing, less time context-switching',
+  'Every conversation ends in a pipeline action',
+];
 
 interface Step {
   number: string;
@@ -143,8 +153,8 @@ export default function CommercialHowItWorks() {
               margin: '0 auto',
             }}
           >
-            Aiden Signature and Aiden Bespoke automate the entire intake and
-            handoff workflow, with no engineering resources required.
+            Aiden automates the entire intake and handoff workflow, with no
+            engineering resources required.
           </p>
         </div>
 
@@ -279,6 +289,71 @@ export default function CommercialHowItWorks() {
               </div>
             );
           })}
+        </div>
+
+        <div
+          data-testid="commercial-net-result"
+          style={{
+            marginTop: '3rem',
+            padding: '2rem 1.75rem',
+            background: 'var(--od-card)',
+            border: '1px solid var(--od-border)',
+            borderRadius: '14px',
+          }}
+        >
+          <div style={{ marginBottom: '1rem' }}>
+            <PillBadge variant="gold">Net Result</PillBadge>
+          </div>
+          <h3
+            style={{
+              margin: '0 0 1.25rem',
+              fontFamily: 'var(--font-poppins, Poppins, sans-serif)',
+              fontWeight: 800,
+              fontSize: '1.125rem',
+              color: 'var(--od-white)',
+              letterSpacing: '-0.01em',
+            }}
+          >
+            SDR Prep Is Nearly Eliminated.
+          </h3>
+          <ul
+            role="list"
+            style={{
+              listStyle: 'none',
+              margin: 0,
+              padding: 0,
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+              gap: '0.625rem 1.5rem',
+            }}
+          >
+            {NET_RESULT_BULLETS.map((b) => (
+              <li
+                key={b}
+                style={{
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: '0.625rem',
+                  color: 'var(--od-text)',
+                  fontSize: '0.9375rem',
+                  lineHeight: 1.55,
+                }}
+              >
+                <span
+                  aria-hidden="true"
+                  style={{
+                    color: 'var(--od-gold)',
+                    fontWeight: 700,
+                    flexShrink: 0,
+                    marginTop: '0.0625rem',
+                  }}
+                >
+                  ✓
+                </span>
+                <span>{b}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </section>

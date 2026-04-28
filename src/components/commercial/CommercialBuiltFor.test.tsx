@@ -23,18 +23,19 @@ describe('CommercialBuiltFor', () => {
     expect(heading.textContent).toContain('Here’s Who We Built It For.');
   });
 
-  it('renders 3 who-cards with correct icons and titles', () => {
-    render(<CommercialBuiltFor />);
+  it('renders 3 who-cards with the correct icon SVGs and titles', () => {
+    const { container } = render(<CommercialBuiltFor />);
     const cards = screen.getAllByTestId('commercial-who-card');
     expect(cards).toHaveLength(3);
-    expect(cards[0].textContent).toContain('🗺️');
     expect(cards[0].textContent).toContain('Regional Sales Teams');
-    expect(cards[1].textContent).toContain('🏆');
     expect(cards[1].textContent).toContain(
       'High-Value, High-Consideration Products',
     );
-    expect(cards[2].textContent).toContain('⚙️');
     expect(cards[2].textContent).toContain('Live Chat at Scale');
+    cards.forEach((card) => {
+      expect(card.querySelectorAll('svg')).toHaveLength(1);
+    });
+    expect(container.textContent).not.toMatch(/🗺️|🏆|⚙️/);
   });
 
   it('applies static state under reduced-motion (even when not yet in view)', () => {
