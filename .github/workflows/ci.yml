@@ -88,14 +88,17 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # Lighthouse needs a production-built app to audit. Build locally rather
+      # than depending on a Vercel preview URL — keeps the gate self-contained
+      # and removes a flaky external dependency.
+      - name: Build
+        run: pnpm build
+
       - name: Run Lighthouse CI
         uses: treosh/lighthouse-ci-action@v11
         with:
-          urls: |
-            ${{ secrets.VERCEL_PREVIEW_URL }}/
-            ${{ secrets.VERCEL_PREVIEW_URL }}/essentials
-            ${{ secrets.VERCEL_PREVIEW_URL }}/lead-gen
-            ${{ secrets.VERCEL_PREVIEW_URL }}/commercial
-          budgetPath: ./.lighthouserc.json
+          # configPath drives URLs, assertions, and startServerCommand from
+          # lighthouserc.json (which boots `npm start` and audits localhost).
+          configPath: ./lighthouserc.json
           uploadArtifacts: true
           temporaryPublicStorage: true
