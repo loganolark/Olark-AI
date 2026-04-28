@@ -116,7 +116,7 @@ export default function CTAButton({
     fontSize: fontSizeMap[size],
     fontWeight: 700,
     fontFamily: 'var(--font-poppins), ui-sans-serif, sans-serif',
-    borderRadius: '8px',
+    borderRadius: '100px',
     cursor: isInert ? 'not-allowed' : 'pointer',
     textDecoration: 'none',
     whiteSpace: 'nowrap',
