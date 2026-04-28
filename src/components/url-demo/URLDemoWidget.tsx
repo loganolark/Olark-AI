@@ -210,14 +210,14 @@ export default function URLDemoWidget({ onDemoComplete, onUnlockMore, apiEndpoin
                 borderRadius: '8px',
                 background: 'var(--od-dark)',
                 color: 'var(--od-white)',
-                border: validationError ? '1.5px solid #E8325A' : '1.5px solid var(--od-border)',
+                border: validationError ? '1.5px solid var(--od-pink)' : '1.5px solid var(--od-border)',
                 outline: 'none',
                 boxSizing: 'border-box',
               }}
               disabled={status !== 'idle'}
             />
             {validationError && (
-              <p id="url-error" role="alert" style={{ color: '#E8325A', fontSize: '0.875rem', margin: 0 }}>
+              <p id="url-error" role="alert" style={{ color: 'var(--od-pink)', fontSize: '0.875rem', margin: 0 }}>
                 {validationError}
               </p>
             )}

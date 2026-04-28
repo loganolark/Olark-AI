@@ -11,28 +11,29 @@ const baseProps = {
   ctaLabel: 'Get Started Today →',
 };
 
-// JSDOM normalizes inline `style.background` hex colors to rgb() — assert against rgb form.
+// Gradients now reference design tokens (--od-gold/--od-pink/--od-teal families)
+// instead of hard-coded hex; assert against the CSS var names.
 describe('TierCard — gradient variants', () => {
   it('renders the gold gradient strip for tier="essentials"', () => {
     const { container } = render(<TierCard tier="essentials" {...baseProps} />);
     const strip = container.querySelector('.tier-card__gradient-strip') as HTMLElement;
     expect(strip).not.toBeNull();
-    expect(strip.style.background).toContain('rgb(245, 194, 0)'); // #F5C200
-    expect(strip.style.background).toContain('rgb(255, 213, 51)'); // #FFD533
+    expect(strip.style.background).toContain('var(--od-gold)');
+    expect(strip.style.background).toContain('var(--od-gold-lt)');
   });
 
   it('renders the pink gradient strip for tier="lead-gen"', () => {
     const { container } = render(<TierCard tier="lead-gen" {...baseProps} />);
     const strip = container.querySelector('.tier-card__gradient-strip') as HTMLElement;
-    expect(strip.style.background).toContain('rgb(232, 50, 90)'); // #E8325A
-    expect(strip.style.background).toContain('rgb(255, 107, 138)'); // #FF6B8A
+    expect(strip.style.background).toContain('var(--od-pink)');
+    expect(strip.style.background).toContain('var(--od-pink-lt)');
   });
 
   it('renders the teal gradient strip for tier="commercial"', () => {
     const { container } = render(<TierCard tier="commercial" {...baseProps} />);
     const strip = container.querySelector('.tier-card__gradient-strip') as HTMLElement;
-    expect(strip.style.background).toContain('rgb(0, 212, 170)'); // #00D4AA
-    expect(strip.style.background).toContain('rgb(0, 236, 189)'); // #00ECBD
+    expect(strip.style.background).toContain('var(--od-teal)');
+    expect(strip.style.background).toContain('var(--od-teal-lt)');
   });
 });
 

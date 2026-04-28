@@ -1,4 +1,5 @@
 import React from 'react';
+import PillBadge from '@/components/ui/PillBadge';
 
 const PROMISES: string[] = [
   'Free live onboarding included with every Essentials plan',
@@ -81,11 +82,13 @@ export default function SupportPromise({
           style={{
             backgroundColor: 'var(--od-card)',
             border: '1px solid var(--od-border)',
-            borderLeft: '3px solid var(--od-gold)',
             borderRadius: '0.75rem',
             padding: '2rem 1.75rem',
           }}
         >
+          <div style={{ marginBottom: '1rem' }}>
+            <PillBadge variant="gold">Support That Comes Standard</PillBadge>
+          </div>
           <h3
             style={{
               fontFamily: 'var(--font-poppins, Poppins, sans-serif)',

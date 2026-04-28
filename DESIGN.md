@@ -10,6 +10,9 @@ colors:
   od-gold: "#F5C200"
   od-gold-lt: "#FFD533"
   od-pink: "#E8325A"
+  od-pink-lt: "#FF6B8A"
+  od-teal: "#00D4AA"
+  od-teal-lt: "#00ECBD"
   od-white: "#F0EEFF"
   od-text: "#D8D5F5"
   od-muted: "#A09DD8"
@@ -129,6 +132,12 @@ The palette is a single hue family (deep indigo) with two punctuation accents (g
 
 ### Tertiary
 - **Bright Gold** (#FFD533): Hover state for `Filament Gold` — only used in component hover treatments, never as a standalone accent.
+
+### Tier-Identifier Accents (component-scoped)
+These three tokens exist *only* to color the `TierCard` gradient strip — a 4px ribbon at the top of each tier card that gives buyers a fast visual cue for which tier they're looking at. They are **not** general-purpose palette colors and do not appear anywhere else in the system.
+- **Bright Pink** (#FF6B8A / `--od-pink-lt`): Lead-Gen tier strip, paired with Beacon Pink in a 90° gradient.
+- **Sage Teal** (#00D4AA / `--od-teal`): Commercial tier strip start. The system's only deliberate exception to the Single-Hue Doctrine — scoped to ~4px of card chrome.
+- **Mint Teal** (#00ECBD / `--od-teal-lt`): Commercial tier strip end.
 
 ### Neutral (the navy ramp)
 - **Cosmos Black** (#0F0D2E / `--od-dark`): The deepest surface. Body background, hero, and "rest" sections.

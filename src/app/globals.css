@@ -33,6 +33,9 @@
   --od-gold:       #F5C200;
   --od-gold-lt:    #FFD533;
   --od-pink:       #E8325A;
+  --od-pink-lt:    #FF6B8A;
+  --od-teal:       #00D4AA;
+  --od-teal-lt:    #00ECBD;
   --od-white:      #F0EEFF;
   --od-muted:      #A09DD8;
   --od-text:       #D8D5F5;
@@ -866,7 +869,6 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: 12px;
   padding: 1.25rem 1.5rem;
   margin-bottom: 1.75rem;
-  border-left: 4px solid var(--od-gold);
 }
 
 .quote-managed-item {

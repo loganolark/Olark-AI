@@ -4,9 +4,9 @@ import PillBadge from '@/components/ui/PillBadge';
 import type { TierCardProps, TierVariant } from '@/types/tier';
 
 const TIER_GRADIENTS: Record<TierVariant, string> = {
-  essentials: 'linear-gradient(90deg, #F5C200, #FFD533)',
-  'lead-gen': 'linear-gradient(90deg, #E8325A, #FF6B8A)',
-  commercial: 'linear-gradient(90deg, #00D4AA, #00ECBD)',
+  essentials: 'linear-gradient(90deg, var(--od-gold), var(--od-gold-lt))',
+  'lead-gen': 'linear-gradient(90deg, var(--od-pink), var(--od-pink-lt))',
+  commercial: 'linear-gradient(90deg, var(--od-teal), var(--od-teal-lt))',
 };
 
 const TIER_DISPLAY_NAMES: Record<TierVariant, string> = {

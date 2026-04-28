@@ -209,7 +209,7 @@ export default function SiteNav() {
           style={{
             position: 'fixed',
             inset: 0,
-            backgroundColor: '#0F0D2E',
+            backgroundColor: 'var(--od-dark)',
             zIndex: 50,
             display: 'flex',
             flexDirection: 'column',

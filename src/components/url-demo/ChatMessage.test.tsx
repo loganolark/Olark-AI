@@ -9,10 +9,10 @@ describe('ChatMessage — user variant', () => {
     expect(bubble).toHaveStyle({ marginLeft: 'auto' });
   });
 
-  it('uses #252275 background for user messages', () => {
+  it('uses --od-card background token for user messages', () => {
     render(<ChatMessage role="user" content="Hello" />);
     const bubble = screen.getByText('Hello').closest('div') as HTMLElement;
-    expect(bubble).toHaveStyle({ background: '#252275' });
+    expect(bubble.style.background).toBe('var(--od-card)');
   });
 });
 
@@ -23,10 +23,10 @@ describe('ChatMessage — aiden variant', () => {
     expect(bubble).toHaveStyle({ marginRight: 'auto' });
   });
 
-  it('uses #141250 background for aiden messages', () => {
+  it('uses --od-navy background token for aiden messages', () => {
     render(<ChatMessage role="aiden" content="Hi" />);
     const bubble = screen.getByText('Hi').closest('div') as HTMLElement;
-    expect(bubble).toHaveStyle({ background: '#141250' });
+    expect(bubble.style.background).toBe('var(--od-navy)');
   });
 
   it('renders typing indicator when isTyping is true', () => {
