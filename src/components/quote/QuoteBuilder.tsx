@@ -41,6 +41,7 @@ export default function QuoteBuilder({ tier, onComplete }: QuoteBuilderProps) {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [inheritOpen, setInheritOpen] = useState<boolean>(false);
   const [completedPlan, setCompletedPlan] = useState<Plan | null>(null);
+  const [isDownloadingPdf, setIsDownloadingPdf] = useState<boolean>(false);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -248,8 +249,23 @@ export default function QuoteBuilder({ tier, onComplete }: QuoteBuilderProps) {
             <CTAButton
               variant="ghost"
               size="md"
-              disabled
-              aria-label="Download a detailed PDF quote — available shortly"
+              disabled={isDownloadingPdf}
+              loading={isDownloadingPdf}
+              onClick={async () => {
+                setIsDownloadingPdf(true);
+                try {
+                  const { downloadQuotePDF } = await import('@/lib/quote-pdf');
+                  await downloadQuotePDF({
+                    plan,
+                    company,
+                    seats: seatsAnswer,
+                  });
+                } catch (err) {
+                  console.error('[QuoteBuilder] PDF generation failed', err);
+                } finally {
+                  setIsDownloadingPdf(false);
+                }
+              }}
             >
               Download a detailed PDF quote
             </CTAButton>
