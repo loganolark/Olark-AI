@@ -39,12 +39,27 @@ describe('HomePage — Rep section', () => {
   });
 });
 
-describe('HomePage — CTA bridge', () => {
-  it('renders tier-specific CTA links', () => {
+describe('HomePage — Final CTA (replaces former 3-button CTA bridge)', () => {
+  it('renders the "Still Not Sure" headline', () => {
     render(<HomePage />);
-    expect(screen.getByRole('link', { name: /Start Today, See Results This Week/i })).toHaveAttribute('href', '/essentials');
-    expect(screen.getByRole('link', { name: /Give Your Reps a Teammate/i })).toHaveAttribute('href', '/lead-gen');
-    expect(screen.getByRole('link', { name: /Build Your Full Pipeline Signal/i })).toHaveAttribute('href', '/commercial');
+    expect(
+      screen.getByRole('heading', { level: 2, name: /Still Not Sure Which Tier Fits/i }),
+    ).toBeInTheDocument();
+  });
+
+  it('renders a single primary CTA pointing at the in-page quiz anchor', () => {
+    render(<HomePage />);
+    const quizCtas = screen.getAllByRole('link', { name: /Take the 60-Second Quiz/i });
+    // Hero secondary CTA + final-section primary CTA both point at #quiz — that's intentional reinforcement.
+    expect(quizCtas.length).toBeGreaterThanOrEqual(2);
+    quizCtas.forEach((cta) => expect(cta).toHaveAttribute('href', '#quiz'));
+  });
+
+  it('does NOT render the old 3-button tier-specific CTA bridge', () => {
+    render(<HomePage />);
+    expect(screen.queryByRole('link', { name: /Start Today, See Results This Week/i })).toBeNull();
+    expect(screen.queryByRole('link', { name: /Give Your Reps a Teammate/i })).toBeNull();
+    expect(screen.queryByRole('link', { name: /Build Your Full Pipeline Signal/i })).toBeNull();
   });
 });
 

@@ -23,6 +23,8 @@ export default function TierCard({
   capabilities,
   ctaHref,
   ctaLabel,
+  ctaVariant = 'primary',
+  ctaSize = 'lg',
 }: TierCardProps) {
   const tierName = TIER_DISPLAY_NAMES[tier];
   return (
@@ -52,8 +54,8 @@ export default function TierCard({
           </ul>
           <div className="tier-card__cta">
             <CTAButton
-              variant="primary"
-              size="lg"
+              variant={ctaVariant}
+              size={ctaSize}
               href={ctaHref}
               aria-label={`${ctaLabel} — ${tierName} tier`}
             >

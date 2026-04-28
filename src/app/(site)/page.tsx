@@ -41,6 +41,7 @@ interface HomepageTier {
   tier: TierVariant;
   name: string;
   positioning: string;
+  capabilities: string[];
   href: string;
 }
 
@@ -49,18 +50,33 @@ const TIERS: HomepageTier[] = [
     tier: 'essentials',
     name: 'Essentials',
     positioning: 'Live in 48 hours. Every visitor qualified, routed, and ready for your rep.',
+    capabilities: [
+      'Live chatbot trained on your website in one click',
+      'Visitor capture, qualification, and rep handoff',
+      'Free onboarding — no engineering required',
+    ],
     href: '/essentials',
   },
   {
     tier: 'lead-gen',
     name: 'Lead-Gen',
     positioning: 'Your leads arrive with a context brief. Your reps just got a teammate.',
+    capabilities: [
+      'AI Analyst surfaces your highest-intent visitors',
+      'Smart routing to the right rep, automatically',
+      'Pipeline-ready handoffs with full context',
+    ],
     href: '/lead-gen',
   },
   {
     tier: 'commercial',
     name: 'Commercial',
     positioning: 'Full pipeline signal. Provable ROI, direct team access, no ticket queue.',
+    capabilities: [
+      'Full signal trail on every visitor interaction',
+      'Deep CRM integration with rep intelligence briefs',
+      'Implementation in days, not quarters',
+    ],
     href: '/commercial',
   },
 ];
@@ -88,7 +104,7 @@ export default function HomePage() {
               See Aiden on Your Site
             </CTAButton>
             <CTAButton variant="secondary" size="lg" href="#quiz">
-              Find Your Tier →
+              Take the 60-Second Quiz →
             </CTAButton>
           </>
         }
@@ -186,9 +202,11 @@ export default function HomePage() {
               tier={t.tier}
               headline={t.name}
               tagline={t.positioning}
-              capabilities={[]}
+              capabilities={t.capabilities}
               ctaHref={t.href}
               ctaLabel="Learn more →"
+              ctaVariant="secondary"
+              ctaSize="md"
             />
           ))}
         </div>
@@ -306,7 +324,7 @@ export default function HomePage() {
         <PathFinderQuiz />
       </section>
 
-      {/* ─── CTA Bridge ─── */}
+      {/* ─── Final CTA — single quiz step (was: CTA Bridge with 3 tier links) ─── */}
       <section
         style={{
           backgroundColor: 'var(--od-dark)',
@@ -325,35 +343,24 @@ export default function HomePage() {
             margin: '0 0 1rem',
           }}
         >
-          Find Your Tier
+          Still Not Sure Which Tier Fits?
         </h2>
         <p
           style={{
             color: 'var(--od-muted)',
             marginBottom: '2.5rem',
             fontSize: '0.9375rem',
+            maxWidth: '480px',
+            marginLeft: 'auto',
+            marginRight: 'auto',
           }}
         >
-          Three ways to deploy Aiden. One fits your team right now.
+          A few quick questions about your team and we&rsquo;ll match you to the
+          right tier. Sixty seconds, then you decide.
         </p>
-        <div
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: '1rem',
-            justifyContent: 'center',
-          }}
-        >
-          <CTAButton variant="secondary" size="md" href="/essentials">
-            Start Today, See Results This Week →
-          </CTAButton>
-          <CTAButton variant="secondary" size="md" href="/lead-gen">
-            Give Your Reps a Teammate →
-          </CTAButton>
-          <CTAButton variant="secondary" size="md" href="/commercial">
-            Build Your Full Pipeline Signal →
-          </CTAButton>
-        </div>
+        <CTAButton variant="primary" size="lg" href="#quiz">
+          Take the 60-Second Quiz →
+        </CTAButton>
       </section>
     </>
   );
