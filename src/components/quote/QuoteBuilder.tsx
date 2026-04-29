@@ -2,6 +2,8 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import CTAButton from '@/components/ui/CTAButton';
+import { useConsent } from '@/lib/consent';
+import { trackEvent } from '@/lib/analytics';
 import {
   PLAN_DATA,
   type Plan,
@@ -10,6 +12,7 @@ import {
   type QuoteQuestion,
   type QuoteState,
 } from '@/types/quote';
+import type { HubSpotContactPayload } from '@/types/hubspot';
 import { calcPricing, formatUSD } from '@/lib/quote-pricing';
 import {
   firstQuestion,
@@ -21,6 +24,82 @@ import {
 const ADVANCE_DELAY_MS = 220;
 const BOOKING_HREF = 'https://hello.olark.com/meetings/logan-stuard/aiden';
 
+/** Plans whose pricing is gated behind an email capture. SMB tiers
+ *  (essentials, advanced) show pricing openly — they're transactional. The
+ *  upper tiers below imply a real sales conversation, so we trade pricing
+ *  visibility for a contactable lead. */
+const EMAIL_GATED_PLANS: ReadonlyArray<Plan> = ['pro', 'signature', 'bespoke'];
+
+const QUOTE_EMAIL_STORAGE_KEY = 'olark_quote_email_captured';
+
+function readQuoteEmailCaptured(): boolean {
+  if (typeof window === 'undefined') return false;
+  try {
+    return window.localStorage.getItem(QUOTE_EMAIL_STORAGE_KEY) === 'true';
+  } catch {
+    return false;
+  }
+}
+
+function writeQuoteEmailCaptured(): void {
+  if (typeof window === 'undefined') return;
+  try {
+    window.localStorage.setItem(QUOTE_EMAIL_STORAGE_KEY, 'true');
+  } catch {
+    /* defensive */
+  }
+}
+
+function isValidEmail(s: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
+}
+
+function quizTierToTierSignal(tier: QuizTier): 'essentials' | 'lead_gen' | 'commercial' {
+  if (tier === 'advanced') return 'lead_gen';
+  return tier;
+}
+
+/**
+ * Fire-and-forget POST to /api/hubspot/contact when a visitor unlocks gated
+ * pricing with their email. Mirrors the wiring used by PathFinderQuiz so the
+ * shape, transport, and unmount-resilience all match what the live HubSpot
+ * integration already accepts.
+ *
+ *   • Strongly typed via HubSpotContactPayload — adding fields that aren't on
+ *     the type (e.g. an `olark_quote_partial` we made up) would silently get
+ *     rejected by HubSpot, so we constrain to documented properties only.
+ *   • navigator.sendBeacon when available so the request survives nav/unmount;
+ *     fetch+keepalive fallback otherwise.
+ *   • Plan-name granularity (pro vs signature vs bespoke) isn't sent because
+ *     no HubSpot custom property exists for it yet. olark_tier_signal already
+ *     conveys the band (essentials / lead_gen / commercial).
+ */
+function postQuoteEmailToHubSpot(email: string, tier: QuizTier): void {
+  if (typeof window === 'undefined') return;
+  const payload: HubSpotContactPayload = {
+    email,
+    olark_tier_signal: quizTierToTierSignal(tier),
+  };
+  try {
+    const body = JSON.stringify(payload);
+    if (typeof navigator !== 'undefined' && typeof navigator.sendBeacon === 'function') {
+      const blob = new Blob([body], { type: 'application/json' });
+      const queued = navigator.sendBeacon('/api/hubspot/contact', blob);
+      if (queued) return;
+    }
+    void fetch('/api/hubspot/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body,
+      keepalive: true,
+    }).catch(() => {
+      /* swallow — server logs to Sentry */
+    });
+  } catch {
+    /* defensive — JSON.stringify shouldn't fail with these inputs */
+  }
+}
+
 export interface QuoteBuilderProps {
   tier: QuizTier;
   onComplete?: (plan: Plan, answers: Record<string, string>) => void;
@@ -31,6 +110,8 @@ function shortText(text: string): string {
 }
 
 export default function QuoteBuilder({ tier, onComplete }: QuoteBuilderProps) {
+  const { consent } = useConsent();
+  const consentAnalytics = consent.analytics;
   const [step, setStep] = useState<'collecting' | 'result'>('collecting');
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [history, setHistory] = useState<QuoteHistoryItem[]>([]);
@@ -43,7 +124,20 @@ export default function QuoteBuilder({ tier, onComplete }: QuoteBuilderProps) {
   const [completedPlan, setCompletedPlan] = useState<Plan | null>(null);
   const [isDownloadingPdf, setIsDownloadingPdf] = useState<boolean>(false);
 
+  const [emailCaptured, setEmailCaptured] = useState<boolean>(false);
+  const [emailValue, setEmailValue] = useState<string>('');
+  const [emailError, setEmailError] = useState<string>('');
+
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const emailInputRef = useRef<HTMLInputElement | null>(null);
+
+  // Restore prior email-gate clearance on mount so a returning visitor isn't
+  // re-asked across page navigations within the session/site.
+  useEffect(() => {
+    if (readQuoteEmailCaptured()) {
+      setEmailCaptured(true);
+    }
+  }, []);
 
   // Reset on tier change. Multiple setStates batched into one re-render by React.
   useEffect(() => {
@@ -136,6 +230,29 @@ export default function QuoteBuilder({ tier, onComplete }: QuoteBuilderProps) {
     setCompletedPlan(null);
   }
 
+  function handleEmailSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const trimmed = emailValue.trim();
+    if (!isValidEmail(trimmed)) {
+      setEmailError('Please enter a valid email address.');
+      emailInputRef.current?.focus();
+      return;
+    }
+    setEmailError('');
+    setEmailCaptured(true);
+    writeQuoteEmailCaptured();
+    // Consent-gate the HubSpot push the same way PathFinderQuiz does — when
+    // the visitor hasn't accepted analytics/marketing we still unlock the
+    // pricing locally, but we don't transmit their email off-device.
+    if (consentAnalytics && completedPlan) {
+      postQuoteEmailToHubSpot(trimmed, tier);
+      trackEvent('quote_email_unlock', {
+        plan: completedPlan,
+        tier_signal: quizTierToTierSignal(tier),
+      });
+    }
+  }
+
   // ─── Result rendering ──────────────────────────────────────────────────────
   if (step === 'result' && completedPlan) {
     const plan = completedPlan;
@@ -144,6 +261,8 @@ export default function QuoteBuilder({ tier, onComplete }: QuoteBuilderProps) {
     const pricing = calcPricing(plan, seatsAnswer);
     const company = answers.company || 'Your Company';
     const includedValue = pricing.includedSeats * pricing.seatPrice;
+    const requiresEmail = EMAIL_GATED_PLANS.includes(plan);
+    const isLocked = requiresEmail && !emailCaptured;
 
     return (
       <div data-testid="quote-result" className="quote-builder">
@@ -158,7 +277,65 @@ export default function QuoteBuilder({ tier, onComplete }: QuoteBuilderProps) {
             <p className="quote-result-tagline">{data.tagline}</p>
           </div>
 
-          <div className="quote-pricing-card" data-testid="quote-pricing-card">
+          {isLocked && (
+            <form
+              className="quote-email-gate"
+              data-testid="quote-email-gate"
+              onSubmit={handleEmailSubmit}
+              noValidate
+            >
+              <p className="quote-email-gate__heading">
+                Custom pricing for {data.name} is one click away.
+              </p>
+              <p className="quote-email-gate__body">
+                {data.name} sits at the higher end of the Aiden lineup — drop your
+                email and we&rsquo;ll reveal your full custom quote, plus follow up
+                with the right rep to walk through it.
+              </p>
+              <div className="quote-email-gate__form">
+                <input
+                  ref={emailInputRef}
+                  type="email"
+                  inputMode="email"
+                  autoComplete="email"
+                  className="quote-email-gate__input"
+                  placeholder="you@company.com"
+                  aria-label="Email address"
+                  aria-invalid={emailError ? 'true' : 'false'}
+                  aria-describedby={emailError ? 'quote-email-error' : undefined}
+                  value={emailValue}
+                  onChange={(e) => setEmailValue(e.target.value)}
+                />
+                <button
+                  type="submit"
+                  className="quote-submit-btn"
+                  data-testid="quote-email-submit"
+                >
+                  Reveal Pricing →
+                </button>
+              </div>
+              {emailError && (
+                <p
+                  id="quote-email-error"
+                  role="alert"
+                  className="quote-email-gate__error"
+                >
+                  {emailError}
+                </p>
+              )}
+              <p className="quote-email-gate__fineprint">
+                We won&rsquo;t spam you. Your email is used to follow up with the
+                right rep about this quote.
+              </p>
+            </form>
+          )}
+
+          <div
+            className="quote-pricing-card"
+            data-testid="quote-pricing-card"
+            data-locked={isLocked ? 'true' : 'false'}
+            aria-hidden={isLocked ? 'true' : undefined}
+          >
             <div className="quote-pricing-label">Pricing Breakdown</div>
             <div className="quote-pricing-row">
               <span className="qlabel">{data.name} Platform Fee</span>

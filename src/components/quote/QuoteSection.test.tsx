@@ -20,6 +20,19 @@ describe('QuoteSection — initial trigger state (merged with former MidPageMeet
     expect(screen.getByRole('button', { name: /Get My Custom Quote/i })).toBeInTheDocument();
   });
 
+  it('renders the "Quote Builder" eyebrow OUTSIDE the trigger card (above it)', () => {
+    render(<QuoteSection tier="essentials" />);
+    const eyebrow = screen.getByTestId('quote-section-eyebrow');
+    const trigger = screen.getByTestId('quote-trigger');
+    // The eyebrow must NOT be a descendant of the trigger card — it sits above
+    // as a sibling so it visually labels the whole section like the eyebrows
+    // on every other section on the site.
+    expect(trigger.contains(eyebrow)).toBe(false);
+    // And it must precede the trigger in document order
+    const cmp = eyebrow.compareDocumentPosition(trigger);
+    expect(cmp & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
   it('uses the commercial merged headline ("Ready to Put Aiden to Work...") for tier="commercial"', () => {
     render(<QuoteSection tier="commercial" />);
     expect(

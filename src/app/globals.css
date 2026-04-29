@@ -806,6 +806,92 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
 }
 
+/* ─── QuoteBuilder email gate: blur prices on pro/signature/bespoke until
+   the visitor unlocks with email. The labels stay readable so the visitor
+   knows what they're getting; the numbers are obfuscated. */
+.quote-pricing-card[data-locked="true"] .qvalue {
+  filter: blur(8px);
+  user-select: none;
+  pointer-events: none;
+  transition: filter 250ms ease-out;
+}
+
+.quote-pricing-card:not([data-locked="true"]) .qvalue {
+  transition: filter 250ms ease-out;
+}
+
+.quote-email-gate {
+  background: rgba(245, 194, 0, 0.06);
+  border: 1px solid rgba(245, 194, 0, 0.3);
+  border-radius: 14px;
+  padding: 1.5rem 1.25rem;
+  margin: 0 0 1.75rem;
+}
+
+.quote-email-gate__heading {
+  font-family: var(--font-poppins, Poppins, sans-serif);
+  font-weight: 700;
+  font-size: 1.0625rem;
+  color: var(--od-white);
+  margin: 0 0 0.5rem;
+  letter-spacing: -0.01em;
+}
+
+.quote-email-gate__body {
+  color: var(--od-text);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  margin: 0 0 1rem;
+}
+
+.quote-email-gate__form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: stretch;
+}
+
+.quote-email-gate__input {
+  flex: 1 1 220px;
+  min-width: 0;
+  background: var(--od-card);
+  border: 1px solid var(--od-border);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  color: var(--od-white);
+  font-size: 0.9375rem;
+  font-family: inherit;
+  transition: border-color 150ms ease-out, box-shadow 150ms ease-out;
+}
+
+.quote-email-gate__input::placeholder {
+  color: var(--od-muted);
+}
+
+.quote-email-gate__input:focus-visible {
+  outline: none;
+  border-color: var(--od-gold);
+  box-shadow: 0 0 0 3px rgba(245, 194, 0, 0.18);
+}
+
+.quote-email-gate__input[aria-invalid="true"] {
+  border-color: var(--od-pink);
+}
+
+.quote-email-gate__error {
+  color: var(--od-pink);
+  font-size: 0.875rem;
+  margin: 0.625rem 0 0;
+  font-weight: 500;
+}
+
+.quote-email-gate__fineprint {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--od-muted);
+  margin: 0.875rem 0 0;
+}
+
 .quote-section-sublabel {
   font-size: 0.75rem;
   letter-spacing: 0.1em;

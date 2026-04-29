@@ -62,29 +62,32 @@ export default function QuoteSection({
     >
       <Reveal style={{ maxWidth: '720px', margin: '0 auto' }} threshold={0.15}>
         {!expanded && (
-          <div
-            data-testid="quote-trigger"
-            style={{
-              padding: '3rem 2rem',
-              background: 'rgba(37, 34, 117, 0.4)',
-              border: '1px solid var(--od-border)',
-              borderRadius: '20px',
-              textAlign: 'center',
-              boxShadow: '0 32px 80px rgba(0, 0, 0, 0.4)',
-            }}
-          >
+          <>
             <p
+              data-testid="quote-section-eyebrow"
               style={{
                 fontSize: '0.75rem',
                 letterSpacing: '0.1em',
                 textTransform: 'uppercase',
                 fontWeight: 600,
                 color: 'var(--od-gold)',
-                margin: '0 0 1rem',
+                textAlign: 'center',
+                margin: '0 0 1.25rem',
               }}
             >
               Quote Builder
             </p>
+            <div
+              data-testid="quote-trigger"
+              style={{
+                padding: '3rem 2rem',
+                background: 'rgba(37, 34, 117, 0.4)',
+                border: '1px solid var(--od-border)',
+                borderRadius: '20px',
+                textAlign: 'center',
+                boxShadow: '0 32px 80px rgba(0, 0, 0, 0.4)',
+              }}
+            >
             <div style={{ marginBottom: '1.25rem' }}>
               <PillBadge variant="gold" pulse>
                 Start Today
@@ -121,7 +124,8 @@ export default function QuoteSection({
             >
               Get My Custom Quote
             </CTAButton>
-          </div>
+            </div>
+          </>
         )}
         {expanded && <QuoteBuilder tier={tier} />}
       </Reveal>
