@@ -49,6 +49,7 @@ export default function CrawlWalkRunTimeline() {
             delay={i * 110}
             offset={14}
             threshold={0.15}
+            className="cwr-phase-wrap"
           >
           <div role="listitem" className="cwr-phase">
             <button

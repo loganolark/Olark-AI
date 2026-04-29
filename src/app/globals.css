@@ -295,6 +295,7 @@ h1, h2, h3, h4, h5, h6 {
 .tier-card-shell {
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
 .tier-card__badge-row {
@@ -392,12 +393,21 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
+.cwr-phase-wrap {
+  flex: 1;
+  display: flex;
+  min-width: 0;
+}
+
 .cwr-phase {
   flex: 1;
+  width: 100%;
   background: var(--od-card);
   border: 1px solid var(--od-border);
   border-radius: 12px;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .cwr-phase__trigger {
@@ -409,10 +419,12 @@ h1, h2, h3, h4, h5, h6 {
   text-align: left;
   cursor: pointer;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 1rem;
   font: inherit;
+  min-height: 6.5rem;
+  flex: 1;
 }
 
 .cwr-phase__trigger:focus-visible {

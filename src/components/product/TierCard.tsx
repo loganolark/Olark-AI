@@ -29,11 +29,16 @@ export default function TierCard({
 }: TierCardProps) {
   const tierName = TIER_DISPLAY_NAMES[tier];
   return (
-    <Reveal threshold={0.2} offset={16}>
+    <Reveal
+      threshold={0.2}
+      offset={16}
+      style={{ height: '100%', display: 'flex' }}
+    >
       <div
         className="tier-card-shell"
         data-tier={tier}
         data-featured={featured ? 'true' : 'false'}
+        style={{ flex: 1 }}
       >
         {featured && (
           <div className="tier-card__badge-row">
