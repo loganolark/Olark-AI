@@ -10,7 +10,6 @@ import PipelineVisual from '@/components/product/PipelineVisual';
 import AutomationVisual from '@/components/product/AutomationVisual';
 import QuizResumeBanner from '@/components/quiz/QuizResumeBanner';
 import QuoteSection from '@/components/quote/QuoteSection';
-import Reveal from '@/components/ui/Reveal';
 
 export const metadata: Metadata = {
   title: 'Qualify Leads Before They Talk to You | Aiden Lead-Gen by Olark',
@@ -143,87 +142,6 @@ export default function LeadGenPage() {
         ]}
         graphic={<AutomationVisual />}
       />
-
-      <section
-        id="rep-section"
-        style={{
-          backgroundColor: 'var(--od-dark)',
-          padding: '5rem 1.5rem',
-          textAlign: 'center',
-          borderTop: '1px solid var(--od-border)',
-        }}
-      >
-        <Reveal style={{ maxWidth: '720px', margin: '0 auto' }}>
-          <p
-            style={{
-              fontSize: '0.75rem',
-              letterSpacing: '0.1em',
-              textTransform: 'uppercase',
-              fontWeight: 600,
-              color: 'var(--od-pink)',
-              marginBottom: '1rem',
-            }}
-          >
-            For the reps doing the work
-          </p>
-          <h2
-            style={{
-              fontFamily: 'var(--font-poppins, Poppins, sans-serif)',
-              fontWeight: 900,
-              fontSize: 'clamp(1.75rem, 4.5vw, 2.75rem)',
-              letterSpacing: '-0.03em',
-              lineHeight: 1.15,
-              color: 'var(--od-white)',
-              margin: '0 0 1.5rem',
-            }}
-          >
-            All You Have to Do Is Eat.
-          </h2>
-          <p
-            style={{
-              fontSize: '1rem',
-              lineHeight: 1.7,
-              color: 'var(--od-text)',
-              margin: '0 0 1rem',
-              maxWidth: '560px',
-              marginLeft: 'auto',
-              marginRight: 'auto',
-            }}
-          >
-            Monday morning, you open your queue and every chat handoff is already pre-qualified — company size, role,
-            inbound intent, the questions they asked, the objections they raised. No more cold-opening conversations.
-            No more spending 20 minutes figuring out who you’re talking to.
-          </p>
-          <p
-            style={{
-              fontSize: '1rem',
-              lineHeight: 1.7,
-              color: 'var(--od-text)',
-              margin: '0 0 1rem',
-              maxWidth: '560px',
-              marginLeft: 'auto',
-              marginRight: 'auto',
-            }}
-          >
-            You walk in briefed. The visitor walks in expecting someone who already knows their context. That’s the
-            difference between a chat queue that drains your day and one that compounds your wins.
-          </p>
-          <p
-            style={{
-              fontSize: '1rem',
-              lineHeight: 1.7,
-              color: 'var(--od-muted)',
-              margin: 0,
-              maxWidth: '560px',
-              marginLeft: 'auto',
-              marginRight: 'auto',
-              fontStyle: 'italic',
-            }}
-          >
-            Aiden does the qualifying. You do what you’re great at — closing the conversation a real human is owed.
-          </p>
-        </Reveal>
-      </section>
 
       <QuoteSection tier="advanced" />
     </>

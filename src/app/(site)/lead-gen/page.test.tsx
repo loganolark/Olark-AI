@@ -54,18 +54,12 @@ describe('LeadGenPage — TierCard relocation', () => {
   });
 });
 
-describe('LeadGenPage — rep section', () => {
-  it('renders "All You Have to Do Is Eat." verbatim', () => {
+describe('LeadGenPage — rep section removed (lives on homepage PersonaTabSwitcher)', () => {
+  it('does NOT render the "All You Have to Do Is Eat." rep section', () => {
     renderPage();
-    expect(
-      screen.getByRole('heading', { name: /All You Have to Do Is Eat\./i }),
-    ).toBeInTheDocument();
-  });
-
-  it('rep section uses Priya-voice copy describing her workflow', () => {
-    renderPage();
-    expect(screen.getByText(/Monday morning, you open your queue/i)).toBeInTheDocument();
-    expect(screen.getByText(/cold-opening conversations/i)).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: /All You Have to Do Is Eat\./i })).toBeNull();
+    expect(screen.queryByText(/Monday morning, you open your queue/i)).toBeNull();
+    expect(screen.queryByText(/For the reps doing the work/i)).toBeNull();
   });
 
   it('does NOT contain forbidden replacement-language phrases (NFR-T3)', () => {
@@ -108,15 +102,17 @@ describe('LeadGenPage — Story 8.4 feature spotlights + meeting CTA', () => {
     expect(screen.queryByRole('link', { name: /Schedule to Learn More About Aiden/i })).toBeNull();
   });
 
-  it('feature spotlights render before the rep section in the DOM', () => {
+  it('feature spotlights render before the bottom QuoteSection in the DOM', () => {
     renderPage();
     const headings = screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent);
     const routingIdx = headings.findIndex((t) =>
       /Guide Every Conversation From the Start/i.test(t ?? ''),
     );
-    const repIdx = headings.findIndex((t) => /All You Have to Do Is Eat/i.test(t ?? ''));
+    const quoteIdx = headings.findIndex((t) =>
+      /Put Aiden to Work as Your New Sales/i.test(t ?? ''),
+    );
     expect(routingIdx).toBeGreaterThan(-1);
-    expect(repIdx).toBeGreaterThan(routingIdx);
+    expect(quoteIdx).toBeGreaterThan(routingIdx);
   });
 });
 

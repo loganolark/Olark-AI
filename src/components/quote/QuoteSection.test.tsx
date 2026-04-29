@@ -5,11 +5,14 @@ import userEvent from '@testing-library/user-event';
 import QuoteSection from './QuoteSection';
 
 describe('QuoteSection — initial trigger state (merged with former MidPageMeetingCTA copy)', () => {
-  it('renders the trigger card with "Start Today" PillBadge + essentials-tier merged headline', () => {
+  it('renders the trigger card with "Quote Builder" eyebrow + "Start Today" PillBadge + essentials merged headline', () => {
     render(<QuoteSection tier="essentials" />);
     expect(screen.getByTestId('quote-trigger')).toBeInTheDocument();
-    // Replaced the "Build Your Quote" eyebrow with the gold pulsing "Start
-    // Today" PillBadge that used to live above MidPageMeetingCTA.
+    // Eyebrow identifying the section type — matches the eyebrow pattern used
+    // by every other section on the site ("What's Included", "Built For", etc.)
+    expect(screen.getByText(/Quote Builder/i)).toBeInTheDocument();
+    // Gold pulsing PillBadge below the eyebrow (carries the urgency that used
+    // to live on the standalone MidPageMeetingCTA).
     expect(screen.getByText(/Start Today/i)).toBeInTheDocument();
     expect(
       screen.getByText(/The Smartest First Step in AI Starts Here/i),

@@ -73,6 +73,18 @@ export default function QuoteSection({
               boxShadow: '0 32px 80px rgba(0, 0, 0, 0.4)',
             }}
           >
+            <p
+              style={{
+                fontSize: '0.75rem',
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                fontWeight: 600,
+                color: 'var(--od-gold)',
+                margin: '0 0 1rem',
+              }}
+            >
+              Quote Builder
+            </p>
             <div style={{ marginBottom: '1.25rem' }}>
               <PillBadge variant="gold" pulse>
                 Start Today
