@@ -256,7 +256,7 @@ export default function SiteNav() {
               className="site-nav-cta-primary"
               style={{
                 backgroundColor: 'var(--od-gold)',
-                color: 'var(--od-dark)',
+                color: 'var(--od-ink)',
                 fontWeight: 700,
                 padding: '0.5rem 1.25rem',
                 borderRadius: '6px',
@@ -390,7 +390,7 @@ export default function SiteNav() {
             className="site-nav-cta-primary"
             style={{
               backgroundColor: 'var(--od-gold)',
-              color: 'var(--od-dark)',
+              color: 'var(--od-ink)',
               textDecoration: 'none',
               fontSize: '1.125rem',
               fontWeight: 700,

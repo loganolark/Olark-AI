@@ -13,7 +13,7 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
           left: '1rem',
           zIndex: 100,
           backgroundColor: 'var(--od-gold)',
-          color: 'var(--od-dark)',
+          color: 'var(--od-ink)',
           fontWeight: 700,
           padding: '0.5rem 1rem',
           borderRadius: '100px',

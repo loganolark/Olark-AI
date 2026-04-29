@@ -125,7 +125,7 @@ export default function PersonaTabSwitcher() {
                   'background-color 200ms ease-out, color 200ms ease-out, border-color 200ms ease-out',
                 fontFamily: 'inherit',
                 background: isActive ? 'var(--od-gold)' : 'rgba(160,157,216,0.08)',
-                color: isActive ? 'var(--od-dark)' : 'var(--od-text)',
+                color: isActive ? 'var(--od-ink)' : 'var(--od-text)',
                 border: isActive
                   ? '1px solid var(--od-gold)'
                   : '1px solid var(--od-border)',

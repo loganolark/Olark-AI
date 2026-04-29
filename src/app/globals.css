@@ -37,33 +37,42 @@
   --od-brand-violet:   #675ac9;  /* Brand Violet — shapes, accent text */
   --od-brand-yellow:   #fac917;  /* Brand Yellow — overlay shapes, nav text on purple */
 
-  /* ─── Aiden dark-mode application of the brand palette ───────────────
-     Surfaces step from brand Navy (deepest) → brand Purple → a derived
-     lighter purple for cards. All token names preserved from prior site
-     so consumers don't have to change. */
-  --od-dark:       #272d3f;  /* page bg = Brand Navy */
-  --od-navy:       #3d3683;  /* mid section bg = Brand Purple */
-  --od-card:       #4a4399;  /* card surface = lighter Purple (~10% lift) */
-  --od-card-hover: #5851ad;  /* card hover = lighter again */
-  --od-border:     rgba(103, 90, 201, 0.45);  /* Brand Violet @45% */
+  /* ─── Aiden LIGHT-MODE application of the brand palette ───────────────
+     Page bg + cards default to white. Brand Grey provides quiet visual
+     rhythm between sections. Brand Purple/Yellow/Pink/Green pop as
+     accents. All --od-* names preserved from the prior dark-mode
+     application so component code (which uses var(--od-*)) doesn't
+     have to change — only the values flip.
+
+     Naming caveat: --od-white now stores a DARK color (used as primary
+     text on white pages). The name is kept for back-compat; treat it
+     semantically as "primary heading colour." */
+  --od-dark:       #FFFFFF;       /* page bg = white */
+  --od-navy:       #f3f3f3;       /* alt section bg = Brand Grey for rhythm */
+  --od-card:       #FFFFFF;       /* card surface = white, lift via border + shadow */
+  --od-card-hover: #f9f9fb;       /* card hover = subtle off-white */
+  --od-border:     rgba(61, 54, 131, 0.18);  /* Brand Purple @18% — visible line on white */
 
   /* Brand accent aliases for component code */
-  --od-purple:     #675ac9;  /* maps to Brand Violet (formerly hex #2D2B8F) */
+  --od-purple:     #675ac9;  /* Brand Violet */
   --od-violet:     #675ac9;
   --od-violet-lt:  #7a6fd8;
-  --od-gold:       #fac917;  /* Brand Yellow (snapped from #F5C200) */
+  --od-gold:       #fac917;  /* Brand Yellow */
   --od-gold-lt:    #ffd84a;
-  --od-pink:       #ef4e73;  /* Brand Pink (snapped from #E8325A) */
+  --od-pink:       #ef4e73;  /* Brand Pink */
   --od-pink-lt:    #f47691;
-  --od-green:      #6fc284;  /* Brand Green (replaces former --od-teal #00D4AA) */
+  --od-green:      #6fc284;  /* Brand Green */
   --od-green-lt:   #83cf95;
 
-  /* Text on dark surfaces — Violet-tinted tints retained from prior site
-     because they read cleanly on Purple/Navy bgs. Per brand: white on
-     Purple is the canonical heading treatment. */
-  --od-white:      #FFFFFF;
-  --od-text:       #D8D5F5;
-  --od-muted:      #A09DD8;
+  /* Text on light surfaces — flipped to dark for legibility */
+  --od-white:      #272d3f;       /* PRIMARY TEXT (headings) — Brand Navy as ink */
+  --od-text:       #4e5458;       /* BODY TEXT — Brand Charcoal */
+  --od-muted:      #6c727a;       /* MUTED TEXT — mid-grey */
+
+  /* The dark "ink" colour used as text-on-gold (CTAButton primary, etc).
+     Was --od-dark before the light-mode flip; carved out here because
+     --od-dark now means "page bg = white". */
+  --od-ink:        #272d3f;
 }
 
 body {
@@ -268,7 +277,7 @@ h1, h2, h3, h4, h5, h6 {
   height: 22px;
   border-radius: 50%;
   background-color: var(--od-gold);
-  color: var(--od-dark);
+  color: var(--od-ink);
   font-weight: 700;
   font-size: 0.875rem;
   line-height: 1;
@@ -573,7 +582,7 @@ h1, h2, h3, h4, h5, h6 {
   flex: 0 0 18px;
   border-radius: 50%;
   background: var(--od-gold);
-  color: var(--od-dark);
+  color: var(--od-ink);
   font-size: 0.75rem;
   font-weight: 700;
 }
@@ -696,7 +705,7 @@ h1, h2, h3, h4, h5, h6 {
 .quote-submit-btn {
   flex: 0 0 auto;
   background: var(--od-gold);
-  color: var(--od-dark);
+  color: var(--od-ink);
   border: 0;
   border-radius: 10px;
   padding: 0 1.25rem;

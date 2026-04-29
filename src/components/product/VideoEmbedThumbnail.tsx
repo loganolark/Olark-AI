@@ -19,7 +19,7 @@ function PlayIcon() {
       viewBox="0 0 24 24"
       fill="none"
       aria-hidden="true"
-      style={{ stroke: 'var(--od-dark)', fill: 'var(--od-dark)' }}
+      style={{ stroke: 'var(--od-ink)', fill: 'var(--od-ink)' }}
     >
       <polygon points="5,3 19,12 5,21" />
     </svg>
