@@ -120,12 +120,12 @@ export default function VideoSection({
                   borderRadius: '50%',
                   background:
                     checklistStyle === 'chat'
-                      ? 'rgba(232,50,90,0.18)'
-                      : 'rgba(245,194,0,0.15)',
+                      ? 'rgba(239, 78, 115,0.18)'
+                      : 'rgba(250, 201, 23,0.15)',
                   border:
                     checklistStyle === 'chat'
-                      ? '1px solid rgba(232,50,90,0.4)'
-                      : '1px solid rgba(245,194,0,0.4)',
+                      ? '1px solid rgba(239, 78, 115,0.4)'
+                      : '1px solid rgba(250, 201, 23,0.4)',
                   marginTop: '0.125rem',
                 }}
               >

@@ -33,11 +33,11 @@ export default function QuizPlaceholder({ onStart }: QuizPlaceholderProps) {
         maxWidth: '720px',
         margin: '0 auto',
         padding: 'clamp(2.25rem, 5vw, 3rem) clamp(1.25rem, 4vw, 2.5rem)',
-        background: 'rgba(37,34,117,0.5)',
+        background: 'rgba(74, 67, 153,0.5)',
         border: '1px solid var(--od-border)',
         borderRadius: '20px',
         boxShadow:
-          '0 32px 80px rgba(0,0,0,0.4), 0 0 0 1px rgba(245,194,0,0.05) inset',
+          '0 32px 80px rgba(0,0,0,0.4), 0 0 0 1px rgba(250, 201, 23,0.05) inset',
         cursor: 'pointer',
         textAlign: 'center',
         transition:
@@ -125,8 +125,8 @@ export default function QuizPlaceholder({ onStart }: QuizPlaceholderProps) {
               display: 'inline-flex',
               padding: '0.25rem 0.75rem',
               borderRadius: '100px',
-              background: 'rgba(245,194,0,0.10)',
-              border: '1px solid rgba(245,194,0,0.25)',
+              background: 'rgba(250, 201, 23,0.10)',
+              border: '1px solid rgba(250, 201, 23,0.25)',
               color: 'var(--od-text)',
               fontSize: '0.8125rem',
               fontWeight: 500,
@@ -156,7 +156,7 @@ export default function QuizPlaceholder({ onStart }: QuizPlaceholderProps) {
           backgroundColor: 'var(--od-gold)',
           color: 'var(--od-dark)',
           boxShadow:
-            '0 0 40px rgba(245,194,0,0.35), 0 4px 16px rgba(0,0,0,0.4)',
+            '0 0 40px rgba(250, 201, 23,0.35), 0 4px 16px rgba(0,0,0,0.4)',
         }}
       >
         Start the Quiz →

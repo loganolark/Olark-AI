@@ -24,21 +24,46 @@
 }
 
 :root {
-  --od-dark:       #0F0D2E;
-  --od-navy:       #141250;
-  --od-card:       #252275;
-  --od-card-hover: #2D2B8F;
-  --od-border:     rgba(120, 115, 220, 0.45);
-  --od-purple:     #2D2B8F;
-  --od-gold:       #F5C200;
-  --od-gold-lt:    #FFD533;
-  --od-pink:       #E8325A;
-  --od-pink-lt:    #FF6B8A;
-  --od-teal:       #00D4AA;
-  --od-teal-lt:    #00ECBD;
-  --od-white:      #F0EEFF;
-  --od-muted:      #A09DD8;
+  /* ─── Strict Olark brand palette (Visual Style Guide, Feb 2022) ───────
+     Source of truth for every other --od-* token. Don't introduce hex
+     values outside this block — derive from these via rgba() / mix() so
+     the brand sheet stays the only place to update. */
+  --od-brand-purple:   #3d3683;  /* Brand Purple — primary feature surface */
+  --od-brand-navy:     #272d3f;  /* Brand Navy — deepest dark surface */
+  --od-brand-charcoal: #4e5458;  /* Brand Charcoal — body text on light */
+  --od-brand-grey:     #f3f3f3;  /* Brand Grey — light backgrounds */
+  --od-brand-green:    #6fc284;  /* Brand Green — shapes & flourishes */
+  --od-brand-pink:     #ef4e73;  /* Brand Pink — shapes & flourishes */
+  --od-brand-violet:   #675ac9;  /* Brand Violet — shapes, accent text */
+  --od-brand-yellow:   #fac917;  /* Brand Yellow — overlay shapes, nav text on purple */
+
+  /* ─── Aiden dark-mode application of the brand palette ───────────────
+     Surfaces step from brand Navy (deepest) → brand Purple → a derived
+     lighter purple for cards. All token names preserved from prior site
+     so consumers don't have to change. */
+  --od-dark:       #272d3f;  /* page bg = Brand Navy */
+  --od-navy:       #3d3683;  /* mid section bg = Brand Purple */
+  --od-card:       #4a4399;  /* card surface = lighter Purple (~10% lift) */
+  --od-card-hover: #5851ad;  /* card hover = lighter again */
+  --od-border:     rgba(103, 90, 201, 0.45);  /* Brand Violet @45% */
+
+  /* Brand accent aliases for component code */
+  --od-purple:     #675ac9;  /* maps to Brand Violet (formerly hex #2D2B8F) */
+  --od-violet:     #675ac9;
+  --od-violet-lt:  #7a6fd8;
+  --od-gold:       #fac917;  /* Brand Yellow (snapped from #F5C200) */
+  --od-gold-lt:    #ffd84a;
+  --od-pink:       #ef4e73;  /* Brand Pink (snapped from #E8325A) */
+  --od-pink-lt:    #f47691;
+  --od-green:      #6fc284;  /* Brand Green (replaces former --od-teal #00D4AA) */
+  --od-green-lt:   #83cf95;
+
+  /* Text on dark surfaces — Violet-tinted tints retained from prior site
+     because they read cleanly on Purple/Navy bgs. Per brand: white on
+     Purple is the canonical heading treatment. */
+  --od-white:      #FFFFFF;
   --od-text:       #D8D5F5;
+  --od-muted:      #A09DD8;
 }
 
 body {
@@ -117,7 +142,7 @@ h1, h2, h3, h4, h5, h6 {
 /* ─── CTAButton hover / active states ─── */
 /* Primary variant hover: intensify glow + scale up */
 [data-ctabtn-variant="primary"]:not([aria-disabled="true"]):hover {
-  box-shadow: 0 0 60px rgba(245,194,0,0.5), 0 4px 16px rgba(0,0,0,0.4) !important;
+  box-shadow: 0 0 60px rgba(250, 201, 23,0.5), 0 4px 16px rgba(0,0,0,0.4) !important;
   transform: scale(1.02);
 }
 
@@ -225,7 +250,7 @@ h1, h2, h3, h4, h5, h6 {
 .quiz-card--selected,
 .quiz-card--selected:hover {
   border-color: var(--od-gold);
-  background-color: rgba(245, 194, 0, 0.1);
+  background-color: rgba(250, 201, 23, 0.1);
   color: var(--od-white);
   transform: translateY(0);
 }
@@ -493,9 +518,9 @@ h1, h2, h3, h4, h5, h6 {
   background:
     linear-gradient(
       90deg,
-      rgba(37, 34, 117, 0.4) 0%,
+      rgba(74, 67, 153, 0.4) 0%,
       rgba(45, 43, 143, 0.6) 50%,
-      rgba(37, 34, 117, 0.4) 100%
+      rgba(74, 67, 153, 0.4) 100%
     );
   background-size: 200% 100%;
   animation: hubspot-shimmer 1.6s ease-in-out infinite;
@@ -526,7 +551,7 @@ h1, h2, h3, h4, h5, h6 {
   gap: 0.5rem;
   margin-bottom: 1.5rem;
   padding: 1rem 1.25rem;
-  background: rgba(37, 34, 117, 0.4);
+  background: rgba(74, 67, 153, 0.4);
   border: 1px solid var(--od-border);
   border-radius: 12px;
 }
@@ -593,7 +618,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .quote-opt {
-  background: rgba(15, 13, 46, 0.6);
+  background: rgba(39, 45, 63, 0.6);
   border: 1px solid var(--od-border);
   border-radius: 10px;
   color: var(--od-text);
@@ -621,7 +646,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .quote-opt.selected {
   border-color: var(--od-gold);
-  background-color: rgba(245, 194, 0, 0.12);
+  background-color: rgba(250, 201, 23, 0.12);
   color: var(--od-white);
 }
 
@@ -641,7 +666,7 @@ h1, h2, h3, h4, h5, h6 {
   flex: 1 1 220px;
   min-width: 0;
   padding: 0.75rem 1rem;
-  background: rgba(15, 13, 46, 0.6);
+  background: rgba(39, 45, 63, 0.6);
   color: var(--od-white);
   border: 1px solid var(--od-border);
   border-radius: 10px;
@@ -652,7 +677,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .quote-input:focus-visible {
   border-color: var(--od-gold);
-  box-shadow: 0 0 0 2px rgba(245, 194, 0, 0.25);
+  box-shadow: 0 0 0 2px rgba(250, 201, 23, 0.25);
 }
 
 .quote-input.shake {
@@ -714,8 +739,8 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
   color: var(--od-gold);
   padding: 0.375rem 0.875rem;
-  background: rgba(245, 194, 0, 0.12);
-  border: 1px solid rgba(245, 194, 0, 0.3);
+  background: rgba(250, 201, 23, 0.12);
+  border: 1px solid rgba(250, 201, 23, 0.3);
   border-radius: 100px;
   margin-bottom: 0.75rem;
 }
@@ -747,7 +772,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .quote-pricing-card {
-  background: rgba(15, 13, 46, 0.5);
+  background: rgba(39, 45, 63, 0.5);
   border: 1px solid var(--od-border);
   border-radius: 12px;
   padding: 1.5rem;
@@ -769,7 +794,7 @@ h1, h2, h3, h4, h5, h6 {
   align-items: flex-start;
   gap: 1rem;
   padding: 0.75rem 0;
-  border-bottom: 1px solid rgba(120, 115, 220, 0.2);
+  border-bottom: 1px solid rgba(103, 90, 201, 0.2);
   font-size: 0.9375rem;
 }
 
@@ -821,8 +846,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .quote-email-gate {
-  background: rgba(245, 194, 0, 0.06);
-  border: 1px solid rgba(245, 194, 0, 0.3);
+  background: rgba(250, 201, 23, 0.06);
+  border: 1px solid rgba(250, 201, 23, 0.3);
   border-radius: 14px;
   padding: 1.5rem 1.25rem;
   margin: 0 0 1.75rem;
@@ -871,7 +896,7 @@ h1, h2, h3, h4, h5, h6 {
 .quote-email-gate__input:focus-visible {
   outline: none;
   border-color: var(--od-gold);
-  box-shadow: 0 0 0 3px rgba(245, 194, 0, 0.18);
+  box-shadow: 0 0 0 3px rgba(250, 201, 23, 0.18);
 }
 
 .quote-email-gate__input[aria-invalid="true"] {
@@ -895,8 +920,8 @@ h1, h2, h3, h4, h5, h6 {
 .quote-pdf-locked-notice {
   margin: 0.75rem 0 0;
   padding: 0.75rem 1rem;
-  background: rgba(245, 194, 0, 0.08);
-  border: 1px solid rgba(245, 194, 0, 0.3);
+  background: rgba(250, 201, 23, 0.08);
+  border: 1px solid rgba(250, 201, 23, 0.3);
   border-radius: 10px;
   color: var(--od-text);
   font-size: 0.875rem;
@@ -909,12 +934,12 @@ h1, h2, h3, h4, h5, h6 {
   transform: translateY(-3px);
   box-shadow:
     0 38px 90px rgba(0, 0, 0, 0.5),
-    0 0 0 1px rgba(245, 194, 0, 0.18) inset;
+    0 0 0 1px rgba(250, 201, 23, 0.18) inset;
 }
 
 .quiz-placeholder:hover .quiz-placeholder__cta {
   box-shadow:
-    0 0 56px rgba(245, 194, 0, 0.55),
+    0 0 56px rgba(250, 201, 23, 0.55),
     0 8px 22px rgba(0, 0, 0, 0.45);
 }
 
@@ -973,7 +998,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .video-embed-thumb:hover {
   transform: translateY(-2px);
-  box-shadow: 0 0 60px rgba(245, 194, 0, 0.32), 0 18px 40px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 60px rgba(250, 201, 23, 0.32), 0 18px 40px rgba(0, 0, 0, 0.4);
 }
 
 .video-embed-thumb:hover img {
@@ -981,12 +1006,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .video-embed-thumb:hover .video-play-overlay {
-  background-color: rgba(15, 13, 46, 0.05) !important;
+  background-color: rgba(39, 45, 63, 0.05) !important;
 }
 
 .video-embed-thumb:hover .video-play-btn {
   transform: scale(1.08);
-  box-shadow: 0 0 36px rgba(245, 194, 0, 0.7);
+  box-shadow: 0 0 36px rgba(250, 201, 23, 0.7);
 }
 
 .video-embed-thumb:focus-visible {
@@ -1003,7 +1028,7 @@ h1, h2, h3, h4, h5, h6 {
 
 [data-ctabtn-variant='primary']:not([aria-disabled='true']):hover {
   box-shadow:
-    0 0 56px rgba(245, 194, 0, 0.5),
+    0 0 56px rgba(250, 201, 23, 0.5),
     0 8px 24px rgba(0, 0, 0, 0.45) !important;
 }
 
@@ -1035,7 +1060,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .cwr-phase__trigger:hover {
-  background-color: rgba(245, 194, 0, 0.06);
+  background-color: rgba(250, 201, 23, 0.06);
 }
 
 .cwr-phase__trigger:hover .cwr-phase__chevron {
@@ -1052,8 +1077,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 [role='tablist'] [role='tab']:not([aria-selected='true']):hover {
-  background-color: rgba(245, 194, 0, 0.12) !important;
-  border-color: rgba(245, 194, 0, 0.35) !important;
+  background-color: rgba(250, 201, 23, 0.12) !important;
+  border-color: rgba(250, 201, 23, 0.35) !important;
   color: var(--od-white) !important;
   transform: translateY(-1px);
 }
@@ -1066,7 +1091,7 @@ h1, h2, h3, h4, h5, h6 {
 /* Quote builder option buttons */
 .quote-opt:not(:disabled):hover {
   border-color: var(--od-gold);
-  background: rgba(245, 194, 0, 0.06);
+  background: rgba(250, 201, 23, 0.06);
   transform: translateY(-1px);
 }
 
@@ -1095,7 +1120,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .site-nav-cta-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 0 36px rgba(245, 194, 0, 0.6), 0 8px 22px rgba(0, 0, 0, 0.4) !important;
+  box-shadow: 0 0 36px rgba(250, 201, 23, 0.6), 0 8px 22px rgba(0, 0, 0, 0.4) !important;
 }
 
 .site-nav-cta-primary:active {
@@ -1116,9 +1141,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .site-nav-cta-secondary:hover {
-  background-color: rgba(245, 194, 0, 0.12) !important;
+  background-color: rgba(250, 201, 23, 0.12) !important;
   transform: translateY(-2px);
-  box-shadow: 0 0 24px rgba(245, 194, 0, 0.35), 0 6px 16px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 0 24px rgba(250, 201, 23, 0.35), 0 6px 16px rgba(0, 0, 0, 0.35);
 }
 
 .site-nav-cta-secondary:focus-visible {
@@ -1133,7 +1158,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .site-nav-hamburger:hover {
   color: var(--od-gold) !important;
-  background-color: rgba(245, 194, 0, 0.08) !important;
+  background-color: rgba(250, 201, 23, 0.08) !important;
 }
 
 .site-nav-mobile-close {
@@ -1153,7 +1178,7 @@ h1, h2, h3, h4, h5, h6 {
 .site-nav-mobile-link:hover {
   color: var(--od-gold) !important;
   padding-left: 1.25rem !important;
-  border-left-color: rgba(245, 194, 0, 0.5) !important;
+  border-left-color: rgba(250, 201, 23, 0.5) !important;
 }
 
 /* Reduced-motion: disable transform/transition lifts but keep colour shifts */
@@ -1250,7 +1275,7 @@ h1, h2, h3, h4, h5, h6 {
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 0.5rem;
   padding: 0.75rem 0 0.5rem 1rem;
-  border-left: 2px solid rgba(245, 194, 0, 0.25);
+  border-left: 2px solid rgba(250, 201, 23, 0.25);
   margin-left: 0.25rem;
 }
 

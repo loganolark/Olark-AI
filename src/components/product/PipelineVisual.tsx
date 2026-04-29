@@ -72,7 +72,7 @@ export default function PipelineVisual() {
       data-testid="pipeline-visual"
       data-in-view={inView ? 'true' : 'false'}
       style={{
-        background: 'rgba(15,13,46,0.4)',
+        background: 'rgba(39, 45, 63,0.4)',
         border: '1px solid var(--od-border)',
         borderRadius: '14px',
         padding: '1.5rem',
@@ -111,10 +111,10 @@ export default function PipelineVisual() {
               style={{
                 position: 'relative',
                 background: stage.active
-                  ? 'rgba(245,194,0,0.08)'
+                  ? 'rgba(250, 201, 23,0.08)'
                   : 'transparent',
                 border: stage.active
-                  ? '1px solid rgba(245,194,0,0.35)'
+                  ? '1px solid rgba(250, 201, 23,0.35)'
                   : '1px solid transparent',
                 borderRadius: '10px',
                 padding: '0.625rem 0.75rem',
@@ -152,7 +152,7 @@ export default function PipelineVisual() {
                     borderRadius: '50%',
                     background: DOT_COLORS[stage.dot],
                     boxShadow: stage.active
-                      ? '0 0 12px rgba(245,194,0,0.6)'
+                      ? '0 0 12px rgba(250, 201, 23,0.6)'
                       : undefined,
                   }}
                 />

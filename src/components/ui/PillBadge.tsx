@@ -12,13 +12,13 @@ export interface PillBadgeProps {
 
 const variantStyles: Record<PillBadgeVariant, React.CSSProperties> = {
   gold: {
-    backgroundColor: 'rgba(245,194,0,0.15)',
-    border: '1px solid rgba(245,194,0,0.3)',
+    backgroundColor: 'rgba(250, 201, 23,0.15)',
+    border: '1px solid rgba(250, 201, 23,0.3)',
     color: 'var(--od-gold)',
   },
   pink: {
-    backgroundColor: 'rgba(232,50,90,0.15)',
-    border: '1px solid rgba(232,50,90,0.3)',
+    backgroundColor: 'rgba(239, 78, 115,0.15)',
+    border: '1px solid rgba(239, 78, 115,0.3)',
     color: 'var(--od-pink)',
   },
   muted: {

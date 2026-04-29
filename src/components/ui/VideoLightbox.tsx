@@ -219,7 +219,7 @@ export function VideoLightboxProvider({ children }: { children: React.ReactNode 
           alignItems: 'center',
           justifyContent: 'center',
           padding: '1.5rem',
-          backgroundColor: 'rgba(15, 13, 46, 0.92)',
+          backgroundColor: 'rgba(39, 45, 63, 0.92)',
           backdropFilter: 'blur(8px)',
         }}
       >
@@ -251,8 +251,8 @@ export function VideoLightboxProvider({ children }: { children: React.ReactNode 
                 onClick={close}
                 aria-label="Close video"
                 style={{
-                  background: 'rgba(245,194,0,0.12)',
-                  border: '1px solid rgba(245,194,0,0.4)',
+                  background: 'rgba(250, 201, 23,0.12)',
+                  border: '1px solid rgba(250, 201, 23,0.4)',
                   color: 'var(--od-white)',
                   borderRadius: '100px',
                   padding: '0.5rem 1rem',
@@ -275,7 +275,7 @@ export function VideoLightboxProvider({ children }: { children: React.ReactNode 
                 background: 'var(--od-card)',
                 borderRadius: '14px',
                 overflow: 'hidden',
-                boxShadow: '0 0 60px rgba(245,194,0,0.25)',
+                boxShadow: '0 0 60px rgba(250, 201, 23,0.25)',
               }}
             >
               {renderIframe && (

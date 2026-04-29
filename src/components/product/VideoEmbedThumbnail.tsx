@@ -61,7 +61,7 @@ export default function VideoEmbedThumbnail({
         overflow: 'hidden',
         padding: 0,
         cursor: 'pointer',
-        boxShadow: '0 0 40px rgba(245,194,0,0.18)',
+        boxShadow: '0 0 40px rgba(250, 201, 23,0.18)',
       }}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -92,7 +92,7 @@ export default function VideoEmbedThumbnail({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          background: 'rgba(15,13,46,0.18)',
+          background: 'rgba(39, 45, 63,0.18)',
           transition: 'background-color 200ms ease',
         }}
       >
@@ -109,7 +109,7 @@ export default function VideoEmbedThumbnail({
             borderRadius: '50%',
             background: 'var(--od-gold)',
             paddingLeft: '4px',
-            boxShadow: '0 0 24px rgba(245,194,0,0.5)',
+            boxShadow: '0 0 24px rgba(250, 201, 23,0.5)',
             transition: 'transform 200ms ease',
           }}
         >

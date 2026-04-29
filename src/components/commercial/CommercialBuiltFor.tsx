@@ -109,7 +109,7 @@ export default function CommercialBuiltFor() {
                     width: '40px',
                     height: '40px',
                     borderRadius: '10px',
-                    background: 'rgba(245,194,0,0.12)',
+                    background: 'rgba(250, 201, 23,0.12)',
                     color: 'var(--od-gold)',
                     marginBottom: '0.875rem',
                   }}

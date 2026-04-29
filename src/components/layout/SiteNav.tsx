@@ -136,7 +136,7 @@ export default function SiteNav() {
           display: 'flex',
           alignItems: 'center',
           transition: 'background-color 300ms, backdrop-filter 300ms',
-          backgroundColor: scrolled ? 'rgba(15,13,46,0.85)' : 'transparent',
+          backgroundColor: scrolled ? 'rgba(39, 45, 63,0.85)' : 'transparent',
           backdropFilter: scrolled ? 'blur(20px)' : 'none',
         }}
       >
@@ -218,7 +218,7 @@ export default function SiteNav() {
                 transition:
                   'left 280ms cubic-bezier(0.4, 0, 0.2, 1), width 280ms cubic-bezier(0.4, 0, 0.2, 1), opacity 200ms ease',
                 pointerEvents: 'none',
-                boxShadow: '0 0 12px rgba(245,194,0,0.55)',
+                boxShadow: '0 0 12px rgba(250, 201, 23,0.55)',
               }}
             />
           </div>
@@ -262,7 +262,7 @@ export default function SiteNav() {
                 borderRadius: '6px',
                 fontSize: '0.9375rem',
                 textDecoration: 'none',
-                boxShadow: '0 0 20px rgba(245,194,0,0.35)',
+                boxShadow: '0 0 20px rgba(250, 201, 23,0.35)',
               }}
             >
               Talk to Us →

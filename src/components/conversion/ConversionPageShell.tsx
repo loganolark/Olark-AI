@@ -133,7 +133,7 @@ export default async function ConversionPageShell() {
       <section
         style={{
           background: [
-            'radial-gradient(ellipse 80% 60% at 50% -10%, rgba(61,54,131,0.4) 0%, transparent 70%)',
+            'radial-gradient(ellipse 80% 60% at 50% -10%, rgba(61, 54, 131,0.4) 0%, transparent 70%)',
             'var(--od-dark)',
           ].join(', '),
           paddingTop: '8rem',

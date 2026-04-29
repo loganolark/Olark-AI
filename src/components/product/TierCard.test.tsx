@@ -29,11 +29,11 @@ describe('TierCard — gradient variants', () => {
     expect(strip.style.background).toContain('var(--od-pink-lt)');
   });
 
-  it('renders the teal gradient strip for tier="commercial"', () => {
+  it('renders the green gradient strip for tier="commercial"', () => {
     const { container } = render(<TierCard tier="commercial" {...baseProps} />);
     const strip = container.querySelector('.tier-card__gradient-strip') as HTMLElement;
-    expect(strip.style.background).toContain('var(--od-teal)');
-    expect(strip.style.background).toContain('var(--od-teal-lt)');
+    expect(strip.style.background).toContain('var(--od-green)');
+    expect(strip.style.background).toContain('var(--od-green-lt)');
   });
 });
 

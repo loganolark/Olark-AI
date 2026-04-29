@@ -29,9 +29,10 @@ export async function downloadQuotePDF({
   const mr = 18;
   const cw = W - ml - mr;
 
-  const purple: [number, number, number] = [37, 34, 117];
-  const darkPurp: [number, number, number] = [15, 13, 46];
-  const gold: [number, number, number] = [245, 194, 0];
+  // Olark brand palette (Visual Style Guide, Feb 2022)
+  const purple: [number, number, number] = [61, 54, 131]; // Brand Purple #3d3683
+  const darkPurp: [number, number, number] = [39, 45, 63]; // Brand Navy #272d3f
+  const gold: [number, number, number] = [250, 201, 23]; // Brand Yellow #fac917
   const white: [number, number, number] = [255, 255, 255];
   const offWhite: [number, number, number] = [240, 238, 255];
   const textDark: [number, number, number] = [25, 22, 65];

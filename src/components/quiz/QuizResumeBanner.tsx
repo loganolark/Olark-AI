@@ -54,7 +54,7 @@ export default function QuizResumeBanner() {
           alignItems: 'center',
           minHeight: '44px',
           padding: '0.5rem 1rem',
-          background: 'rgba(245, 194, 0, 0.12)',
+          background: 'rgba(250, 201, 23, 0.12)',
           border: '1px solid var(--od-gold)',
           color: 'var(--od-gold)',
           borderRadius: '100px',

@@ -24,8 +24,8 @@ import { useEffect, useRef } from 'react';
  */
 
 const COLORS = [
-  'rgba(245,194,0,', // gold
-  'rgba(232,50,90,', // pink
+  'rgba(250, 201, 23,', // gold
+  'rgba(239, 78, 115,', // pink
   'rgba(93,211,179,', // teal
   'rgba(160,157,216,', // muted purple
 ];
@@ -159,7 +159,7 @@ export default function ParticleBackground({
             ctx!.beginPath();
             ctx!.moveTo(pi.x, pi.y);
             ctx!.lineTo(pj.x, pj.y);
-            ctx!.strokeStyle = `rgba(120,115,220,${0.08 * (1 - dist / linkDistance)})`;
+            ctx!.strokeStyle = `rgba(103, 90, 201,${0.08 * (1 - dist / linkDistance)})`;
             ctx!.lineWidth = 0.6;
             ctx!.stroke();
           }

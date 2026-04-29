@@ -36,7 +36,7 @@ export default function RoutingVisual() {
       data-testid="routing-visual"
       data-in-view={inView ? 'true' : 'false'}
       style={{
-        background: 'rgba(15,13,46,0.4)',
+        background: 'rgba(39, 45, 63,0.4)',
         border: '1px solid var(--od-border)',
         borderRadius: '14px',
         padding: '1.5rem',
@@ -65,11 +65,11 @@ export default function RoutingVisual() {
               background:
                 bubble.side === 'left'
                   ? 'var(--od-card)'
-                  : 'rgba(245,194,0,0.12)',
+                  : 'rgba(250, 201, 23,0.12)',
               border:
                 bubble.side === 'left'
                   ? '1px solid var(--od-border)'
-                  : '1px solid rgba(245,194,0,0.3)',
+                  : '1px solid rgba(250, 201, 23,0.3)',
               padding: '0.625rem 0.875rem',
               borderRadius:
                 bubble.side === 'left'
@@ -114,11 +114,11 @@ export default function RoutingVisual() {
                       fontWeight: 500,
                       background:
                         b.variant === 'pink'
-                          ? 'rgba(232,50,90,0.18)'
-                          : 'rgba(120,115,220,0.18)',
+                          ? 'rgba(239, 78, 115,0.18)'
+                          : 'rgba(103, 90, 201,0.18)',
                       border:
                         b.variant === 'pink'
-                          ? '1px solid rgba(232,50,90,0.4)'
+                          ? '1px solid rgba(239, 78, 115,0.4)'
                           : '1px solid var(--od-border)',
                       color:
                         b.variant === 'pink'

@@ -148,7 +148,7 @@ export default function EssentialsFeatureGroups() {
                   style={{
                     flex: 1,
                     height: '1px',
-                    background: 'linear-gradient(90deg, rgba(245,194,0,0.4), rgba(245,194,0,0))',
+                    background: 'linear-gradient(90deg, rgba(250, 201, 23,0.4), rgba(250, 201, 23,0))',
                   }}
                 />
               </div>
@@ -177,7 +177,7 @@ export default function EssentialsFeatureGroups() {
                         width: '36px',
                         height: '36px',
                         borderRadius: '9px',
-                        background: 'rgba(245,194,0,0.12)',
+                        background: 'rgba(250, 201, 23,0.12)',
                         color: 'var(--od-gold)',
                         marginBottom: '0.5rem',
                       }}

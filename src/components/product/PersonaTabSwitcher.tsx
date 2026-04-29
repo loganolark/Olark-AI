@@ -129,7 +129,7 @@ export default function PersonaTabSwitcher() {
                 border: isActive
                   ? '1px solid var(--od-gold)'
                   : '1px solid var(--od-border)',
-                boxShadow: isActive ? '0 0 24px rgba(245,194,0,0.25)' : 'none',
+                boxShadow: isActive ? '0 0 24px rgba(250, 201, 23,0.25)' : 'none',
               }}
             >
               {p.pillLabel}
@@ -149,7 +149,7 @@ export default function PersonaTabSwitcher() {
         offset={10}
         duration={400}
         style={{
-          background: 'rgba(15,13,46,0.5)',
+          background: 'rgba(39, 45, 63,0.5)',
           border: '1px solid var(--od-border)',
           borderRadius: '16px',
           padding: '2.5rem clamp(1.5rem, 4vw, 2.5rem)',

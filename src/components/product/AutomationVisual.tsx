@@ -41,13 +41,13 @@ const ROWS: Row[] = [
 
 const BADGE_STYLES: Record<BadgeVariant, React.CSSProperties> = {
   gold: {
-    background: 'rgba(245,194,0,0.15)',
-    border: '1px solid rgba(245,194,0,0.4)',
+    background: 'rgba(250, 201, 23,0.15)',
+    border: '1px solid rgba(250, 201, 23,0.4)',
     color: 'var(--od-gold)',
   },
   pink: {
-    background: 'rgba(232,50,90,0.15)',
-    border: '1px solid rgba(232,50,90,0.4)',
+    background: 'rgba(239, 78, 115,0.15)',
+    border: '1px solid rgba(239, 78, 115,0.4)',
     color: 'var(--od-pink)',
   },
   muted: {
@@ -69,7 +69,7 @@ export default function AutomationVisual() {
       data-testid="automation-visual"
       data-in-view={inView ? 'true' : 'false'}
       style={{
-        background: 'rgba(15,13,46,0.4)',
+        background: 'rgba(39, 45, 63,0.4)',
         border: '1px solid var(--od-border)',
         borderRadius: '14px',
         padding: '1.5rem',
@@ -95,8 +95,8 @@ export default function AutomationVisual() {
               alignItems: 'center',
               gap: '0.75rem',
               padding: '0.75rem 0.875rem',
-              background: 'rgba(37,34,117,0.35)',
-              border: '1px solid rgba(120,115,220,0.25)',
+              background: 'rgba(74, 67, 153,0.35)',
+              border: '1px solid rgba(103, 90, 201,0.25)',
               borderRadius: '10px',
               opacity: inView ? 1 : 0,
               transform: inView ? 'translateY(0)' : 'translateY(6px)',

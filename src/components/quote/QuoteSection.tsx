@@ -81,7 +81,7 @@ export default function QuoteSection({
               data-testid="quote-trigger"
               style={{
                 padding: '3rem 2rem',
-                background: 'rgba(37, 34, 117, 0.4)',
+                background: 'rgba(74, 67, 153, 0.4)',
                 border: '1px solid var(--od-border)',
                 borderRadius: '20px',
                 textAlign: 'center',

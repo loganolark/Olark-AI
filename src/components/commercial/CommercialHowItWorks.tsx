@@ -84,13 +84,13 @@ const PHASES: { phase: Phase; label: string; color: string }[] = [
 
 const PHASE_TAG_STYLES: Record<Phase, React.CSSProperties> = {
   1: {
-    background: 'rgba(245,194,0,0.15)',
-    border: '1px solid rgba(245,194,0,0.4)',
+    background: 'rgba(250, 201, 23,0.15)',
+    border: '1px solid rgba(250, 201, 23,0.4)',
     color: 'var(--od-gold)',
   },
   2: {
-    background: 'rgba(232,50,90,0.15)',
-    border: '1px solid rgba(232,50,90,0.4)',
+    background: 'rgba(239, 78, 115,0.15)',
+    border: '1px solid rgba(239, 78, 115,0.4)',
     color: 'var(--od-pink)',
   },
   3: {
@@ -101,8 +101,8 @@ const PHASE_TAG_STYLES: Record<Phase, React.CSSProperties> = {
 };
 
 const PHASE_NUM_COLOR: Record<Phase, string> = {
-  1: 'rgba(245,194,0,0.85)',
-  2: 'rgba(232,50,90,0.85)',
+  1: 'rgba(250, 201, 23,0.85)',
+  2: 'rgba(239, 78, 115,0.85)',
   3: 'rgba(91,192,190,0.85)',
 };
 

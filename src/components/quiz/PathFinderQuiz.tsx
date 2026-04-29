@@ -652,10 +652,10 @@ export default function PathFinderQuiz({ onAnswersComplete }: PathFinderQuizProp
         maxWidth: '720px',
         margin: '0 auto',
         padding: 'clamp(2rem, 5vw, 3rem) clamp(1.25rem, 4vw, 2.5rem)',
-        background: 'rgba(37,34,117,0.5)',
+        background: 'rgba(74, 67, 153,0.5)',
         border: '1px solid var(--od-border)',
         borderRadius: '20px',
-        boxShadow: '0 32px 80px rgba(0,0,0,0.4), 0 0 0 1px rgba(245,194,0,0.05) inset',
+        boxShadow: '0 32px 80px rgba(0,0,0,0.4), 0 0 0 1px rgba(250, 201, 23,0.05) inset',
       }}
     >
       <progress

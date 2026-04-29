@@ -6,15 +6,15 @@ describe('PillBadge — variants', () => {
   it('renders gold variant with correct background and border tokens', () => {
     render(<PillBadge variant="gold">Live</PillBadge>);
     const badge = screen.getByText('Live').closest('span')!;
-    expect(badge.style.backgroundColor).toBe('rgba(245, 194, 0, 0.15)');
-    expect(badge.style.border).toBe('1px solid rgba(245, 194, 0, 0.3)');
+    expect(badge.style.backgroundColor).toBe('rgba(250, 201, 23, 0.15)');
+    expect(badge.style.border).toBe('1px solid rgba(250, 201, 23, 0.3)');
     expect(badge.style.color).toBe('var(--od-gold)');
   });
 
   it('renders pink variant', () => {
     render(<PillBadge variant="pink">Hot</PillBadge>);
     const badge = screen.getByText('Hot').closest('span')!;
-    expect(badge.style.backgroundColor).toBe('rgba(232, 50, 90, 0.15)');
+    expect(badge.style.backgroundColor).toBe('rgba(239, 78, 115, 0.15)');
     expect(badge.style.color).toBe('var(--od-pink)');
   });
 

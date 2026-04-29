@@ -109,7 +109,7 @@ export default function CommercialProblemSection() {
                     width: '32px',
                     height: '32px',
                     borderRadius: '8px',
-                    background: 'rgba(232,50,90,0.1)',
+                    background: 'rgba(239, 78, 115,0.1)',
                   }}
                 >
                   <ProductIcon name={s.icon} size={20} />
@@ -148,8 +148,8 @@ export default function CommercialProblemSection() {
                     padding: '0.25rem 0.625rem',
                     fontSize: '0.75rem',
                     fontWeight: 600,
-                    background: 'rgba(232,50,90,0.12)',
-                    border: '1px solid rgba(232,50,90,0.4)',
+                    background: 'rgba(239, 78, 115,0.12)',
+                    border: '1px solid rgba(239, 78, 115,0.4)',
                     color: 'var(--od-pink)',
                     whiteSpace: 'nowrap',
                   }}
