@@ -892,6 +892,18 @@ h1, h2, h3, h4, h5, h6 {
   margin: 0.875rem 0 0;
 }
 
+.quote-pdf-locked-notice {
+  margin: 0.75rem 0 0;
+  padding: 0.75rem 1rem;
+  background: rgba(245, 194, 0, 0.08);
+  border: 1px solid rgba(245, 194, 0, 0.3);
+  border-radius: 10px;
+  color: var(--od-text);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
 .quote-section-sublabel {
   font-size: 0.75rem;
   letter-spacing: 0.1em;

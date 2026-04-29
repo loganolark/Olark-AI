@@ -377,6 +377,73 @@ describe('QuoteBuilder — email gate (pro/signature/bespoke)', () => {
     }
   });
 
+  it('PDF download is blocked while locked: shows a friendly notice + focuses the email input', async () => {
+    const user = userEvent.setup();
+    render(<QuoteBuilder tier="advanced" />);
+    await answerCompany(user, 'Acme');
+    await user.click(
+      screen.getByRole('button', { name: /Lead Generation \+ Customer Support/i }),
+    );
+    await answerSeats(user, '4');
+    await screen.findByTestId('quote-result', undefined, { timeout: 1500 });
+
+    // Notice not visible until the user attempts the locked action
+    expect(screen.queryByTestId('quote-pdf-locked-notice')).toBeNull();
+
+    await user.click(screen.getByRole('button', { name: /Download a detailed PDF quote/i }));
+
+    const notice = screen.getByTestId('quote-pdf-locked-notice');
+    expect(notice).toBeInTheDocument();
+    expect(notice).toHaveTextContent(/Add your email above to unlock pricing/i);
+    // Email input is focused so the visitor can complete the unlock without
+    // having to find it themselves.
+    expect(screen.getByPlaceholderText(/you@company.com/i)).toHaveFocus();
+    // Pricing card is still locked
+    expect(screen.getByTestId('quote-pricing-card').getAttribute('data-locked')).toBe('true');
+  });
+
+  it('PDF locked notice clears after the email is submitted and pricing unlocks', async () => {
+    const user = userEvent.setup();
+    vi.spyOn(window, 'fetch').mockResolvedValue(new Response(null, { status: 200 }));
+
+    render(<QuoteBuilder tier="advanced" />);
+    await answerCompany(user, 'Acme');
+    await user.click(
+      screen.getByRole('button', { name: /Lead Generation \+ Customer Support/i }),
+    );
+    await answerSeats(user, '4');
+    await screen.findByTestId('quote-result', undefined, { timeout: 1500 });
+
+    // Trigger the notice
+    await user.click(screen.getByRole('button', { name: /Download a detailed PDF quote/i }));
+    expect(screen.getByTestId('quote-pdf-locked-notice')).toBeInTheDocument();
+
+    // Now unlock by giving email
+    await user.type(screen.getByPlaceholderText(/you@company.com/i), 'logan@olark.com');
+    await user.click(screen.getByTestId('quote-email-submit'));
+
+    // Notice should be gone
+    expect(screen.queryByTestId('quote-pdf-locked-notice')).toBeNull();
+    expect(screen.getByTestId('quote-pricing-card').getAttribute('data-locked')).toBe('false');
+  });
+
+  it('PDF download proceeds normally for un-gated tiers (essentials)', async () => {
+    const user = userEvent.setup();
+    // Stub the dynamic PDF lib so the test doesn't crash on jsdom file APIs.
+    vi.doMock('@/lib/quote-pdf', () => ({ downloadQuotePDF: vi.fn().mockResolvedValue(undefined) }));
+
+    render(<QuoteBuilder tier="essentials" />);
+    await answerCompany(user, 'Acme');
+    await answerSeats(user, '5');
+    await screen.findByTestId('quote-result', undefined, { timeout: 1500 });
+
+    await user.click(screen.getByRole('button', { name: /Download a detailed PDF quote/i }));
+
+    // No locked notice for essentials (transactional tier — pricing always
+    // visible, PDF always available)
+    expect(screen.queryByTestId('quote-pdf-locked-notice')).toBeNull();
+  });
+
   it('persists unlock across mounts via localStorage (returning visitor skips the gate)', async () => {
     // Simulate a prior session where the visitor already provided email
     window.localStorage.setItem('olark_quote_email_captured', 'true');

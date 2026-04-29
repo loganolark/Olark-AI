@@ -127,6 +127,7 @@ export default function QuoteBuilder({ tier, onComplete }: QuoteBuilderProps) {
   const [emailCaptured, setEmailCaptured] = useState<boolean>(false);
   const [emailValue, setEmailValue] = useState<string>('');
   const [emailError, setEmailError] = useState<string>('');
+  const [pdfLockedNotice, setPdfLockedNotice] = useState<boolean>(false);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   const emailInputRef = useRef<HTMLInputElement | null>(null);
@@ -138,6 +139,14 @@ export default function QuoteBuilder({ tier, onComplete }: QuoteBuilderProps) {
       setEmailCaptured(true);
     }
   }, []);
+
+  // Once the visitor unlocks via email, dismiss any PDF "needs email" notice
+  // they may have triggered earlier so it doesn't linger after the gate clears.
+  useEffect(() => {
+    if (emailCaptured && pdfLockedNotice) {
+      setPdfLockedNotice(false);
+    }
+  }, [emailCaptured, pdfLockedNotice]);
 
   // Reset on tier change. Multiple setStates batched into one re-render by React.
   useEffect(() => {
@@ -429,6 +438,23 @@ export default function QuoteBuilder({ tier, onComplete }: QuoteBuilderProps) {
               disabled={isDownloadingPdf}
               loading={isDownloadingPdf}
               onClick={async () => {
+                if (isLocked) {
+                  // PDF is gated behind the same email capture as pricing.
+                  // Show an inline notice and pull focus to the email input
+                  // so the visitor can complete the unlock without hunting.
+                  setPdfLockedNotice(true);
+                  if (
+                    emailInputRef.current &&
+                    typeof emailInputRef.current.scrollIntoView === 'function'
+                  ) {
+                    emailInputRef.current.scrollIntoView({
+                      behavior: 'smooth',
+                      block: 'center',
+                    });
+                  }
+                  emailInputRef.current?.focus();
+                  return;
+                }
                 setIsDownloadingPdf(true);
                 try {
                   const { downloadQuotePDF } = await import('@/lib/quote-pdf');
@@ -450,6 +476,17 @@ export default function QuoteBuilder({ tier, onComplete }: QuoteBuilderProps) {
               Book Implementation Call →
             </CTAButton>
           </div>
+
+          {pdfLockedNotice && (
+            <p
+              className="quote-pdf-locked-notice"
+              data-testid="quote-pdf-locked-notice"
+              role="alert"
+            >
+              Add your email above to unlock pricing and download your custom
+              quote.
+            </p>
+          )}
 
           <button
             type="button"
