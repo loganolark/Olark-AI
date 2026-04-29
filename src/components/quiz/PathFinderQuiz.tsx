@@ -394,7 +394,12 @@ export default function PathFinderQuiz({ onAnswersComplete }: PathFinderQuizProp
       }
     }
     setFocusedIndex(targetIndex);
-    radios[targetIndex]?.focus();
+    // preventScroll: the quiz lives near the bottom of the homepage; without
+    // this flag, hydrating the radiogroup focuses the first radio and the
+    // browser auto-scrolls the page to the quiz on initial load. Same intent
+    // for subsequent step transitions — the user is already at the quiz, no
+    // need to nudge their viewport.
+    radios[targetIndex]?.focus({ preventScroll: true });
   }, [step, hydrated, answers]);
 
   // ─── Page abandonment via beforeunload ─────────────────────────────────────
@@ -428,7 +433,9 @@ export default function PathFinderQuiz({ onAnswersComplete }: PathFinderQuizProp
       const moveFocus = (next: number) => {
         e.preventDefault();
         setFocusedIndex(next);
-        radios[next]?.focus();
+        // The user is already navigating within the focused radiogroup; we
+        // don't want arrow keys to nudge their viewport.
+        radios[next]?.focus({ preventScroll: true });
       };
 
       switch (e.key) {
