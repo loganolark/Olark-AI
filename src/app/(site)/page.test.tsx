@@ -65,12 +65,18 @@ describe('HomePage — Final CTA (replaces former 3-button CTA bridge)', () => {
     ).toBeInTheDocument();
   });
 
-  it('renders a single primary CTA pointing at the in-page quiz anchor', () => {
+  it('renders both quiz CTAs — hero link to #quiz + Final CTA start-quiz button', () => {
     render(<HomePage />);
-    const quizCtas = screen.getAllByRole('link', { name: /Take the 60-Second Quiz/i });
-    // Hero secondary CTA + final-section primary CTA both point at #quiz — that's intentional reinforcement.
-    expect(quizCtas.length).toBeGreaterThanOrEqual(2);
-    quizCtas.forEach((cta) => expect(cta).toHaveAttribute('href', '#quiz'));
+    // Hero CTA stays an <a href="#quiz"> so anchor-scrolling still works.
+    const heroLink = screen.getByRole('link', { name: /Take the 60-Second Quiz/i });
+    expect(heroLink).toHaveAttribute('href', '#quiz');
+    // Final CTA "Take the 60-Second Quiz" became a <button> — clicking it
+    // starts the quiz via the QUIZ_START_EVENT, no href needed.
+    const finalCtaButton = screen.getByRole('button', {
+      name: /Take the 60-Second Quiz/i,
+    });
+    expect(finalCtaButton).toBeInTheDocument();
+    expect(finalCtaButton).not.toHaveAttribute('href');
   });
 
   it('does NOT render the old 3-button tier-specific CTA bridge', () => {
@@ -88,9 +94,18 @@ describe('HomePage — Placeholders', () => {
     expect(screen.getByText(/Loading demo/i)).toBeInTheDocument();
   });
 
-  it('renders Path Finder Quiz section', () => {
+  it('renders the QuizPlaceholder by default (PathFinderQuiz is gated behind it)', () => {
     render(<HomePage />);
-    // PathFinderQuiz mounts the first question's radiogroup once hydrated.
-    expect(screen.getByRole('radiogroup', { name: /How big is your company/i })).toBeInTheDocument();
+    // The quiz section now starts with a clickable placeholder card. The
+    // real PathFinderQuiz radiogroup only mounts after the visitor opts in.
+    expect(screen.getByTestId('quiz-placeholder')).toBeInTheDocument();
+    expect(
+      screen.queryByRole('radiogroup', { name: /How big is your company/i }),
+    ).toBeNull();
+  });
+
+  it('renders the #quiz section anchor that the hero CTA scrolls to', () => {
+    const { container } = render(<HomePage />);
+    expect(container.querySelector('#quiz')).not.toBeNull();
   });
 });

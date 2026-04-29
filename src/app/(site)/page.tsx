@@ -5,7 +5,8 @@ import SectionHero from '@/components/ui/SectionHero';
 import Reveal from '@/components/ui/Reveal';
 import LogoStrip from '@/components/product/LogoStrip';
 import URLDemoWidgetLoader from '@/components/url-demo/URLDemoWidgetLoader';
-import PathFinderQuiz from '@/components/quiz/PathFinderQuiz';
+import HeroQuizCTA from '@/components/quiz/HeroQuizCTA';
+import HomepageQuizBlock from '@/components/quiz/HomepageQuizBlock';
 import TierCard from '@/components/product/TierCard';
 import PersonaTabSwitcher from '@/components/product/PersonaTabSwitcher';
 import ParticleBackground from '@/components/ui/ParticleBackground';
@@ -107,9 +108,7 @@ export default function HomePage() {
             <CTAButton variant="primary" size="lg" href="#demo">
               See Aiden on Your Site
             </CTAButton>
-            <CTAButton variant="secondary" size="lg" href="#quiz">
-              Take the 60-Second Quiz →
-            </CTAButton>
+            <HeroQuizCTA />
           </>
         }
       />
@@ -245,65 +244,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ─── Path Finder Quiz ─── */}
-      <section
-        id="quiz"
-        style={{
-          position: 'relative',
-          overflow: 'hidden',
-          backgroundColor: 'var(--od-navy)',
-          padding: '5rem 1.5rem',
-        }}
-      >
-        <ParticleBackground density={50} />
-        <div style={{ position: 'relative', zIndex: 1 }}>
-          <PathFinderQuiz />
-        </div>
-      </section>
-
-      {/* ─── Final CTA — single quiz step (was: CTA Bridge with 3 tier links) ─── */}
-      <section
-        style={{
-          position: 'relative',
-          overflow: 'hidden',
-          backgroundColor: 'var(--od-dark)',
-          padding: '5rem 1.5rem',
-          textAlign: 'center',
-          borderTop: '1px solid var(--od-border)',
-        }}
-      >
-        <ParticleBackground density={40} />
-        <Reveal style={{ position: 'relative', zIndex: 1 }}>
-          <h2
-            style={{
-              fontFamily: 'var(--font-poppins), ui-sans-serif, sans-serif',
-              fontWeight: 900,
-              fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)',
-              letterSpacing: '-0.025em',
-              color: 'var(--od-white)',
-              margin: '0 0 1rem',
-            }}
-          >
-            Still Not Sure Which Tier Fits?
-          </h2>
-          <p
-            style={{
-              color: 'var(--od-muted)',
-              marginBottom: '2.5rem',
-              fontSize: '0.9375rem',
-              maxWidth: '480px',
-              marginLeft: 'auto',
-              marginRight: 'auto',
-            }}
-          >
-            A few quick questions about your team and we&rsquo;ll match you to the
-            right tier. Sixty seconds, then you decide.
-          </p>
-          <CTAButton variant="primary" size="lg" href="#quiz">
-            Take the 60-Second Quiz →
-          </CTAButton>
-        </Reveal>
-      </section>
+      {/* ─── Final CTA + Path Finder Quiz (swapped order, shared dark bg) ─── */}
+      <HomepageQuizBlock />
     </>
   );
 }
