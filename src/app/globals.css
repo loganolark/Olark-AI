@@ -904,6 +904,22 @@ h1, h2, h3, h4, h5, h6 {
   text-align: center;
 }
 
+/* ─── ParticleBackground a11y guards ─────────────────────────────────────
+   The component itself returns null under reduced-motion via JS, but these
+   CSS rules belt-and-suspender it for users whose preference toggles after
+   render or whose system uses forced-colors mode. */
+@media (prefers-reduced-motion: reduce) {
+  .particle-bg {
+    display: none !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .particle-bg {
+    display: none !important;
+  }
+}
+
 /* ─── Hover & focus animations on clickable elements ────────────────────────
    Every clickable surface on the site gets a subtle hover/focus reaction so
    visitors get feedback on what's actionable. Animations are skipped under

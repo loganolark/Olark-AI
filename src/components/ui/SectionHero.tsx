@@ -14,6 +14,9 @@ export interface SectionHeroProps {
   children?: React.ReactNode;
   /** Override section id — useful for skip-link anchors */
   id?: string;
+  /** Optional decorative layer (e.g. <ParticleBackground />) rendered absolute
+   *  behind the hero content. Only used by the homepage today. */
+  backgroundEffect?: React.ReactNode;
 }
 
 export default function SectionHero({
@@ -23,11 +26,14 @@ export default function SectionHero({
   cta,
   children,
   id,
+  backgroundEffect,
 }: SectionHeroProps) {
   return (
     <section
       id={id}
       style={{
+        position: 'relative',
+        overflow: 'hidden',
         background: [
           'radial-gradient(ellipse 80% 60% at 50% -10%, rgba(61,54,131,0.4) 0%, transparent 70%)',
           'var(--od-dark)',
@@ -39,11 +45,14 @@ export default function SectionHero({
         textAlign: 'center',
       }}
     >
+      {backgroundEffect}
       <Reveal
         threshold={0.05}
         offset={16}
         duration={600}
         style={{
+          position: 'relative',
+          zIndex: 1,
           maxWidth: '800px',
           margin: '0 auto',
           display: 'flex',

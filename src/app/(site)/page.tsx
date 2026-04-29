@@ -8,6 +8,7 @@ import URLDemoWidgetLoader from '@/components/url-demo/URLDemoWidgetLoader';
 import PathFinderQuiz from '@/components/quiz/PathFinderQuiz';
 import TierCard from '@/components/product/TierCard';
 import PersonaTabSwitcher from '@/components/product/PersonaTabSwitcher';
+import ParticleBackground from '@/components/ui/ParticleBackground';
 import type { TierVariant } from '@/types/tier';
 
 export const metadata: Metadata = {
@@ -93,6 +94,7 @@ export default function HomePage() {
 
       {/* ─── Hero ─── */}
       <SectionHero
+        backgroundEffect={<ParticleBackground density={70} />}
         badge={
           <PillBadge variant="gold" pulse>
             16 years of live chat · Now AI-first
@@ -115,12 +117,15 @@ export default function HomePage() {
       {/* ─── Social Proof ─── */}
       <section
         style={{
+          position: 'relative',
+          overflow: 'hidden',
           backgroundColor: 'var(--od-navy)',
           padding: '3rem 1.5rem',
           textAlign: 'center',
         }}
       >
-        <Reveal>
+        <ParticleBackground density={30} />
+        <Reveal style={{ position: 'relative', zIndex: 1 }}>
           <p
             style={{
               fontSize: '0.8125rem',
@@ -141,23 +146,31 @@ export default function HomePage() {
       <section
         id="demo"
         style={{
+          position: 'relative',
+          overflow: 'hidden',
           backgroundColor: 'var(--od-dark)',
           padding: '5rem 1.5rem',
           textAlign: 'center',
         }}
       >
-        <URLDemoWidgetLoader />
+        <ParticleBackground density={50} />
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          <URLDemoWidgetLoader />
+        </div>
       </section>
 
       {/* ─── How It Works ─── */}
       <section
         style={{
+          position: 'relative',
+          overflow: 'hidden',
           backgroundColor: 'var(--od-navy)',
           padding: '5rem 1.5rem',
           textAlign: 'center',
         }}
       >
-        <Reveal>
+        <ParticleBackground density={70} />
+        <Reveal style={{ position: 'relative', zIndex: 1 }}>
           <p
             style={{
               color: 'var(--od-gold)',
@@ -194,6 +207,8 @@ export default function HomePage() {
         </Reveal>
         <div
           style={{
+            position: 'relative',
+            zIndex: 1,
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
             gap: '1.5rem',
@@ -234,23 +249,31 @@ export default function HomePage() {
       <section
         id="quiz"
         style={{
+          position: 'relative',
+          overflow: 'hidden',
           backgroundColor: 'var(--od-navy)',
           padding: '5rem 1.5rem',
         }}
       >
-        <PathFinderQuiz />
+        <ParticleBackground density={50} />
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          <PathFinderQuiz />
+        </div>
       </section>
 
       {/* ─── Final CTA — single quiz step (was: CTA Bridge with 3 tier links) ─── */}
       <section
         style={{
+          position: 'relative',
+          overflow: 'hidden',
           backgroundColor: 'var(--od-dark)',
           padding: '5rem 1.5rem',
           textAlign: 'center',
           borderTop: '1px solid var(--od-border)',
         }}
       >
-        <Reveal>
+        <ParticleBackground density={40} />
+        <Reveal style={{ position: 'relative', zIndex: 1 }}>
           <h2
             style={{
               fontFamily: 'var(--font-poppins), ui-sans-serif, sans-serif',
