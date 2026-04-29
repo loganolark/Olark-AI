@@ -3,12 +3,16 @@ import { cookies } from 'next/headers';
 import CTAButton from '@/components/ui/CTAButton';
 import PillBadge from '@/components/ui/PillBadge';
 import Reveal from '@/components/ui/Reveal';
+import TierCard from '@/components/product/TierCard';
+import PathFinderQuiz from '@/components/quiz/PathFinderQuiz';
 import HubSpotMeetingEmbed from '@/components/conversion/HubSpotMeetingEmbed';
 import {
   parseSessionSignalsCookie,
   selectVariant,
 } from '@/lib/conversion-variant';
+import { TIER_CONTENT } from '@/lib/tier-content';
 import type { ConversionVariant } from '@/types/conversion';
+import type { TierVariant } from '@/types/tier';
 
 type BadgeVariant = 'gold' | 'pink' | 'muted';
 
@@ -51,6 +55,16 @@ const VARIANT_COPY: Record<ConversionVariant, VariantCopy> = {
       'Aiden qualifies, routes, and briefs every visitor. Talk to us when you’re ready to see it on your site.',
     cta: 'Talk to Logan →',
   },
+};
+
+/** Map a ConversionVariant → the matching TierVariant for the recommendation
+ *  card. `anonymous` returns null (the inline quiz is shown instead). */
+const VARIANT_TO_TIER: Record<ConversionVariant, TierVariant | null> = {
+  'commercial-high-intent': 'commercial',
+  'commercial-quiz-only': 'commercial',
+  'lead-gen': 'lead-gen',
+  essentials: 'essentials',
+  anonymous: null,
 };
 
 const TRUST_ITEMS: string[] = [
@@ -111,6 +125,8 @@ export default async function ConversionPageShell() {
   const parsed = parseSessionSignalsCookie(raw);
   const variant = selectVariant(parsed);
   const copy = VARIANT_COPY[variant];
+  const matchedTier = VARIANT_TO_TIER[variant];
+  const tierContent = matchedTier ? TIER_CONTENT[matchedTier] : null;
 
   return (
     <div data-variant={variant}>
@@ -201,6 +217,109 @@ export default async function ConversionPageShell() {
           </CTAButton>
         </Reveal>
       </section>
+
+      {matchedTier && tierContent ? (
+        <section
+          data-testid="conversion-tier-recommendation"
+          style={{
+            backgroundColor: 'var(--od-navy)',
+            padding: '4rem 1.5rem',
+            borderTop: '1px solid var(--od-border)',
+          }}
+        >
+          <Reveal style={{ maxWidth: '720px', margin: '0 auto' }} threshold={0.15}>
+            <p
+              style={{
+                fontSize: '0.75rem',
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                fontWeight: 600,
+                color: 'var(--od-gold)',
+                textAlign: 'center',
+                margin: '0 0 0.75rem',
+              }}
+            >
+              Your Recommended Plan
+            </p>
+            <h2
+              style={{
+                fontFamily: 'var(--font-poppins, Poppins, sans-serif)',
+                fontWeight: 900,
+                fontSize: 'clamp(1.5rem, 4vw, 2rem)',
+                letterSpacing: '-0.03em',
+                lineHeight: 1.15,
+                color: 'var(--od-white)',
+                textAlign: 'center',
+                margin: '0 0 2.25rem',
+              }}
+            >
+              Here’s What You’ll Be Booking
+            </h2>
+            <TierCard
+              tier={matchedTier}
+              headline={tierContent.headline}
+              tagline={tierContent.tagline}
+              capabilities={tierContent.capabilities}
+              ctaHref={tierContent.ctaHref}
+              ctaLabel={tierContent.ctaLabel}
+            />
+          </Reveal>
+        </section>
+      ) : (
+        <section
+          data-testid="conversion-quiz-section"
+          style={{
+            backgroundColor: 'var(--od-navy)',
+            padding: '4rem 1.5rem',
+            borderTop: '1px solid var(--od-border)',
+          }}
+        >
+          <Reveal style={{ maxWidth: '760px', margin: '0 auto' }} threshold={0.1}>
+            <p
+              style={{
+                fontSize: '0.75rem',
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                fontWeight: 600,
+                color: 'var(--od-gold)',
+                textAlign: 'center',
+                margin: '0 0 0.75rem',
+              }}
+            >
+              Before You Book
+            </p>
+            <h2
+              style={{
+                fontFamily: 'var(--font-poppins, Poppins, sans-serif)',
+                fontWeight: 900,
+                fontSize: 'clamp(1.5rem, 4vw, 2rem)',
+                letterSpacing: '-0.03em',
+                lineHeight: 1.15,
+                color: 'var(--od-white)',
+                textAlign: 'center',
+                margin: '0 0 0.75rem',
+              }}
+            >
+              Take 60 Seconds — We’ll Match You to the Right Plan
+            </h2>
+            <p
+              style={{
+                fontSize: '1rem',
+                lineHeight: 1.6,
+                color: 'var(--od-text)',
+                textAlign: 'center',
+                margin: '0 auto 2.25rem',
+                maxWidth: '560px',
+                fontWeight: 300,
+              }}
+            >
+              Three quick questions about your team. Logan walks into your call already
+              knowing where you fit, so the whole 30 minutes goes to your real work.
+            </p>
+            <PathFinderQuiz />
+          </Reveal>
+        </section>
+      )}
 
       <section
         style={{

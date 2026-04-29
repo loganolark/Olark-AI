@@ -3,7 +3,6 @@ import type { Metadata } from 'next';
 import SectionHero from '@/components/ui/SectionHero';
 import PillBadge from '@/components/ui/PillBadge';
 import CTAButton from '@/components/ui/CTAButton';
-import TierCard from '@/components/product/TierCard';
 import FeatureSpotlight from '@/components/product/FeatureSpotlight';
 import MidPageMeetingCTA from '@/components/product/MidPageMeetingCTA';
 import VideoSection from '@/components/product/VideoSection';
@@ -36,14 +35,6 @@ const productJsonLd = {
   brand: { '@type': 'Brand', name: 'Olark' },
   url: 'https://olark.ai/lead-gen',
 };
-
-const LEAD_GEN_CAPABILITIES = [
-  'Visitors qualified by company size, role, and intent before your rep sees them',
-  'Handoff briefs include the visitor’s questions, objections, and stated needs',
-  'Tier signals route to the right rep — no triage queue',
-  'Context-loaded chat history attached to every contact in your CRM',
-  'Pipeline-ready leads, not raw form fills',
-];
 
 export default function LeadGenPage() {
   return (
@@ -153,25 +144,6 @@ export default function LeadGenPage() {
         ]}
         graphic={<AutomationVisual />}
       />
-
-      <section
-        id="capabilities"
-        style={{
-          backgroundColor: 'var(--od-navy)',
-          padding: '5rem 1.5rem',
-        }}
-      >
-        <div style={{ maxWidth: '720px', margin: '0 auto' }}>
-          <TierCard
-            tier="lead-gen"
-            headline="Lead-Gen"
-            tagline="For growth-stage teams whose pipeline is bigger than their bandwidth — give every rep a teammate that does the qualifying upstream."
-            capabilities={LEAD_GEN_CAPABILITIES}
-            ctaHref="/get-started"
-            ctaLabel="Give Your Reps a Teammate →"
-          />
-        </div>
-      </section>
 
       <QuoteSection tier="advanced" />
 

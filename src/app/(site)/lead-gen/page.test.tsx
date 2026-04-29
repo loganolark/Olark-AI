@@ -36,25 +36,21 @@ describe('LeadGenPage — structure', () => {
   });
 });
 
-describe('LeadGenPage — TierCard', () => {
-  it('does NOT render the "Most Popular" pill (single-tier page; badge removed per critique)', () => {
+describe('LeadGenPage — TierCard relocation', () => {
+  it('does NOT render a TierCard (moved to /get-started as the dynamic recommendation)', () => {
+    const { container } = renderPage();
+    expect(container.querySelector('article.tier-card')).toBeNull();
+  });
+
+  it('does NOT show big-card capability copy on the product page', () => {
+    renderPage();
+    expect(screen.queryByText(/Visitors qualified by company size/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Pipeline-ready leads, not raw form fills/i)).not.toBeInTheDocument();
+  });
+
+  it('does NOT render the "Most Popular" pill anywhere', () => {
     renderPage();
     expect(screen.queryByText(/Most Popular/i)).toBeNull();
-  });
-
-  it('lists Lead-Gen-tier capabilities', () => {
-    renderPage();
-    expect(screen.getByText(/Visitors qualified by company size/i)).toBeInTheDocument();
-    expect(screen.getByText(/Handoff briefs/i)).toBeInTheDocument();
-    expect(screen.getByText(/Pipeline-ready leads/i)).toBeInTheDocument();
-  });
-
-  it('primary CTA "Give Your Reps a Teammate" routes to /get-started with Lead-Gen-tier aria-label', () => {
-    renderPage();
-    const cta = screen.getByRole('link', {
-      name: /Give Your Reps a Teammate.*Lead-Gen tier/i,
-    });
-    expect(cta).toHaveAttribute('href', '/get-started');
   });
 });
 

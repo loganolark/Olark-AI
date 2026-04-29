@@ -64,14 +64,22 @@ describe('CommercialPage — Crawl/Walk/Run timeline', () => {
   });
 });
 
-describe('CommercialPage — capabilities', () => {
-  it('lists the four required Commercial capabilities', () => {
+describe('CommercialPage — TierCard relocation', () => {
+  it('does NOT render a TierCard (moved to /get-started as the dynamic recommendation)', () => {
+    const { container } = renderPage();
+    expect(container.querySelector('article.tier-card')).toBeNull();
+  });
+
+  it('does NOT show big-card capability copy on the product page', () => {
     renderPage();
-    // "Full signal trail" also appears in the hero h1 — use the longer capability copy to disambiguate.
-    expect(screen.getByText(/Full signal trail — every visitor interaction logged/i)).toBeInTheDocument();
-    expect(screen.getByText(/Rep intelligence brief/i)).toBeInTheDocument();
-    expect(screen.getByText(/HubSpot CRM integration/i)).toBeInTheDocument();
-    expect(screen.getByText(/Objection-handling flows/i)).toBeInTheDocument();
+    // "Full signal trail" still appears in the hero h1 + commercial narrative
+    // sections — assert only the longer capability-list strings are absent.
+    expect(
+      screen.queryByText(/Rep intelligence brief on every contact — context/i),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(/Tier-segmented routing gives your reps better leads/i),
+    ).not.toBeInTheDocument();
   });
 
   it('does NOT contain forbidden replacement language (NFR-T3)', () => {
@@ -80,14 +88,6 @@ describe('CommercialPage — capabilities', () => {
     expect(text).not.toMatch(/replaces your SDR/i);
     expect(text).not.toMatch(/replaces your team/i);
     expect(text).not.toMatch(/AI closes for you/i);
-  });
-});
-
-describe('CommercialPage — CTA', () => {
-  it('primary CTA "Scope Your Build" routes to /get-started with Commercial-tier aria-label', () => {
-    renderPage();
-    const cta = screen.getByRole('link', { name: /Scope Your Build.*Commercial tier/i });
-    expect(cta).toHaveAttribute('href', '/get-started');
   });
 });
 

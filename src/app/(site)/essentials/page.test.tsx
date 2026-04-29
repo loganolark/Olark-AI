@@ -36,22 +36,19 @@ describe('EssentialsPage — structure', () => {
   });
 });
 
-describe('EssentialsPage — TierCard', () => {
-  it('renders the TierCard with role="article"', () => {
+describe('EssentialsPage — TierCard relocation', () => {
+  it('does NOT render a TierCard (moved to /get-started as the dynamic recommendation)', () => {
     const { container } = renderPage();
-    // Story 8.4 added EssentialsFeatureGroups with feature-card <article>s, so
-    // scope to the TierCard's class explicitly rather than getByRole('article').
-    expect(container.querySelector('article.tier-card')).not.toBeNull();
+    expect(container.querySelector('article.tier-card')).toBeNull();
   });
 
-  it('lists Essentials-tier capabilities', () => {
+  it('does NOT show big-card capability copy on the product page', () => {
     renderPage();
-    expect(screen.getByText(/One-click install/i)).toBeInTheDocument();
-    expect(screen.getByText(/Live in 48 hours, not 6 months/i)).toBeInTheDocument();
-    expect(screen.getByText(/Self-serve dashboard/i)).toBeInTheDocument();
+    expect(screen.queryByText(/One-click install/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Self-serve dashboard/i)).not.toBeInTheDocument();
   });
 
-  it('does NOT list cross-tier capabilities or upgrade language', () => {
+  it('does NOT contain cross-tier or upgrade language', () => {
     renderPage();
     expect(screen.queryByText(/upgrade available/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/full pipeline/i)).not.toBeInTheDocument();
@@ -59,14 +56,8 @@ describe('EssentialsPage — TierCard', () => {
   });
 });
 
-describe('EssentialsPage — CTAs', () => {
-  it('primary CTA "Get Started Today" routes to /get-started with Essentials-tier aria-label', () => {
-    renderPage();
-    const cta = screen.getByRole('link', { name: /Get Started Today.*Essentials tier/i });
-    expect(cta).toHaveAttribute('href', '/get-started');
-  });
-
-  it('secondary "See Lead-Gen →" link routes to /lead-gen', () => {
+describe('EssentialsPage — secondary nav', () => {
+  it('renders the "See Lead-Gen →" cross-link to /lead-gen', () => {
     renderPage();
     const link = screen.getByRole('link', { name: /See Lead-Gen/i });
     expect(link).toHaveAttribute('href', '/lead-gen');

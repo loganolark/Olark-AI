@@ -2,6 +2,29 @@ import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 
+// PathFinderQuiz is rendered inline on the anonymous variant. Mock its
+// dependencies before importing the shell.
+vi.mock('@/lib/quiz-state', async () => {
+  const actual = await vi.importActual<typeof import('@/lib/quiz-state')>('@/lib/quiz-state');
+  return {
+    readQuizState: vi.fn(() => null),
+    readQuizSession: vi.fn(),
+    writeQuizState: vi.fn(),
+    writeQuizSession: vi.fn(),
+    clearQuizState: vi.fn(),
+    getTierSignalFromAnswers: actual.getTierSignalFromAnswers,
+  };
+});
+
+vi.mock('@/lib/consent', () => ({
+  useConsent: vi.fn(() => ({
+    consent: { analytics: false, marketing: false },
+    hasInteracted: false,
+    acceptAll: vi.fn(),
+    updateConsent: vi.fn(),
+  })),
+}));
+
 import { cookies } from 'next/headers';
 import ConversionPageShell from './ConversionPageShell';
 
@@ -149,29 +172,105 @@ describe('ConversionPageShell — single contextual CTA per variant', () => {
     expect(screen.queryByRole('link', { name: /Scope My Build/i })).toBeNull();
   });
 
-  it('essentials variant shows "Book Your Onboarding Call →" CTA', async () => {
+  it('essentials variant shows "Book Your Onboarding Call →" CTAs (hero + tier card) both pointing at #booking', async () => {
     vi.mocked(cookies).mockReturnValue(
       makeCookieStore(
         encodeQuizCookie({ tier_signal: 'essentials', demo_run: false, quiz_completed: true }),
       ) as never,
     );
     await renderShell();
-    expect(
-      screen.getByRole('link', { name: /Book Your Onboarding Call/i }),
-    ).toHaveAttribute('href', '#booking');
+    const ctas = screen.getAllByRole('link', { name: /Book Your Onboarding Call/i });
+    // Hero + recommended TierCard both carry the same CTA on /get-started.
+    expect(ctas.length).toBeGreaterThanOrEqual(1);
+    ctas.forEach((cta) => expect(cta).toHaveAttribute('href', '#booking'));
   });
 
-  it('commercial variants show "Scope My Build →" CTA', async () => {
+  it('commercial variants show "Scope My Build →" CTAs both pointing at #booking', async () => {
     vi.mocked(cookies).mockReturnValue(
       makeCookieStore(
         encodeQuizCookie({ tier_signal: 'commercial', demo_run: true, quiz_completed: true }),
       ) as never,
     );
     await renderShell();
-    expect(screen.getByRole('link', { name: /Scope My Build/i })).toHaveAttribute(
-      'href',
-      '#booking',
+    const ctas = screen.getAllByRole('link', { name: /Scope My Build/i });
+    expect(ctas.length).toBeGreaterThanOrEqual(1);
+    ctas.forEach((cta) => expect(cta).toHaveAttribute('href', '#booking'));
+  });
+});
+
+describe('ConversionPageShell — dynamic tier recommendation card', () => {
+  it('renders the Essentials TierCard with capability copy when variant=essentials', async () => {
+    vi.mocked(cookies).mockReturnValue(
+      makeCookieStore(
+        encodeQuizCookie({ tier_signal: 'essentials', demo_run: false, quiz_completed: true }),
+      ) as never,
     );
+    await renderShell();
+    const recSection = screen.getByTestId('conversion-tier-recommendation');
+    expect(recSection).toBeInTheDocument();
+    expect(recSection.querySelector('article.tier-card')).not.toBeNull();
+    expect(screen.getByText(/One-click install/i)).toBeInTheDocument();
+    expect(screen.getByText(/Live in 48 hours, not 6 months/i)).toBeInTheDocument();
+  });
+
+  it('renders the Lead-Gen TierCard with capability copy when variant=lead-gen', async () => {
+    vi.mocked(cookies).mockReturnValue(
+      makeCookieStore(
+        encodeQuizCookie({ tier_signal: 'lead_gen', demo_run: false, quiz_completed: true }),
+      ) as never,
+    );
+    await renderShell();
+    expect(screen.getByTestId('conversion-tier-recommendation')).toBeInTheDocument();
+    expect(screen.getByText(/Visitors qualified by company size/i)).toBeInTheDocument();
+    expect(screen.getByText(/Pipeline-ready leads, not raw form fills/i)).toBeInTheDocument();
+  });
+
+  it('renders the Commercial TierCard for both commercial variants', async () => {
+    vi.mocked(cookies).mockReturnValue(
+      makeCookieStore(
+        encodeQuizCookie({ tier_signal: 'commercial', demo_run: true, quiz_completed: true }),
+      ) as never,
+    );
+    await renderShell();
+    expect(screen.getByTestId('conversion-tier-recommendation')).toBeInTheDocument();
+    expect(
+      screen.getByText(/Rep intelligence brief on every contact — context/i),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/Tier-segmented routing gives your reps better leads/i),
+    ).toBeInTheDocument();
+  });
+
+  it('does NOT render the recommendation card on the anonymous variant', async () => {
+    vi.mocked(cookies).mockReturnValue(makeCookieStore() as never);
+    await renderShell();
+    expect(screen.queryByTestId('conversion-tier-recommendation')).toBeNull();
+  });
+});
+
+describe('ConversionPageShell — inline quiz fallback for anonymous', () => {
+  it('renders the PathFinderQuiz when variant=anonymous', async () => {
+    vi.mocked(cookies).mockReturnValue(makeCookieStore() as never);
+    await renderShell();
+    expect(screen.getByTestId('conversion-quiz-section')).toBeInTheDocument();
+    expect(screen.getByTestId('path-finder-quiz')).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', {
+        level: 2,
+        name: /Take 60 Seconds.*We.ll Match You to the Right Plan/i,
+      }),
+    ).toBeInTheDocument();
+  });
+
+  it('does NOT render the quiz section when variant is a known tier', async () => {
+    vi.mocked(cookies).mockReturnValue(
+      makeCookieStore(
+        encodeQuizCookie({ tier_signal: 'essentials', demo_run: false, quiz_completed: true }),
+      ) as never,
+    );
+    await renderShell();
+    expect(screen.queryByTestId('conversion-quiz-section')).toBeNull();
+    expect(screen.queryByTestId('path-finder-quiz')).toBeNull();
   });
 });
 

@@ -3,7 +3,6 @@ import type { Metadata } from 'next';
 import SectionHero from '@/components/ui/SectionHero';
 import PillBadge from '@/components/ui/PillBadge';
 import CTAButton from '@/components/ui/CTAButton';
-import TierCard from '@/components/product/TierCard';
 import EssentialsFeatureGroups from '@/components/product/EssentialsFeatureGroups';
 import SupportPromise from '@/components/product/SupportPromise';
 import MidPageMeetingCTA from '@/components/product/MidPageMeetingCTA';
@@ -35,14 +34,6 @@ const productJsonLd = {
   brand: { '@type': 'Brand', name: 'Olark' },
   url: 'https://olark.ai/essentials',
 };
-
-const ESSENTIALS_CAPABILITIES = [
-  'One-click install — paste a script tag, you’re live',
-  'Pre-trained on your site, FAQs, and pricing',
-  'Routes qualified visitors to your rep automatically',
-  'Self-serve dashboard — no implementation engineer required',
-  'Live in 48 hours, not 6 months',
-];
 
 export default function EssentialsPage() {
   return (
@@ -118,43 +109,26 @@ export default function EssentialsPage() {
       <EssentialsFeatureGroups />
 
       <section
-        id="capabilities"
         style={{
           backgroundColor: 'var(--od-navy)',
-          padding: '5rem 1.5rem',
+          padding: '3rem 1.5rem',
         }}
       >
-        <div style={{ maxWidth: '720px', margin: '0 auto' }}>
-          <TierCard
-            tier="essentials"
-            headline="Essentials"
-            tagline="For SMB teams who want chat that just works — qualified leads, no babysitting, no upgrade dance."
-            capabilities={ESSENTIALS_CAPABILITIES}
-            ctaHref="/get-started"
-            ctaLabel="Get Started Today →"
-          />
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '0.5rem',
-              flexWrap: 'wrap',
-              marginTop: '1.5rem',
-            }}
-          >
-            <span
-              style={{
-                fontSize: '0.875rem',
-                color: 'var(--od-muted)',
-              }}
-            >
-              Scaling past 3 reps?
-            </span>
-            <CTAButton variant="ghost" size="sm" href="/lead-gen">
-              See Lead-Gen →
-            </CTAButton>
-          </div>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '0.5rem',
+            flexWrap: 'wrap',
+          }}
+        >
+          <span style={{ fontSize: '0.875rem', color: 'var(--od-muted)' }}>
+            Scaling past 3 reps?
+          </span>
+          <CTAButton variant="ghost" size="sm" href="/lead-gen">
+            See Lead-Gen →
+          </CTAButton>
         </div>
       </section>
 

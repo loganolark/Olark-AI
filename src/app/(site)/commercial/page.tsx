@@ -7,7 +7,6 @@ import CommercialAidenQuote from '@/components/commercial/CommercialAidenQuote';
 import CommercialBuiltFor from '@/components/commercial/CommercialBuiltFor';
 import CommercialHowItWorks from '@/components/commercial/CommercialHowItWorks';
 import CommercialProblemSection from '@/components/commercial/CommercialProblemSection';
-import TierCard from '@/components/product/TierCard';
 import CrawlWalkRunTimeline from '@/components/product/CrawlWalkRunTimeline';
 import MidPageMeetingCTA from '@/components/product/MidPageMeetingCTA';
 import VideoSection from '@/components/product/VideoSection';
@@ -37,14 +36,6 @@ const productJsonLd = {
   brand: { '@type': 'Brand', name: 'Olark' },
   url: 'https://olark.ai/commercial',
 };
-
-const COMMERCIAL_CAPABILITIES = [
-  'Full signal trail — every visitor interaction logged and queryable',
-  'Rep intelligence brief on every contact — context, objections, stated needs',
-  'Deep HubSpot CRM integration — deals, activities, segmented routing',
-  'Objection-handling flows tuned to your product and sales motion',
-  'Tier-segmented routing gives your reps better leads, not more leads',
-];
 
 export default function CommercialPage() {
   return (
@@ -128,25 +119,6 @@ export default function CommercialPage() {
       </section>
 
       <QuoteSection tier="commercial" />
-
-      <section
-        id="capabilities"
-        style={{
-          backgroundColor: 'var(--od-navy)',
-          padding: '5rem 1.5rem',
-        }}
-      >
-        <div style={{ maxWidth: '720px', margin: '0 auto' }}>
-          <TierCard
-            tier="commercial"
-            headline="Commercial"
-            tagline="For teams that need provable pipeline impact — full signal trail, rep intelligence on every contact, and an implementation timeline you can hand to engineering."
-            capabilities={COMMERCIAL_CAPABILITIES}
-            ctaHref="/get-started"
-            ctaLabel="Scope Your Build →"
-          />
-        </div>
-      </section>
 
       <MidPageMeetingCTA page="commercial" />
     </>
