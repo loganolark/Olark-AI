@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useVideoLightbox, type VideoLightboxPage } from '@/components/ui/VideoLightbox';
+import { useWistiaPoster } from '@/lib/hooks/use-wistia-poster';
 
 export interface VideoEmbedThumbnailProps {
   mediaId: string;
@@ -32,7 +33,14 @@ export default function VideoEmbedThumbnail({
   aspect = 16 / 9,
 }: VideoEmbedThumbnailProps) {
   const { open } = useVideoLightbox();
+  // Wistia's `/swatch` endpoint returns a tiny ~16x9 placeholder by design
+  // (used as a blur-up by their player). It looks blurry at full thumbnail
+  // size, so we resolve the actual poster URL via /api/wistia-poster and
+  // swap to it once it loads. Swatch stays as the instant low-res fallback
+  // so the box never renders empty.
   const swatchUrl = `https://fast.wistia.com/embed/medias/${mediaId}/swatch`;
+  const posterUrl = useWistiaPoster(mediaId);
+  const imageSrc = posterUrl ?? swatchUrl;
 
   return (
     <button
@@ -58,7 +66,11 @@ export default function VideoEmbedThumbnail({
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={swatchUrl}
+        // Force a remount when posterUrl resolves so the browser fetches the
+        // higher-res image without inheriting the cached low-res render.
+        key={imageSrc}
+        src={imageSrc}
+        data-poster-source={posterUrl ? 'high-res' : 'swatch'}
         alt=""
         loading="lazy"
         decoding="async"
@@ -68,6 +80,7 @@ export default function VideoEmbedThumbnail({
           width: '100%',
           height: '100%',
           objectFit: 'cover',
+          transition: 'opacity 250ms ease-out',
         }}
       />
       <span
