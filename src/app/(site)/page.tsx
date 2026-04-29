@@ -7,6 +7,7 @@ import LogoStrip from '@/components/product/LogoStrip';
 import URLDemoWidgetLoader from '@/components/url-demo/URLDemoWidgetLoader';
 import PathFinderQuiz from '@/components/quiz/PathFinderQuiz';
 import TierCard from '@/components/product/TierCard';
+import PersonaTabSwitcher from '@/components/product/PersonaTabSwitcher';
 import type { TierVariant } from '@/types/tier';
 
 export const metadata: Metadata = {
@@ -217,105 +218,16 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ─── Rep Section ─── */}
+      {/* ─── Persona Tab Switcher (replaces Before/With duo) ─── */}
       <section
         style={{
           backgroundColor: 'var(--od-card)',
           padding: '5rem 1.5rem',
-          textAlign: 'center',
         }}
       >
-        <Reveal style={{ maxWidth: '720px', margin: '0 auto' }}>
-          <p
-            style={{
-              color: 'var(--od-gold)',
-              fontSize: '0.8125rem',
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              fontWeight: 600,
-              marginBottom: '1rem',
-            }}
-          >
-            For the rep in the room
-          </p>
-          <h2
-            style={{
-              fontFamily: 'var(--font-poppins), ui-sans-serif, sans-serif',
-              fontWeight: 900,
-              fontSize: 'clamp(2rem, 4vw, 3rem)',
-              letterSpacing: '-0.025em',
-              color: 'var(--od-white)',
-              margin: '0 0 2rem',
-            }}
-          >
-            All You Have to Do Is Eat.
-          </h2>
-          <div
-            style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: '1.5rem',
-              justifyContent: 'center',
-              marginBottom: '2rem',
-            }}
-          >
-            <div
-              style={{
-                flex: '1 1 260px',
-                background: 'rgba(15,13,46,0.6)',
-                borderRadius: '12px',
-                padding: '1.5rem',
-                textAlign: 'left',
-              }}
-            >
-              <p
-                style={{
-                  color: 'var(--od-muted)',
-                  fontWeight: 600,
-                  fontSize: '0.8125rem',
-                  letterSpacing: '0.06em',
-                  textTransform: 'uppercase',
-                  marginBottom: '0.75rem',
-                  margin: '0 0 0.75rem',
-                }}
-              >
-                Before Aiden
-              </p>
-              <p style={{ color: 'var(--od-text)', lineHeight: 1.7, margin: 0 }}>
-                45-minute discovery calls. 12 tabs open. Context scattered across emails, Slack, and sticky notes. The first 20 minutes are just catching up.
-              </p>
-            </div>
-            <div
-              style={{
-                flex: '1 1 260px',
-                background: 'rgba(245,194,0,0.08)',
-                border: '1px solid rgba(245,194,0,0.2)',
-                borderRadius: '12px',
-                padding: '1.5rem',
-                textAlign: 'left',
-              }}
-            >
-              <p
-                style={{
-                  color: 'var(--od-gold)',
-                  fontWeight: 600,
-                  fontSize: '0.8125rem',
-                  letterSpacing: '0.06em',
-                  textTransform: 'uppercase',
-                  margin: '0 0 0.75rem',
-                }}
-              >
-                With Aiden
-              </p>
-              <p style={{ color: 'var(--od-text)', lineHeight: 1.7, margin: 0 }}>
-                Your leads arrive with a context brief — company size, use case, objections already handled. You walk in knowing what they need. The conversation starts at the close.
-              </p>
-            </div>
-          </div>
-          <p style={{ color: 'var(--od-muted)', fontSize: '0.9375rem', margin: 0 }}>
-            Aiden doesn&apos;t replace you. It handles the work that kept you from the work.
-          </p>
-        </Reveal>
+        <div style={{ maxWidth: '960px', margin: '0 auto' }}>
+          <PersonaTabSwitcher />
+        </div>
       </section>
 
       {/* ─── Path Finder Quiz ─── */}

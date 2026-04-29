@@ -29,6 +29,12 @@ export interface RevealProps {
   style?: React.CSSProperties;
   id?: string;
   'data-testid'?: string;
+  /** ARIA role — pass-through for cases where Reveal IS the semantic element
+   *  (e.g. a tabpanel). */
+  role?: string;
+  'aria-labelledby'?: string;
+  'aria-label'?: string;
+  'aria-hidden'?: boolean | 'true' | 'false';
 }
 
 export default function Reveal({
@@ -45,6 +51,10 @@ export default function Reveal({
   style,
   id,
   'data-testid': testId,
+  role,
+  'aria-labelledby': ariaLabelledBy,
+  'aria-label': ariaLabel,
+  'aria-hidden': ariaHidden,
 }: RevealProps) {
   const ref = useRef<HTMLElement | null>(null);
   const inView = useInView(ref, { threshold, rootMargin, once });
@@ -68,6 +78,10 @@ export default function Reveal({
       ref,
       id,
       className,
+      role,
+      'aria-labelledby': ariaLabelledBy,
+      'aria-label': ariaLabel,
+      'aria-hidden': ariaHidden,
       'data-reveal': visible ? 'in' : 'out',
       'data-testid': testId,
       style: baseStyle,

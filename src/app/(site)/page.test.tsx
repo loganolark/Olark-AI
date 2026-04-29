@@ -26,16 +26,34 @@ describe('HomePage — How It Works section', () => {
   });
 });
 
-describe('HomePage — Rep section', () => {
-  it('renders "All You Have to Do Is Eat." verbatim', () => {
+describe('HomePage — Persona tab switcher (replaces Before/With rep duo)', () => {
+  it('renders the PersonaTabSwitcher with all 3 role tabs', () => {
     render(<HomePage />);
+    expect(screen.getByTestId('persona-tab-switcher')).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /^SDR$/ })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /^RevOps Director$/ })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /^VP of Sales$/ })).toBeInTheDocument();
+  });
+
+  it('SDR tab is the default-active persona, with "All You Have to Do Is Eat." headline', () => {
+    render(<HomePage />);
+    expect(screen.getByTestId('persona-panel-sdr')).toBeInTheDocument();
     expect(screen.getByText(/All You Have to Do Is Eat\./i)).toBeInTheDocument();
   });
 
-  it('rep section uses second-person copy', () => {
+  it('SDR persona body uses second-person voice ("you walk in briefed")', () => {
     render(<HomePage />);
-    // Target the rep section "With Aiden" copy (em-dash), not the Lead-Gen tier card (period)
-    expect(screen.getByText(/Your leads arrive with a context brief —/i)).toBeInTheDocument();
+    expect(screen.getByText(/Monday morning, you open your queue/i)).toBeInTheDocument();
+    expect(screen.getByText(/You walk in briefed/i)).toBeInTheDocument();
+  });
+
+  it('does NOT render the old Before/With Aiden duo', () => {
+    const { container } = render(<HomePage />);
+    const text = container.textContent ?? '';
+    expect(text).not.toMatch(/Before Aiden/i);
+    // "With Aiden" is generic enough to hit elsewhere; the unique tell of the
+    // old layout was the side-by-side eyebrow style around the duo.
+    expect(text).not.toMatch(/45-minute discovery calls/i);
   });
 });
 
