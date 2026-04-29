@@ -124,7 +124,10 @@ export default function FeatureSpotlight({
     </div>
   );
 
-  const visual = (
+  // Render the real graphic naked so it fills the grid cell. The dashed
+  // wrapper was a "Visual coming soon" placeholder — kept only as a dev
+  // fallback when no graphic is passed (every shipped spotlight passes one).
+  const visual = graphic ?? (
     <div
       style={{
         border: '1px dashed var(--od-border)',
@@ -138,7 +141,7 @@ export default function FeatureSpotlight({
         fontStyle: 'italic',
       }}
     >
-      {graphic ?? 'Visual coming soon'}
+      Visual coming soon
     </div>
   );
 
