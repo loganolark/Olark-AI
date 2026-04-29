@@ -84,27 +84,27 @@ describe('EssentialsPage — Story 8.4 content expansion', () => {
     expect(screen.getByText(/Support That Comes Standard/i)).toBeInTheDocument();
   });
 
-  it('renders the MidPageMeetingCTA with the Essentials title', () => {
+  it('renders the QuoteSection at the bottom with the merged "Smartest First Step" headline', () => {
     renderPage();
+    // The standalone MidPageMeetingCTA is gone; its positioning copy is now
+    // the QuoteSection's headline at the bottom of the page.
     expect(
       screen.getByRole('heading', { level: 2, name: /The Smartest First Step in AI Starts Here/i }),
     ).toBeInTheDocument();
-    expect(
-      screen.getByRole('link', { name: /Schedule to Learn More About Aiden/i }),
-    ).toHaveAttribute('href', '/get-started');
+    expect(screen.queryByRole('link', { name: /Schedule to Learn More About Aiden/i })).toBeNull();
   });
 
-  it('renders new sections in the correct DOM order: feature groups → support promise → meeting CTA', () => {
+  it('renders bottom-of-page sections in correct DOM order: feature groups → support promise → quote section', () => {
     renderPage();
     const headings = screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent);
     const featuresIdx = headings.findIndex((t) => /Everything You Need to Start Smart/i.test(t ?? ''));
     const supportIdx = headings.findIndex((t) => /You.re Never on Your Own/.test(t ?? ''));
-    const meetingIdx = headings.findIndex((t) =>
+    const quoteIdx = headings.findIndex((t) =>
       /The Smartest First Step in AI Starts Here/i.test(t ?? ''),
     );
     expect(featuresIdx).toBeGreaterThan(-1);
     expect(supportIdx).toBeGreaterThan(featuresIdx);
-    expect(meetingIdx).toBeGreaterThan(supportIdx);
+    expect(quoteIdx).toBeGreaterThan(supportIdx);
   });
 });
 

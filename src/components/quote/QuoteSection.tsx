@@ -2,24 +2,27 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import CTAButton from '@/components/ui/CTAButton';
+import PillBadge from '@/components/ui/PillBadge';
 import Reveal from '@/components/ui/Reveal';
 import QuoteBuilder from './QuoteBuilder';
 import type { QuizTier } from '@/types/quote';
 
+// Merged copy: each tier's bottom-of-page CTA fuses the previous standalone
+// MidPageMeetingCTA's positioning with the QuoteSection's action. One section
+// instead of two — same urgency, less vertical real estate.
 const DEFAULT_HEADLINES: Record<QuizTier, string> = {
-  essentials: 'Not Sure What You’ll Need? Get a Custom Quote in 60 Seconds.',
-  advanced:
-    'Not Sure Which Plan Is Right? Build a Lead-Gen Quote in 60 Seconds.',
-  commercial: 'Build a Commercial Quote in 60 Seconds.',
+  essentials: 'The Smartest First Step in AI Starts Here',
+  advanced: 'Put Aiden to Work as Your New Sales & Support Rep',
+  commercial: 'Ready to Put Aiden to Work as Your Commercial Sales Engine?',
 };
 
 const DEFAULT_SUBHEADS: Record<QuizTier, string> = {
   essentials:
-    'Answer a few quick questions and we’ll put together a personalized Aiden Essentials quote right here on the page. No email required.',
+    'Even the smallest investment in AI can deliver outsized value — Aiden Essentials is designed to prove that from day one. Build your custom quote in 60 seconds, no email required.',
   advanced:
-    'Answer a few quick questions about how you’ll use Aiden and we’ll recommend the right plan with a custom quote on the spot.',
+    'We’ll match you to the right plan based on your team setup, go-live timeline, and revenue goals — built into a custom quote in 60 seconds.',
   commercial:
-    'Tell us about your CRM and routing needs and we’ll recommend the right plan with a custom quote on the spot.',
+    'Tell us about your CRM and routing needs and we’ll recommend the right plan with a custom quote on the spot — no email required.',
 };
 
 export interface QuoteSectionProps {
@@ -70,18 +73,11 @@ export default function QuoteSection({
               boxShadow: '0 32px 80px rgba(0, 0, 0, 0.4)',
             }}
           >
-            <p
-              style={{
-                fontSize: '0.75rem',
-                letterSpacing: '0.1em',
-                textTransform: 'uppercase',
-                fontWeight: 600,
-                color: 'var(--od-gold)',
-                marginBottom: '1rem',
-              }}
-            >
-              Build Your Quote
-            </p>
+            <div style={{ marginBottom: '1.25rem' }}>
+              <PillBadge variant="gold" pulse>
+                Start Today
+              </PillBadge>
+            </div>
             <h2
               style={{
                 fontFamily: 'var(--font-poppins, Poppins, sans-serif)',

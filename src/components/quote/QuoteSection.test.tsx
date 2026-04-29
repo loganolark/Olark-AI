@@ -4,18 +4,31 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import QuoteSection from './QuoteSection';
 
-describe('QuoteSection — initial trigger state', () => {
-  it('renders the trigger card with "Build Your Quote" + tier-default headline (essentials)', () => {
+describe('QuoteSection — initial trigger state (merged with former MidPageMeetingCTA copy)', () => {
+  it('renders the trigger card with "Start Today" PillBadge + essentials-tier merged headline', () => {
     render(<QuoteSection tier="essentials" />);
     expect(screen.getByTestId('quote-trigger')).toBeInTheDocument();
-    expect(screen.getByText(/Build Your Quote/i)).toBeInTheDocument();
-    expect(screen.getByText(/Get a Custom Quote in 60 Seconds/i)).toBeInTheDocument();
+    // Replaced the "Build Your Quote" eyebrow with the gold pulsing "Start
+    // Today" PillBadge that used to live above MidPageMeetingCTA.
+    expect(screen.getByText(/Start Today/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/The Smartest First Step in AI Starts Here/i),
+    ).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Get My Custom Quote/i })).toBeInTheDocument();
   });
 
-  it('uses the commercial-specific headline for tier="commercial"', () => {
+  it('uses the commercial merged headline ("Ready to Put Aiden to Work...") for tier="commercial"', () => {
     render(<QuoteSection tier="commercial" />);
-    expect(screen.getByText(/Build a Commercial Quote/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Ready to Put Aiden to Work as Your Commercial Sales Engine/i),
+    ).toBeInTheDocument();
+  });
+
+  it('uses the lead-gen merged headline for tier="advanced"', () => {
+    render(<QuoteSection tier="advanced" />);
+    expect(
+      screen.getByText(/Put Aiden to Work as Your New Sales/i),
+    ).toBeInTheDocument();
   });
 
   it('does not render the QuoteBuilder before expansion', () => {

@@ -8,7 +8,6 @@ import CommercialBuiltFor from '@/components/commercial/CommercialBuiltFor';
 import CommercialHowItWorks from '@/components/commercial/CommercialHowItWorks';
 import CommercialProblemSection from '@/components/commercial/CommercialProblemSection';
 import CrawlWalkRunTimeline from '@/components/product/CrawlWalkRunTimeline';
-import MidPageMeetingCTA from '@/components/product/MidPageMeetingCTA';
 import VideoSection from '@/components/product/VideoSection';
 import QuizResumeBanner from '@/components/quiz/QuizResumeBanner';
 import QuoteSection from '@/components/quote/QuoteSection';
@@ -119,8 +118,6 @@ export default function CommercialPage() {
       </section>
 
       <QuoteSection tier="commercial" />
-
-      <MidPageMeetingCTA page="commercial" />
     </>
   );
 }

@@ -5,7 +5,6 @@ import PillBadge from '@/components/ui/PillBadge';
 import CTAButton from '@/components/ui/CTAButton';
 import EssentialsFeatureGroups from '@/components/product/EssentialsFeatureGroups';
 import SupportPromise from '@/components/product/SupportPromise';
-import MidPageMeetingCTA from '@/components/product/MidPageMeetingCTA';
 import VideoSection from '@/components/product/VideoSection';
 import VideoEmbedThumbnail from '@/components/product/VideoEmbedThumbnail';
 import FeatureSpotlight from '@/components/product/FeatureSpotlight';
@@ -132,11 +131,9 @@ export default function EssentialsPage() {
         </div>
       </section>
 
-      <QuoteSection tier="essentials" />
-
       <SupportPromise />
 
-      <MidPageMeetingCTA page="essentials" ctaVariant="secondary" />
+      <QuoteSection tier="essentials" />
     </>
   );
 }

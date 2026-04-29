@@ -4,7 +4,6 @@ import SectionHero from '@/components/ui/SectionHero';
 import PillBadge from '@/components/ui/PillBadge';
 import CTAButton from '@/components/ui/CTAButton';
 import FeatureSpotlight from '@/components/product/FeatureSpotlight';
-import MidPageMeetingCTA from '@/components/product/MidPageMeetingCTA';
 import VideoSection from '@/components/product/VideoSection';
 import RoutingVisual from '@/components/product/RoutingVisual';
 import PipelineVisual from '@/components/product/PipelineVisual';
@@ -145,10 +144,6 @@ export default function LeadGenPage() {
         graphic={<AutomationVisual />}
       />
 
-      <QuoteSection tier="advanced" />
-
-      <MidPageMeetingCTA page="lead-gen" ctaVariant="secondary" />
-
       <section
         id="rep-section"
         style={{
@@ -229,6 +224,8 @@ export default function LeadGenPage() {
           </p>
         </Reveal>
       </section>
+
+      <QuoteSection tier="advanced" />
     </>
   );
 }

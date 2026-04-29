@@ -98,11 +98,14 @@ describe('LeadGenPage — Story 8.4 feature spotlights + meeting CTA', () => {
     expect(screen.getByText('Knowledge Base Answers')).toBeInTheDocument();
   });
 
-  it('renders the MidPageMeetingCTA with the Lead-Gen title', () => {
+  it('renders the QuoteSection at the bottom with the merged "Put Aiden to Work" headline', () => {
     renderPage();
+    // The standalone MidPageMeetingCTA is gone; its positioning copy is now
+    // the QuoteSection's headline at the bottom of the page.
     expect(
       screen.getByRole('heading', { level: 2, name: /Put Aiden to Work as Your New Sales/i }),
     ).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: /Schedule to Learn More About Aiden/i })).toBeNull();
   });
 
   it('feature spotlights render before the rep section in the DOM', () => {

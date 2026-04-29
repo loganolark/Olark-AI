@@ -91,8 +91,8 @@ describe('CommercialPage — TierCard relocation', () => {
   });
 });
 
-describe('CommercialPage — Story 8.4 mid-page meeting CTA', () => {
-  it('renders the MidPageMeetingCTA with the Commercial title', () => {
+describe('CommercialPage — bottom QuoteSection (merged with former MidPageMeetingCTA copy)', () => {
+  it('renders the QuoteSection at the bottom with the merged "Ready to Put Aiden to Work" headline', () => {
     renderPage();
     expect(
       screen.getByRole('heading', {
@@ -102,10 +102,9 @@ describe('CommercialPage — Story 8.4 mid-page meeting CTA', () => {
     ).toBeInTheDocument();
   });
 
-  it('mid-page CTA links to /get-started', () => {
+  it('does NOT render a separate "Schedule to Learn More" meeting-CTA link', () => {
     renderPage();
-    const cta = screen.getByRole('link', { name: /Schedule to Learn More About Aiden/i });
-    expect(cta).toHaveAttribute('href', '/get-started');
+    expect(screen.queryByRole('link', { name: /Schedule to Learn More About Aiden/i })).toBeNull();
   });
 });
 
@@ -219,10 +218,10 @@ describe('CommercialPage — Story 8.6 narrative sections', () => {
       /Seven Steps From First Click to Closed Deal/i,
       /This Is a Commercial Product\./i,
       /Crawl\. Walk\. Run\./i,
-      /Build a Commercial Quote in 60 Seconds\./i,
       /Ready to Put Aiden to Work as Your Commercial Sales Engine/i,
     ];
-    // Note: TierCard renders no h2 of its own; sequence above reflects only h2s.
+    // The QuoteSection now carries the bottom-CTA "Ready to Put Aiden to Work…"
+    // h2 (merged from the former standalone MidPageMeetingCTA).
 
     const indexes = expectedOrder.map((re) =>
       headings.findIndex((t) => re.test(t)),
