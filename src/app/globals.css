@@ -904,6 +904,152 @@ h1, h2, h3, h4, h5, h6 {
   text-align: center;
 }
 
+/* ─── Hover & focus animations on clickable elements ────────────────────────
+   Every clickable surface on the site gets a subtle hover/focus reaction so
+   visitors get feedback on what's actionable. Animations are skipped under
+   prefers-reduced-motion. */
+
+/* Video thumbnail: image zooms slightly, overlay dims, play button scales */
+.video-embed-thumb {
+  transition:
+    transform 220ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.video-embed-thumb img {
+  transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.video-embed-thumb .video-play-overlay {
+  transition: background-color 220ms ease;
+}
+
+.video-embed-thumb .video-play-btn {
+  transition:
+    transform 220ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 220ms ease;
+}
+
+.video-embed-thumb:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 60px rgba(245, 194, 0, 0.32), 0 18px 40px rgba(0, 0, 0, 0.4);
+}
+
+.video-embed-thumb:hover img {
+  transform: scale(1.04);
+}
+
+.video-embed-thumb:hover .video-play-overlay {
+  background-color: rgba(15, 13, 46, 0.05) !important;
+}
+
+.video-embed-thumb:hover .video-play-btn {
+  transform: scale(1.08);
+  box-shadow: 0 0 36px rgba(245, 194, 0, 0.7);
+}
+
+.video-embed-thumb:focus-visible {
+  outline: 2px solid var(--od-gold);
+  outline-offset: 4px;
+}
+
+/* CTAButton — lifts on hover with extra glow on the gold primary, brightens
+   the secondary outline and the ghost text. The component renders inline
+   styles so we hook hover via the data-ctabtn-variant attribute it emits. */
+[data-ctabtn-variant]:not([aria-disabled='true']):hover {
+  transform: translateY(-2px);
+}
+
+[data-ctabtn-variant='primary']:not([aria-disabled='true']):hover {
+  box-shadow:
+    0 0 56px rgba(245, 194, 0, 0.5),
+    0 8px 24px rgba(0, 0, 0, 0.45) !important;
+}
+
+[data-ctabtn-variant='secondary']:not([aria-disabled='true']):hover {
+  border-color: var(--od-gold) !important;
+  color: var(--od-gold) !important;
+  box-shadow: 0 0 0 1px var(--od-gold), 0 8px 20px rgba(0, 0, 0, 0.35) !important;
+}
+
+[data-ctabtn-variant='ghost']:not([aria-disabled='true']):hover {
+  color: var(--od-gold) !important;
+}
+
+[data-ctabtn-variant]:not([aria-disabled='true']):active {
+  transform: translateY(0);
+  transition-duration: 80ms;
+}
+
+[data-ctabtn-variant]:focus-visible {
+  outline: 2px solid var(--od-gold);
+  outline-offset: 3px;
+}
+
+/* Crawl/Walk/Run accordion triggers */
+.cwr-phase__trigger {
+  transition:
+    background-color 200ms ease,
+    color 200ms ease;
+}
+
+.cwr-phase__trigger:hover {
+  background-color: rgba(245, 194, 0, 0.06);
+}
+
+.cwr-phase__trigger:hover .cwr-phase__chevron {
+  color: var(--od-gold);
+}
+
+/* Persona tab pills (PersonaTabSwitcher) */
+[role='tablist'] [role='tab'] {
+  transition:
+    background-color 200ms ease-out,
+    color 200ms ease-out,
+    border-color 200ms ease-out,
+    transform 200ms ease-out;
+}
+
+[role='tablist'] [role='tab']:not([aria-selected='true']):hover {
+  background-color: rgba(245, 194, 0, 0.12) !important;
+  border-color: rgba(245, 194, 0, 0.35) !important;
+  color: var(--od-white) !important;
+  transform: translateY(-1px);
+}
+
+[role='tablist'] [role='tab']:focus-visible {
+  outline: 2px solid var(--od-gold);
+  outline-offset: 2px;
+}
+
+/* Quote builder option buttons */
+.quote-opt:not(:disabled):hover {
+  border-color: var(--od-gold);
+  background: rgba(245, 194, 0, 0.06);
+  transform: translateY(-1px);
+}
+
+/* Reduced-motion: disable transform/transition lifts but keep colour shifts */
+@media (prefers-reduced-motion: reduce) {
+  .video-embed-thumb,
+  .video-embed-thumb img,
+  .video-embed-thumb .video-play-btn,
+  [data-ctabtn-variant],
+  [role='tablist'] [role='tab'],
+  .quote-opt {
+    transition: background-color 120ms ease, color 120ms ease, border-color 120ms ease !important;
+  }
+
+  .video-embed-thumb:hover,
+  .video-embed-thumb:hover img,
+  .video-embed-thumb:hover .video-play-btn,
+  [data-ctabtn-variant]:hover,
+  [role='tablist'] [role='tab']:hover,
+  .quote-opt:hover {
+    transform: none !important;
+  }
+}
+
 .quote-section-sublabel {
   font-size: 0.75rem;
   letter-spacing: 0.1em;
