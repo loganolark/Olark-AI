@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { smoothScrollToHash } from '@/lib/scroll-to-hash';
 
 type CTAButtonSize = 'sm' | 'md' | 'lg';
 type CTAButtonVariant = 'primary' | 'secondary' | 'ghost';
@@ -129,6 +130,17 @@ export default function CTAButton({
     if (isInert) {
       e.preventDefault();
       return;
+    }
+    // Hash-only hrefs ("#booking", "#quote-section", "#quiz", etc.) need an
+    // explicit scrollIntoView. The browser's default behaviour bails when the
+    // current URL hash already matches the target — so a second click after
+    // scrolling away from the section is a no-op without this. See
+    // src/lib/scroll-to-hash.ts for the rationale + history.replaceState
+    // handling.
+    if (typeof href === 'string' && href.startsWith('#')) {
+      if (smoothScrollToHash(href)) {
+        e.preventDefault();
+      }
     }
     onClick?.(e);
   };

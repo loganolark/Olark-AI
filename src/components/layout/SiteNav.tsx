@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { smoothScrollToHash } from '@/lib/scroll-to-hash';
 
 const NAV_LINKS = [
   { href: '/essentials', label: 'Essentials' },
@@ -227,6 +228,14 @@ export default function SiteNav() {
               <a
                 href="#quote-section"
                 data-testid="nav-get-a-quote"
+                onClick={(e) => {
+                  // Re-clicks of the same hash are a no-op in the browser
+                  // when the URL hash already matches — explicit scroll
+                  // makes the second click work the same as the first.
+                  if (smoothScrollToHash('#quote-section')) {
+                    e.preventDefault();
+                  }
+                }}
                 className="site-nav-cta-secondary"
                 style={{
                   color: 'var(--od-gold)',
