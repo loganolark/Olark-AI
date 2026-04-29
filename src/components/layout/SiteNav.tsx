@@ -18,6 +18,15 @@ export default function SiteNav() {
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
 
+  // ─── Sliding underline state ──────────────────────────────────────────────
+  const navListRef = useRef<HTMLDivElement>(null);
+  const [hoveredHref, setHoveredHref] = useState<string | null>(null);
+  const [underline, setUnderline] = useState<{
+    left: number;
+    width: number;
+    visible: boolean;
+  }>({ left: 0, width: 0, visible: false });
+
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY >= 64);
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -31,7 +40,9 @@ export default function SiteNav() {
     } else {
       document.body.style.overflow = '';
     }
-    return () => { document.body.style.overflow = ''; };
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, [mobileOpen]);
 
   useEffect(() => {
@@ -46,15 +57,21 @@ export default function SiteNav() {
       const overlay = overlayRef.current;
       if (!overlay) return;
       const focusable = Array.from(
-        overlay.querySelectorAll<HTMLElement>('a, button, [tabindex]:not([tabindex="-1"])')
+        overlay.querySelectorAll<HTMLElement>('a, button, [tabindex]:not([tabindex="-1"])'),
       ).filter((el) => !el.hasAttribute('disabled'));
       if (focusable.length === 0) return;
       const first = focusable[0];
       const last = focusable[focusable.length - 1];
       if (e.shiftKey) {
-        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        }
       } else {
-        if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
       }
     };
     document.addEventListener('keydown', handleKeyDown);
@@ -63,6 +80,39 @@ export default function SiteNav() {
 
   const isActive = (href: string) =>
     pathname === href || pathname.startsWith(href + '/');
+
+  // Sliding underline target: hovered link wins, fall back to active page.
+  const targetHref =
+    hoveredHref ??
+    NAV_LINKS.find((l) => isActive(l.href))?.href ??
+    null;
+
+  // Reposition the underline when target / pathname / viewport changes.
+  useEffect(() => {
+    function reposition() {
+      const list = navListRef.current;
+      if (!list) return;
+      if (!targetHref) {
+        setUnderline((u) => ({ ...u, visible: false }));
+        return;
+      }
+      const link = list.querySelector<HTMLElement>(
+        `a[data-nav-href="${targetHref}"]`,
+      );
+      if (!link) {
+        setUnderline((u) => ({ ...u, visible: false }));
+        return;
+      }
+      setUnderline({
+        left: link.offsetLeft,
+        width: link.offsetWidth,
+        visible: true,
+      });
+    }
+    reposition();
+    window.addEventListener('resize', reposition);
+    return () => window.removeEventListener('resize', reposition);
+  }, [targetHref, pathname]);
 
   // Story 8.2: product-page-only "Get a Quote" CTA — scrolls to #quote-section
   // (the QuoteSection wrapper sets that anchor on each product page).
@@ -89,18 +139,21 @@ export default function SiteNav() {
           backdropFilter: scrolled ? 'blur(20px)' : 'none',
         }}
       >
-        <div style={{
-          maxWidth: '1280px',
-          margin: '0 auto',
-          padding: '0 1.5rem',
-          width: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}>
+        <div
+          style={{
+            maxWidth: '1280px',
+            margin: '0 auto',
+            padding: '0 1.5rem',
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
           <Link
             href="/"
             aria-label="Aiden by Olark — home"
+            className="site-nav-brand"
             style={{
               color: 'var(--od-white)',
               fontFamily: 'var(--font-poppins)',
@@ -112,26 +165,61 @@ export default function SiteNav() {
             Aiden
           </Link>
 
-          <div className="hidden md:flex" style={{ alignItems: 'center', gap: '2rem' }}>
-            {NAV_LINKS.map(({ href, label }) => (
-              <Link
-                key={href}
-                href={href}
-                aria-current={isActive(href) ? 'page' : undefined}
-                style={{
-                  color: isActive(href) ? 'var(--od-gold)' : 'var(--od-text)',
-                  textDecoration: 'none',
-                  fontSize: '0.9375rem',
-                  fontWeight: 500,
-                  paddingBottom: '2px',
-                  borderBottom: isActive(href)
-                    ? '2px solid var(--od-gold)'
-                    : '2px solid transparent',
-                }}
-              >
-                {label}
-              </Link>
-            ))}
+          <div
+            ref={navListRef}
+            className="hidden md:flex site-nav-list"
+            onMouseLeave={() => setHoveredHref(null)}
+            style={{
+              alignItems: 'center',
+              gap: '2rem',
+              position: 'relative',
+              padding: '0.625rem 0',
+            }}
+          >
+            {NAV_LINKS.map(({ href, label }) => {
+              const active = isActive(href);
+              const hovered = hoveredHref === href;
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  data-nav-href={href}
+                  aria-current={active ? 'page' : undefined}
+                  onMouseEnter={() => setHoveredHref(href)}
+                  onFocus={() => setHoveredHref(href)}
+                  onBlur={() => setHoveredHref(null)}
+                  className="site-nav-link"
+                  style={{
+                    color: active || hovered ? 'var(--od-gold)' : 'var(--od-text)',
+                    textDecoration: 'none',
+                    fontSize: '0.9375rem',
+                    fontWeight: 500,
+                    padding: '0.25rem 0',
+                    transition: 'color 200ms ease',
+                  }}
+                >
+                  {label}
+                </Link>
+              );
+            })}
+            <span
+              aria-hidden="true"
+              data-testid="site-nav-underline"
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                left: underline.left,
+                width: underline.width,
+                height: '2px',
+                backgroundColor: 'var(--od-gold)',
+                borderRadius: '2px',
+                opacity: underline.visible ? 1 : 0,
+                transition:
+                  'left 280ms cubic-bezier(0.4, 0, 0.2, 1), width 280ms cubic-bezier(0.4, 0, 0.2, 1), opacity 200ms ease',
+                pointerEvents: 'none',
+                boxShadow: '0 0 12px rgba(245,194,0,0.55)',
+              }}
+            />
           </div>
 
           <div className="hidden md:flex" style={{ alignItems: 'center', gap: '0.875rem' }}>
@@ -139,6 +227,7 @@ export default function SiteNav() {
               <a
                 href="#quote-section"
                 data-testid="nav-get-a-quote"
+                className="site-nav-cta-secondary"
                 style={{
                   color: 'var(--od-gold)',
                   fontWeight: 600,
@@ -155,6 +244,7 @@ export default function SiteNav() {
             )}
             <Link
               href="/get-started"
+              className="site-nav-cta-primary"
               style={{
                 backgroundColor: 'var(--od-gold)',
                 color: 'var(--od-dark)',
@@ -172,7 +262,7 @@ export default function SiteNav() {
 
           <button
             ref={hamburgerRef}
-            className="md:hidden"
+            className="md:hidden site-nav-hamburger"
             aria-label="Open navigation"
             aria-expanded={mobileOpen}
             aria-controls="mobile-nav"
@@ -216,25 +306,33 @@ export default function SiteNav() {
             padding: '1rem 1.5rem',
           }}
         >
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: '2rem',
-            height: '64px',
-          }}>
-            <span style={{
-              color: 'var(--od-white)',
-              fontFamily: 'var(--font-poppins)',
-              fontWeight: 700,
-              fontSize: '1.25rem',
-            }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: '2rem',
+              height: '64px',
+            }}
+          >
+            <span
+              style={{
+                color: 'var(--od-white)',
+                fontFamily: 'var(--font-poppins)',
+                fontWeight: 700,
+                fontSize: '1.25rem',
+              }}
+            >
               Aiden
             </span>
             <button
               ref={closeButtonRef}
               aria-label="Close navigation"
-              onClick={() => { setMobileOpen(false); hamburgerRef.current?.focus(); }}
+              className="site-nav-mobile-close"
+              onClick={() => {
+                setMobileOpen(false);
+                hamburgerRef.current?.focus();
+              }}
               style={{
                 background: 'transparent',
                 border: 'none',
@@ -258,6 +356,7 @@ export default function SiteNav() {
               href={href}
               aria-current={isActive(href) ? 'page' : undefined}
               onClick={() => setMobileOpen(false)}
+              className="site-nav-mobile-link"
               style={{
                 color: isActive(href) ? 'var(--od-gold)' : 'var(--od-white)',
                 textDecoration: 'none',
@@ -279,6 +378,7 @@ export default function SiteNav() {
           <Link
             href="/get-started"
             onClick={() => setMobileOpen(false)}
+            className="site-nav-cta-primary"
             style={{
               backgroundColor: 'var(--od-gold)',
               color: 'var(--od-dark)',

@@ -78,6 +78,51 @@ describe('SiteNav', () => {
   });
 });
 
+describe('SiteNav — sliding underline + hover affordances', () => {
+  beforeEach(() => {
+    vi.mocked(usePathname).mockReturnValue('/');
+    document.cookie = 'olark_consent=; Max-Age=0; Path=/';
+  });
+
+  it('renders the sliding-underline element next to the desktop link list', () => {
+    renderNav();
+    expect(screen.getByTestId('site-nav-underline')).toBeInTheDocument();
+  });
+
+  it('each desktop nav link carries data-nav-href so the underline can target it', () => {
+    renderNav();
+    expect(
+      screen.getAllByRole('link', { name: /essentials/i })[0],
+    ).toHaveAttribute('data-nav-href', '/essentials');
+    expect(
+      screen.getAllByRole('link', { name: /lead-gen/i })[0],
+    ).toHaveAttribute('data-nav-href', '/lead-gen');
+    expect(
+      screen.getAllByRole('link', { name: /commercial/i })[0],
+    ).toHaveAttribute('data-nav-href', '/commercial');
+  });
+
+  it('Talk to Us CTA carries the primary-CTA hover-animation class', () => {
+    renderNav();
+    expect(screen.getByRole('link', { name: /Talk to Us/i })).toHaveClass(
+      'site-nav-cta-primary',
+    );
+  });
+
+  it('Get a Quote CTA carries the secondary-CTA hover-animation class on product pages', () => {
+    vi.mocked(usePathname).mockReturnValue('/essentials');
+    renderNav();
+    expect(screen.getByTestId('nav-get-a-quote')).toHaveClass('site-nav-cta-secondary');
+  });
+
+  it('Aiden brand link carries the brand hover-animation class', () => {
+    renderNav();
+    expect(screen.getByRole('link', { name: /Aiden by Olark/i })).toHaveClass(
+      'site-nav-brand',
+    );
+  });
+});
+
 // ─── Story 8.2: product-page-only "Get a Quote" CTA ───────────────────────
 
 describe('SiteNav — "Get a Quote" CTA visibility (Story 8.2)', () => {
