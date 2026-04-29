@@ -52,7 +52,7 @@ function getVariantStyles(variant: CTAButtonVariant): React.CSSProperties {
     case 'primary':
       return {
         backgroundColor: 'var(--od-gold)',
-        color: 'var(--od-ink)',
+        color: 'var(--od-dark)',
         border: 'none',
         boxShadow: '0 0 40px rgba(250, 201, 23,0.35), 0 4px 16px rgba(0,0,0,0.4)',
       };

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import CTAButton from '@/components/ui/CTAButton';
 import Reveal from '@/components/ui/Reveal';
+import ParticleBackground from '@/components/ui/ParticleBackground';
 import PathFinderQuiz from './PathFinderQuiz';
 import QuizPlaceholder from './QuizPlaceholder';
 
@@ -51,6 +52,7 @@ export default function HomepageQuizBlock() {
           borderTop: '1px solid var(--od-border)',
         }}
       >
+        <ParticleBackground density={40} />
         <Reveal style={{ position: 'relative', zIndex: 1 }}>
           <h2
             style={{
@@ -94,6 +96,7 @@ export default function HomepageQuizBlock() {
           padding: '5rem 1.5rem',
         }}
       >
+        <ParticleBackground density={50} />
         <div style={{ position: 'relative', zIndex: 1 }}>
           {quizStarted ? (
             <PathFinderQuiz />

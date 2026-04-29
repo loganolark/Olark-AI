@@ -129,7 +129,7 @@ export default function CookieConsentBanner() {
                   style={{
                     width: '100%',
                     backgroundColor: 'var(--od-gold)',
-                    color: 'var(--od-ink)',
+                    color: 'var(--od-dark)',
                     border: 'none',
                     padding: '0.625rem',
                     borderRadius: '6px',
@@ -166,7 +166,7 @@ export default function CookieConsentBanner() {
             onClick={acceptAll}
             style={{
               backgroundColor: 'var(--od-gold)',
-              color: 'var(--od-ink)',
+              color: 'var(--od-dark)',
               border: 'none',
               padding: '0.375rem 1rem',
               borderRadius: '6px',

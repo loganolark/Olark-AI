@@ -8,7 +8,7 @@ describe('CTAButton — variants', () => {
     const btn = screen.getByRole('button', { name: /click me/i });
     expect(btn).toBeInTheDocument();
     expect(btn.style.backgroundColor).toBe('var(--od-gold)');
-    expect(btn.style.color).toBe('var(--od-ink)');
+    expect(btn.style.color).toBe('var(--od-dark)');
   });
 
   it('renders secondary variant with transparent background', () => {

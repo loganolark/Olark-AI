@@ -95,6 +95,7 @@ export default function HomePage() {
 
       {/* ─── Hero ─── */}
       <SectionHero
+        backgroundEffect={<ParticleBackground density={70} />}
         badge={
           <PillBadge variant="gold" pulse>
             16 years of live chat · Now AI-first
@@ -122,6 +123,7 @@ export default function HomePage() {
           textAlign: 'center',
         }}
       >
+        <ParticleBackground density={30} />
         <Reveal style={{ position: 'relative', zIndex: 1 }}>
           <p
             style={{
@@ -150,6 +152,7 @@ export default function HomePage() {
           textAlign: 'center',
         }}
       >
+        <ParticleBackground density={50} />
         <div style={{ position: 'relative', zIndex: 1 }}>
           <URLDemoWidgetLoader />
         </div>
@@ -157,10 +160,10 @@ export default function HomePage() {
 
       {/* ─── How It Works ─── */}
       <section
-        className="section-on-purple"
         style={{
           position: 'relative',
           overflow: 'hidden',
+          backgroundColor: 'var(--od-navy)',
           padding: '5rem 1.5rem',
           textAlign: 'center',
         }}
@@ -231,15 +234,12 @@ export default function HomePage() {
 
       {/* ─── Persona Tab Switcher (replaces Before/With duo) ─── */}
       <section
-        className="section-on-purple"
         style={{
-          position: 'relative',
-          overflow: 'hidden',
+          backgroundColor: 'var(--od-card)',
           padding: '5rem 1.5rem',
         }}
       >
-        <ParticleBackground density={50} />
-        <div style={{ position: 'relative', zIndex: 1, maxWidth: '960px', margin: '0 auto' }}>
+        <div style={{ maxWidth: '960px', margin: '0 auto' }}>
           <PersonaTabSwitcher />
         </div>
       </section>
