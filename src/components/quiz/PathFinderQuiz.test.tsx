@@ -11,8 +11,10 @@ vi.mock('@/lib/quiz-state', async () => {
     writeQuizState: vi.fn(),
     writeQuizSession: vi.fn(),
     clearQuizState: vi.fn(),
-    // Use real tier-derivation to get accurate tier signals in tests.
+    // Use real recommenders so tests exercise the actual band + plan
+    // derivation logic.
     getTierSignalFromAnswers: actual.getTierSignalFromAnswers,
+    getRecommendedPlanFromAnswers: actual.getRecommendedPlanFromAnswers,
   };
 });
 
@@ -32,6 +34,11 @@ import {
 import { useConsent } from '@/lib/consent';
 import { trackEvent } from '@/lib/analytics';
 import PathFinderQuiz from './PathFinderQuiz';
+
+// All quiz-test answers below pick the "Signature" path — small sales team,
+// one CRM, single-team routing — because that's the simpler default that
+// exercises the full quiz flow without firing Bespoke triggers. Bespoke
+// branching has its own coverage in quiz-state.test.ts.
 
 function setConsent(analytics: boolean) {
   vi.mocked(useConsent).mockReturnValue({
@@ -61,15 +68,22 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
+const Q1_LABEL = 'A small team (6–15 reps)';
+const Q1_VALUE = '6-15';
+const Q2_LABEL = 'One CRM (HubSpot, Salesforce, or similar)';
+const Q2_VALUE = 'single_crm';
+const Q3_LABEL = 'One team — all leads land in the same place';
+const Q3_VALUE = 'single_team';
+
 // ─── Initial render ────────────────────────────────────────────────────────
 
 describe('PathFinderQuiz — initial render', () => {
-  it('renders question 1 with 5 option cards and no back button', () => {
+  it('renders question 1 with 4 option cards (sales team size) and no back button', () => {
     render(<PathFinderQuiz />);
     expect(
-      screen.getByRole('radiogroup', { name: /How big is your company/i }),
+      screen.getByRole('radiogroup', { name: /How big is your sales team/i }),
     ).toBeInTheDocument();
-    expect(screen.getAllByRole('radio')).toHaveLength(5);
+    expect(screen.getAllByRole('radio')).toHaveLength(4);
     expect(screen.queryByRole('button', { name: /back/i })).not.toBeInTheDocument();
   });
 
@@ -94,7 +108,7 @@ describe('PathFinderQuiz — selection and auto-advance', () => {
   it('clicking an option marks it aria-checked="true" and others "false"', async () => {
     const user = userEvent.setup();
     render(<PathFinderQuiz />);
-    const option = screen.getByRole('radio', { name: '11–50 employees' });
+    const option = screen.getByRole('radio', { name: Q1_LABEL });
     await user.click(option);
     expect(option).toHaveAttribute('aria-checked', 'true');
     const others = screen.getAllByRole('radio').filter((r) => r !== option);
@@ -104,9 +118,9 @@ describe('PathFinderQuiz — selection and auto-advance', () => {
   it('auto-advances to question 2 ~300ms after selection', async () => {
     const user = userEvent.setup();
     render(<PathFinderQuiz />);
-    await user.click(screen.getByRole('radio', { name: '11–50 employees' }));
+    await user.click(screen.getByRole('radio', { name: Q1_LABEL }));
     expect(
-      await screen.findByRole('radiogroup', { name: /primary job/i }, { timeout: 1500 }),
+      await screen.findByRole('radiogroup', { name: /your stack look like/i }, { timeout: 1500 }),
     ).toBeInTheDocument();
     expect(screen.getByText(/Step 2 of 5/i)).toBeInTheDocument();
   });
@@ -114,11 +128,11 @@ describe('PathFinderQuiz — selection and auto-advance', () => {
   it('writes to sessionStorage and localStorage on every selection', async () => {
     const user = userEvent.setup();
     render(<PathFinderQuiz />);
-    await user.click(screen.getByRole('radio', { name: '11–50 employees' }));
+    await user.click(screen.getByRole('radio', { name: Q1_LABEL }));
     expect(writeQuizSession).toHaveBeenCalled();
     expect(writeQuizState).toHaveBeenCalled();
     const sessionPayload = vi.mocked(writeQuizSession).mock.calls[0][0];
-    expect(sessionPayload.answers).toEqual({ olark_company_size: '11-50' });
+    expect(sessionPayload.answers).toEqual({ olark_company_size: Q1_VALUE });
     expect(sessionPayload.currentStep).toBe(2);
     expect(sessionPayload.emailCaptured).toBe(false);
   });
@@ -127,12 +141,12 @@ describe('PathFinderQuiz — selection and auto-advance', () => {
 // ─── Accumulated pills ─────────────────────────────────────────────────────
 
 describe('PathFinderQuiz — accumulated answers bar', () => {
-  it('shows a pill with the human label of the previous step\'s answer', async () => {
+  it("shows a pill with the human label of the previous step's answer", async () => {
     const user = userEvent.setup();
     render(<PathFinderQuiz />);
-    await user.click(screen.getByRole('radio', { name: '11–50 employees' }));
-    await screen.findByRole('radiogroup', { name: /primary job/i }, { timeout: 1500 });
-    expect(screen.getByText('11–50 employees')).toBeInTheDocument();
+    await user.click(screen.getByRole('radio', { name: Q1_LABEL }));
+    await screen.findByRole('radiogroup', { name: /your stack look like/i }, { timeout: 1500 });
+    expect(screen.getByText(Q1_LABEL)).toBeInTheDocument();
     expect(screen.getByText(/Your answers so far/i)).toBeInTheDocument();
   });
 });
@@ -143,13 +157,13 @@ describe('PathFinderQuiz — back navigation between question steps', () => {
   it('back from step 2 returns to step 1 with prior answer pre-selected', async () => {
     const user = userEvent.setup();
     render(<PathFinderQuiz />);
-    await user.click(screen.getByRole('radio', { name: '11–50 employees' }));
-    await screen.findByRole('radiogroup', { name: /primary job/i }, { timeout: 1500 });
+    await user.click(screen.getByRole('radio', { name: Q1_LABEL }));
+    await screen.findByRole('radiogroup', { name: /your stack look like/i }, { timeout: 1500 });
     await user.click(screen.getByRole('button', { name: /back/i }));
     expect(
-      screen.getByRole('radiogroup', { name: /How big is your company/i }),
+      screen.getByRole('radiogroup', { name: /How big is your sales team/i }),
     ).toBeInTheDocument();
-    expect(screen.getByRole('radio', { name: '11–50 employees' })).toHaveAttribute(
+    expect(screen.getByRole('radio', { name: Q1_LABEL })).toHaveAttribute(
       'aria-checked',
       'true',
     );
@@ -158,28 +172,28 @@ describe('PathFinderQuiz — back navigation between question steps', () => {
   it('back from step 3 to step 2 removes the just-back-navigated answer from the pill bar', async () => {
     const user = userEvent.setup();
     render(<PathFinderQuiz />);
-    await user.click(screen.getByRole('radio', { name: '11–50 employees' }));
-    await screen.findByRole('radiogroup', { name: /primary job/i }, { timeout: 1500 });
-    await user.click(screen.getByRole('radio', { name: 'Qualify inbound visitors' }));
+    await user.click(screen.getByRole('radio', { name: Q1_LABEL }));
+    await screen.findByRole('radiogroup', { name: /your stack look like/i }, { timeout: 1500 });
+    await user.click(screen.getByRole('radio', { name: Q2_LABEL }));
     await screen.findByRole(
       'radiogroup',
-      { name: /inbound traffic/i },
+      { name: /route leads today/i },
       { timeout: 1500 },
     );
-    expect(screen.getByText('11–50 employees')).toBeInTheDocument();
-    expect(screen.getByText('Qualify inbound visitors')).toBeInTheDocument();
+    expect(screen.getByText(Q1_LABEL)).toBeInTheDocument();
+    expect(screen.getByText(Q2_LABEL)).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: /back/i }));
     const radiogroupQ2 = await screen.findByRole(
       'radiogroup',
-      { name: /primary job/i },
+      { name: /your stack look like/i },
       { timeout: 1500 },
     );
     const pillBar = document.querySelector('.quiz-pill-bar') as HTMLElement | null;
     expect(pillBar).not.toBeNull();
-    expect(within(pillBar!).queryByText('Qualify inbound visitors')).not.toBeInTheDocument();
-    expect(within(pillBar!).getByText('11–50 employees')).toBeInTheDocument();
+    expect(within(pillBar!).queryByText(Q2_LABEL)).not.toBeInTheDocument();
+    expect(within(pillBar!).getByText(Q1_LABEL)).toBeInTheDocument();
     expect(
-      within(radiogroupQ2).getByRole('radio', { name: 'Qualify inbound visitors' }),
+      within(radiogroupQ2).getByRole('radio', { name: Q2_LABEL }),
     ).toBeInTheDocument();
   });
 });
@@ -191,7 +205,7 @@ describe('PathFinderQuiz — keyboard navigation', () => {
     const user = userEvent.setup();
     render(<PathFinderQuiz />);
     const radiogroup = screen.getByRole('radiogroup', {
-      name: /How big is your company/i,
+      name: /How big is your sales team/i,
     });
     const first = within(radiogroup).getAllByRole('radio')[0];
     first.focus();
@@ -215,7 +229,7 @@ describe('PathFinderQuiz — keyboard navigation', () => {
   it('after a selection, only the selected radio has tabindex="0"', async () => {
     const user = userEvent.setup();
     render(<PathFinderQuiz />);
-    const target = screen.getByRole('radio', { name: '51–200 employees' });
+    const target = screen.getByRole('radio', { name: 'A full sales floor (16–50 reps)' });
     await user.click(target);
     const radios = screen.getAllByRole('radio');
     const tabbable = radios.filter((r) => r.getAttribute('tabindex') === '0');
@@ -231,8 +245,8 @@ describe('PathFinderQuiz — localStorage resume', () => {
     vi.mocked(readQuizState).mockReturnValue({
       currentStep: 3,
       answers: {
-        olark_company_size: '11-50',
-        olark_use_case: 'inbound_qual',
+        olark_company_size: Q1_VALUE,
+        olark_use_case: Q2_VALUE,
       },
       emailCaptured: false,
       sessionId: 'resumed-session',
@@ -240,24 +254,24 @@ describe('PathFinderQuiz — localStorage resume', () => {
     });
     render(<PathFinderQuiz />);
     expect(
-      screen.getByRole('radiogroup', { name: /inbound traffic/i }),
+      screen.getByRole('radiogroup', { name: /route leads today/i }),
     ).toBeInTheDocument();
-    expect(screen.getByText('11–50 employees')).toBeInTheDocument();
-    expect(screen.getByText('Qualify inbound visitors')).toBeInTheDocument();
+    expect(screen.getByText(Q1_LABEL)).toBeInTheDocument();
+    expect(screen.getByText(Q2_LABEL)).toBeInTheDocument();
     expect(screen.getByText(/Step 3 of 5/i)).toBeInTheDocument();
   });
 
   it('ignores corrupt resume state (currentStep > 3 without emailCaptured) and starts fresh', () => {
     vi.mocked(readQuizState).mockReturnValue({
       currentStep: 4,
-      answers: { olark_company_size: '11-50' },
+      answers: { olark_company_size: Q1_VALUE },
       emailCaptured: false,
       sessionId: 'x',
       startedAt: '2026-04-26T00:00:00.000Z',
     });
     render(<PathFinderQuiz />);
     expect(
-      screen.getByRole('radiogroup', { name: /How big is your company/i }),
+      screen.getByRole('radiogroup', { name: /How big is your sales team/i }),
     ).toBeInTheDocument();
     const radios = screen.getAllByRole('radio');
     radios.forEach((r) => expect(r).toHaveAttribute('aria-checked', 'false'));
@@ -267,9 +281,9 @@ describe('PathFinderQuiz — localStorage resume', () => {
     vi.mocked(readQuizState).mockReturnValue({
       currentStep: 4,
       answers: {
-        olark_company_size: '11-50',
-        olark_use_case: 'inbound_qual',
-        olark_inbound_volume: 'medium',
+        olark_company_size: Q1_VALUE,
+        olark_use_case: Q2_VALUE,
+        olark_inbound_volume: 'regional',
       },
       emailCaptured: true,
       sessionId: 'bouncer-session',
@@ -289,15 +303,15 @@ describe('PathFinderQuiz — localStorage resume', () => {
 
 // ─── Step 3 → step 4 (email capture) ───────────────────────────────────────
 
-describe('PathFinderQuiz — advances to email-capture step 4', () => {
-  async function answerAllThree(user: ReturnType<typeof userEvent.setup>) {
-    await user.click(screen.getByRole('radio', { name: '11–50 employees' }));
-    await screen.findByRole('radiogroup', { name: /primary job/i }, { timeout: 1500 });
-    await user.click(screen.getByRole('radio', { name: 'Qualify inbound visitors' }));
-    await screen.findByRole('radiogroup', { name: /inbound traffic/i }, { timeout: 1500 });
-    await user.click(screen.getByRole('radio', { name: 'Under 5,000 visits' }));
-  }
+async function answerAllThree(user: ReturnType<typeof userEvent.setup>) {
+  await user.click(screen.getByRole('radio', { name: Q1_LABEL }));
+  await screen.findByRole('radiogroup', { name: /your stack look like/i }, { timeout: 1500 });
+  await user.click(screen.getByRole('radio', { name: Q2_LABEL }));
+  await screen.findByRole('radiogroup', { name: /route leads today/i }, { timeout: 1500 });
+  await user.click(screen.getByRole('radio', { name: Q3_LABEL }));
+}
 
+describe('PathFinderQuiz — advances to email-capture step 4', () => {
   it('renders the email-capture form after question 3 is answered', async () => {
     const user = userEvent.setup();
     render(<PathFinderQuiz />);
@@ -321,9 +335,9 @@ describe('PathFinderQuiz — advances to email-capture step 4', () => {
       { timeout: 1500 },
     );
     expect(onComplete).toHaveBeenCalledWith({
-      olark_company_size: '11-50',
-      olark_use_case: 'inbound_qual',
-      olark_inbound_volume: 'low',
+      olark_company_size: Q1_VALUE,
+      olark_use_case: Q2_VALUE,
+      olark_inbound_volume: Q3_VALUE,
     });
   });
 
@@ -336,44 +350,38 @@ describe('PathFinderQuiz — advances to email-capture step 4', () => {
     expect(
       await screen.findByRole(
         'radiogroup',
-        { name: /inbound traffic/i },
+        { name: /route leads today/i },
         { timeout: 1500 },
       ),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('radio', { name: 'Under 5,000 visits' }),
+      screen.getByRole('radio', { name: Q3_LABEL }),
     ).toHaveAttribute('aria-checked', 'true');
   });
 });
 
-// ─── Step 4 → step 5 (tier reveal) ─────────────────────────────────────────
+// ─── Step 4 → step 5 (plan reveal) ─────────────────────────────────────────
 
-describe('PathFinderQuiz — email submit advances to tier reveal', () => {
-  async function answerAllThree(user: ReturnType<typeof userEvent.setup>) {
-    await user.click(screen.getByRole('radio', { name: '11–50 employees' }));
-    await screen.findByRole('radiogroup', { name: /primary job/i }, { timeout: 1500 });
-    await user.click(screen.getByRole('radio', { name: 'Qualify inbound visitors' }));
-    await screen.findByRole('radiogroup', { name: /inbound traffic/i }, { timeout: 1500 });
-    await user.click(screen.getByRole('radio', { name: 'Under 5,000 visits' }));
-    await screen.findByLabelText(/Your work email/i, undefined, { timeout: 1500 });
-  }
-
-  it('renders tier reveal with the correct tier label after valid email submit', async () => {
+describe('PathFinderQuiz — email submit advances to plan reveal', () => {
+  it('renders the plan reveal with the Aiden Signature recommendation after valid email submit', async () => {
     const user = userEvent.setup();
     render(<PathFinderQuiz />);
     await answerAllThree(user);
+    await screen.findByLabelText(/Your work email/i, undefined, { timeout: 1500 });
     await user.type(screen.getByLabelText(/Your work email/i), 'dana@example.com');
     await user.click(screen.getByRole('button', { name: /Send my fit report/i }));
     expect(
-      await screen.findByRole('heading', { name: /Based on what you told us: Lead-Gen/i }, { timeout: 1500 }),
+      await screen.findByRole(
+        'heading',
+        { name: /Based on what you told us: Aiden Signature/i },
+        { timeout: 1500 },
+      ),
     ).toBeInTheDocument();
     expect(
       screen.getByRole('link', { name: /Let.s scope your build/i }),
     ).toHaveAttribute('href', '/get-started');
-    // /lead-gen was collapsed into /commercial — the SMB-tier "details" CTA
-    // routes there now.
     expect(
-      screen.getByRole('link', { name: /See Lead-Gen details/i }),
+      screen.getByRole('link', { name: /See Aiden Signature details/i }),
     ).toHaveAttribute('href', '/commercial');
   });
 
@@ -381,6 +389,7 @@ describe('PathFinderQuiz — email submit advances to tier reveal', () => {
     const user = userEvent.setup();
     render(<PathFinderQuiz />);
     await answerAllThree(user);
+    await screen.findByLabelText(/Your work email/i, undefined, { timeout: 1500 });
     await user.type(screen.getByLabelText(/Your work email/i), 'dana@example.com');
     await user.click(screen.getByRole('button', { name: /Send my fit report/i }));
     await screen.findByRole('heading', { name: /Based on what you told us/i }, { timeout: 1500 });
@@ -394,20 +403,12 @@ describe('PathFinderQuiz — email submit advances to tier reveal', () => {
 // ─── Consent gating: HubSpot writes ────────────────────────────────────────
 
 describe('PathFinderQuiz — consent-gated HubSpot writes', () => {
-  async function answerAllThree(user: ReturnType<typeof userEvent.setup>) {
-    await user.click(screen.getByRole('radio', { name: '11–50 employees' }));
-    await screen.findByRole('radiogroup', { name: /primary job/i }, { timeout: 1500 });
-    await user.click(screen.getByRole('radio', { name: 'Qualify inbound visitors' }));
-    await screen.findByRole('radiogroup', { name: /inbound traffic/i }, { timeout: 1500 });
-    await user.click(screen.getByRole('radio', { name: 'Under 5,000 visits' }));
-    await screen.findByLabelText(/Your work email/i, undefined, { timeout: 1500 });
-  }
-
   it('with consent denied: completes the full quiz with zero fetch calls and zero trackEvent calls', async () => {
     setConsent(false);
     const user = userEvent.setup();
     render(<PathFinderQuiz />);
     await answerAllThree(user);
+    await screen.findByLabelText(/Your work email/i, undefined, { timeout: 1500 });
     await user.type(screen.getByLabelText(/Your work email/i), 'dana@example.com');
     await user.click(screen.getByRole('button', { name: /Send my fit report/i }));
     await screen.findByRole('heading', { name: /Based on what you told us/i }, { timeout: 1500 });
@@ -418,19 +419,19 @@ describe('PathFinderQuiz — consent-gated HubSpot writes', () => {
   it('does not fire HubSpot during steps 1–3 even when consent is granted (no email yet)', async () => {
     const user = userEvent.setup();
     render(<PathFinderQuiz />);
-    await user.click(screen.getByRole('radio', { name: '11–50 employees' }));
-    await screen.findByRole('radiogroup', { name: /primary job/i }, { timeout: 1500 });
-    await user.click(screen.getByRole('radio', { name: 'Qualify inbound visitors' }));
-    await screen.findByRole('radiogroup', { name: /inbound traffic/i }, { timeout: 1500 });
+    await user.click(screen.getByRole('radio', { name: Q1_LABEL }));
+    await screen.findByRole('radiogroup', { name: /your stack look like/i }, { timeout: 1500 });
+    await user.click(screen.getByRole('radio', { name: Q2_LABEL }));
+    await screen.findByRole('radiogroup', { name: /route leads today/i }, { timeout: 1500 });
     expect(globalThis.fetch).not.toHaveBeenCalled();
   });
 
-  it('with consent granted: email submit fires the first HubSpot upsert (partial); completion fires the second (full)', async () => {
+  it('with consent granted: email submit fires the first HubSpot upsert (partial); completion fires the second (full); both carry the recommended_plan field', async () => {
     const user = userEvent.setup();
     render(<PathFinderQuiz />);
     await answerAllThree(user);
+    await screen.findByLabelText(/Your work email/i, undefined, { timeout: 1500 });
 
-    // Email submit: first fetch call, partial payload
     await user.type(screen.getByLabelText(/Your work email/i), 'dana@example.com');
     await user.click(screen.getByRole('button', { name: /Send my fit report/i }));
 
@@ -447,15 +448,19 @@ describe('PathFinderQuiz — consent-gated HubSpot writes', () => {
     expect(firstCall[0]).toBe('/api/hubspot/contact');
     expect(firstBody.email).toBe('dana@example.com');
     expect(firstBody.olark_quiz_partial).toBe(true);
-    expect(firstBody.olark_company_size).toBe('11-50');
-    expect(firstBody.olark_use_case).toBe('inbound_qual');
-    expect(firstBody.olark_inbound_volume).toBe('low');
+    expect(firstBody.olark_company_size).toBe(Q1_VALUE);
+    expect(firstBody.olark_use_case).toBe(Q2_VALUE);
+    expect(firstBody.olark_inbound_volume).toBe(Q3_VALUE);
+    // Both fields fire on partial when all three answers are present.
+    expect(firstBody.olark_tier_signal).toBe('commercial');
+    expect(firstBody.olark_recommended_plan).toBe('signature');
 
     const secondCall = fetchMock.mock.calls[1];
     const secondBody = JSON.parse((secondCall[1] as RequestInit).body as string);
     expect(secondBody.email).toBe('dana@example.com');
     expect(secondBody.olark_quiz_partial).toBe(false);
-    expect(secondBody.olark_tier_signal).toBe('lead_gen');
+    expect(secondBody.olark_tier_signal).toBe('commercial');
+    expect(secondBody.olark_recommended_plan).toBe('signature');
     expect(typeof secondBody.olark_quiz_completed_at).toBe('string');
     expect(secondBody).toHaveProperty('olark_demo_depth');
     expect(secondBody).toHaveProperty('olark_demo_url');
@@ -469,9 +474,9 @@ describe('PathFinderQuiz — GA4 events (consent-gated)', () => {
   it('fires quiz_started exactly once on the first answer', async () => {
     const user = userEvent.setup();
     render(<PathFinderQuiz />);
-    await user.click(screen.getByRole('radio', { name: '11–50 employees' }));
-    await screen.findByRole('radiogroup', { name: /primary job/i }, { timeout: 1500 });
-    await user.click(screen.getByRole('radio', { name: 'Qualify inbound visitors' }));
+    await user.click(screen.getByRole('radio', { name: Q1_LABEL }));
+    await screen.findByRole('radiogroup', { name: /your stack look like/i }, { timeout: 1500 });
+    await user.click(screen.getByRole('radio', { name: Q2_LABEL }));
     const startedCalls = vi.mocked(trackEvent).mock.calls.filter(
       ([name]) => name === 'quiz_started',
     );
@@ -481,9 +486,9 @@ describe('PathFinderQuiz — GA4 events (consent-gated)', () => {
   it('fires quiz_question_answered for every answer with step + value', async () => {
     const user = userEvent.setup();
     render(<PathFinderQuiz />);
-    await user.click(screen.getByRole('radio', { name: '11–50 employees' }));
-    await screen.findByRole('radiogroup', { name: /primary job/i }, { timeout: 1500 });
-    await user.click(screen.getByRole('radio', { name: 'Qualify inbound visitors' }));
+    await user.click(screen.getByRole('radio', { name: Q1_LABEL }));
+    await screen.findByRole('radiogroup', { name: /your stack look like/i }, { timeout: 1500 });
+    await user.click(screen.getByRole('radio', { name: Q2_LABEL }));
     const answered = vi.mocked(trackEvent).mock.calls.filter(
       ([name]) => name === 'quiz_question_answered',
     );
@@ -491,23 +496,19 @@ describe('PathFinderQuiz — GA4 events (consent-gated)', () => {
     expect(answered[0][1]).toMatchObject({
       step: 1,
       property_key: 'olark_company_size',
-      value: '11-50',
+      value: Q1_VALUE,
     });
     expect(answered[1][1]).toMatchObject({
       step: 2,
       property_key: 'olark_use_case',
-      value: 'inbound_qual',
+      value: Q2_VALUE,
     });
   });
 
   it('fires quiz_email_captured and quiz_completed in order on full completion', async () => {
     const user = userEvent.setup();
     render(<PathFinderQuiz />);
-    await user.click(screen.getByRole('radio', { name: '11–50 employees' }));
-    await screen.findByRole('radiogroup', { name: /primary job/i }, { timeout: 1500 });
-    await user.click(screen.getByRole('radio', { name: 'Qualify inbound visitors' }));
-    await screen.findByRole('radiogroup', { name: /inbound traffic/i }, { timeout: 1500 });
-    await user.click(screen.getByRole('radio', { name: 'Under 5,000 visits' }));
+    await answerAllThree(user);
     await screen.findByLabelText(/Your work email/i, undefined, { timeout: 1500 });
     await user.type(screen.getByLabelText(/Your work email/i), 'dana@example.com');
     await user.click(screen.getByRole('button', { name: /Send my fit report/i }));
@@ -518,7 +519,7 @@ describe('PathFinderQuiz — GA4 events (consent-gated)', () => {
       ([name]) => name === 'quiz_completed',
     );
     expect(completedCalls).toHaveLength(1);
-    expect(completedCalls[0][1]).toMatchObject({ tier_signal: 'lead_gen' });
+    expect(completedCalls[0][1]).toMatchObject({ tier_signal: 'commercial' });
     expect(names.indexOf('quiz_email_captured')).toBeLessThan(
       names.indexOf('quiz_completed'),
     );
@@ -537,11 +538,7 @@ describe('PathFinderQuiz — writes olark_session_signals cookie at completion',
   }
 
   async function answerAllThreeAndSubmit(user: ReturnType<typeof userEvent.setup>) {
-    await user.click(screen.getByRole('radio', { name: '11–50 employees' }));
-    await screen.findByRole('radiogroup', { name: /primary job/i }, { timeout: 1500 });
-    await user.click(screen.getByRole('radio', { name: 'Qualify inbound visitors' }));
-    await screen.findByRole('radiogroup', { name: /inbound traffic/i }, { timeout: 1500 });
-    await user.click(screen.getByRole('radio', { name: 'Under 5,000 visits' }));
+    await answerAllThree(user);
     await screen.findByLabelText(/Your work email/i, undefined, { timeout: 1500 });
     await user.type(screen.getByLabelText(/Your work email/i), 'dana@example.com');
     await user.click(screen.getByRole('button', { name: /Send my fit report/i }));
@@ -556,7 +553,7 @@ describe('PathFinderQuiz — writes olark_session_signals cookie at completion',
     const cookie = getQuizCookie();
     expect(cookie).not.toBeNull();
     const decoded = JSON.parse(decodeURIComponent(cookie as string));
-    expect(decoded.tier_signal).toBe('lead_gen');
+    expect(decoded.tier_signal).toBe('commercial');
     expect(decoded.quiz_completed).toBe(true);
     expect(typeof decoded.demo_run).toBe('boolean');
     clearQuizCookie();
@@ -579,11 +576,7 @@ describe('PathFinderQuiz — beforeunload abandonment', () => {
   it('fires quiz_abandoned with last_step when the user leaves mid-quiz with consent + email', async () => {
     const user = userEvent.setup();
     render(<PathFinderQuiz />);
-    await user.click(screen.getByRole('radio', { name: '11–50 employees' }));
-    await screen.findByRole('radiogroup', { name: /primary job/i }, { timeout: 1500 });
-    await user.click(screen.getByRole('radio', { name: 'Qualify inbound visitors' }));
-    await screen.findByRole('radiogroup', { name: /inbound traffic/i }, { timeout: 1500 });
-    await user.click(screen.getByRole('radio', { name: 'Under 5,000 visits' }));
+    await answerAllThree(user);
     await screen.findByLabelText(/Your work email/i, undefined, { timeout: 1500 });
     await user.type(screen.getByLabelText(/Your work email/i), 'dana@example.com');
     await user.click(screen.getByRole('button', { name: /Send my fit report/i }));
@@ -607,11 +600,7 @@ describe('PathFinderQuiz — beforeunload abandonment', () => {
   it('does not fire abandonment when on step 5 (already completed)', async () => {
     const user = userEvent.setup();
     render(<PathFinderQuiz />);
-    await user.click(screen.getByRole('radio', { name: '11–50 employees' }));
-    await screen.findByRole('radiogroup', { name: /primary job/i }, { timeout: 1500 });
-    await user.click(screen.getByRole('radio', { name: 'Qualify inbound visitors' }));
-    await screen.findByRole('radiogroup', { name: /inbound traffic/i }, { timeout: 1500 });
-    await user.click(screen.getByRole('radio', { name: 'Under 5,000 visits' }));
+    await answerAllThree(user);
     await screen.findByLabelText(/Your work email/i, undefined, { timeout: 1500 });
     await user.type(screen.getByLabelText(/Your work email/i), 'dana@example.com');
     await user.click(screen.getByRole('button', { name: /Send my fit report/i }));
@@ -630,8 +619,7 @@ describe('PathFinderQuiz — beforeunload abandonment', () => {
     setConsent(false);
     const user = userEvent.setup();
     render(<PathFinderQuiz />);
-    await user.click(screen.getByRole('radio', { name: '11–50 employees' }));
-    await screen.findByRole('radiogroup', { name: /primary job/i }, { timeout: 1500 });
+    await user.click(screen.getByRole('radio', { name: Q1_LABEL }));
     act(() => {
       window.dispatchEvent(new Event('beforeunload'));
     });

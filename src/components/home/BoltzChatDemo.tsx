@@ -33,18 +33,45 @@ import Reveal from '@/components/ui/Reveal';
 
 // ─── Conversation data ─────────────────────────────────────────────────────
 
+/**
+ * A single scripted turn from the bot side. `kind` decides which bubble
+ * variant is rendered (Boltz speaking vs. a human jumping in vs. a system
+ * notice "X has joined the chat"). Strings can use the `${USER_MSG}`
+ * placeholder, which is replaced at render time with the visitor's most
+ * recent typed/clicked message — that's what makes the human handoff
+ * feel context-aware instead of canned.
+ */
+type ScriptedBubbleKind = 'bot' | 'human' | 'system';
+
+interface ScriptedBubble {
+  kind: ScriptedBubbleKind;
+  text: string;
+  /** Only used when kind === 'human'. Display name for the human agent. */
+  humanName?: string;
+  /** Only used when kind === 'human'. Initials for the avatar. */
+  humanInitials?: string;
+}
+
 interface DemoScript {
   /** Stable id used as React key + chip identifier */
   id: string;
   /** What the user "said" — bubble shown on the right after they click */
   userText: string;
-  /** Sequence of bot bubbles (each appears with typing dots between) */
-  botBubbles: string[];
+  /** Sequence of bubbles (typing dots interleaved between each) */
+  scriptedTurns: ScriptedBubble[];
   /** Small feature-demonstrated tag shown above the user bubble */
   featureTag: string;
   /** Optional next-step chip ids (rendered after bot finishes) */
   followupIds?: string[];
+  /** When true, the conversation closes with a human in the seat — input
+   *  + chip controls disable so the demo lands the handoff moment. */
+  endsWithHuman?: boolean;
 }
+
+const HUMAN_AGENT = {
+  name: 'Marisol K.',
+  initials: 'M',
+};
 
 const STARTING_CHIP_IDS = [
   'lead-time-pvc',
@@ -58,9 +85,9 @@ const SCRIPTS: Record<string, DemoScript> = {
     id: 'lead-time-pvc',
     userText: "What's the lead time on 4\" PVC pipe?",
     featureTag: 'Spec answer · pulled from your catalog',
-    botBubbles: [
-      "Crestline carries 4\" Sch 40 and Sch 80 PVC pipe — both in stock and shipping same-day from our Memphis DC.",
-      "Lead time on standard quantities (under 5,000 ft) is 1 business day to most of the lower 48. Need a bigger run? I can quote freight + production lead.",
+    scriptedTurns: [
+      { kind: 'bot', text: "Crestline carries 4\" Sch 40 and Sch 80 PVC pipe — both in stock and shipping same-day from our Memphis DC." },
+      { kind: 'bot', text: "Lead time on standard quantities (under 5,000 ft) is 1 business day to most of the lower 48. Need a bigger run? I can quote freight + production lead." },
     ],
     followupIds: ['lead-time-quantity'],
   },
@@ -68,9 +95,9 @@ const SCRIPTS: Record<string, DemoScript> = {
     id: 'lead-time-quantity',
     userText: 'I need ~12,000 ft of Sch 80, delivered to Phoenix.',
     featureTag: 'Quote-ready RFQ',
-    botBubbles: [
-      "Got it — 12,000 ft of 4\" Sch 80 PVC, delivered Phoenix. That's about 2,400 sticks at 5ft.",
-      "I'll get our regional rep Marisol the spec, your timeline, and the delivery point. She'll come back with a freight quote and bulk pricing within the hour. What's the best email for her to reach you?",
+    scriptedTurns: [
+      { kind: 'bot', text: "Got it — 12,000 ft of 4\" Sch 80 PVC, delivered Phoenix. That's about 2,400 sticks at 5ft." },
+      { kind: 'bot', text: "I'll get our regional rep the spec, your timeline, and the delivery point. They'll come back with a freight quote and bulk pricing within the hour. What's the best email for them to reach you?" },
     ],
     followupIds: ['email-handoff'],
   },
@@ -79,9 +106,9 @@ const SCRIPTS: Record<string, DemoScript> = {
     id: 'spec-pallet-rack',
     userText: "I'm spec'ing 50,000 sqft of pallet racking.",
     featureTag: 'Project qualification · auto-tagged High Value',
-    botBubbles: [
-      "That's a real project — let me grab the right team for you.",
-      "Quick: are you looking at standard selective rack, or do you need drive-in, push-back, or seismic-rated for a high-density layout?",
+    scriptedTurns: [
+      { kind: 'bot', text: "That's a real project — let me grab the right team for you." },
+      { kind: 'bot', text: "Quick: are you looking at standard selective rack, or do you need drive-in, push-back, or seismic-rated for a high-density layout?" },
     ],
     followupIds: ['rack-type-standard', 'rack-type-drivein', 'rack-type-seismic'],
   },
@@ -89,8 +116,8 @@ const SCRIPTS: Record<string, DemoScript> = {
     id: 'rack-type-standard',
     userText: 'Standard selective rack.',
     featureTag: 'Spec captured',
-    botBubbles: [
-      "Standard selective — easiest to scope. Last thing: where's the facility going up? I want to put you with the right regional manager.",
+    scriptedTurns: [
+      { kind: 'bot', text: "Standard selective — easiest to scope. Last thing: where's the facility going up? I want to put you with the right regional manager." },
     ],
     followupIds: ['facility-region'],
   },
@@ -98,9 +125,9 @@ const SCRIPTS: Record<string, DemoScript> = {
     id: 'rack-type-drivein',
     userText: 'Drive-in for high-density storage.',
     featureTag: 'Spec captured',
-    botBubbles: [
-      "Drive-in is a specialty config — I'll loop in the engineering desk so you get someone who can model the lane depth + lift heights with you.",
-      "What city is the facility going up in?",
+    scriptedTurns: [
+      { kind: 'bot', text: "Drive-in is a specialty config — I'll loop in the engineering desk so you get someone who can model the lane depth + lift heights with you." },
+      { kind: 'bot', text: "What city is the facility going up in?" },
     ],
     followupIds: ['facility-region'],
   },
@@ -108,9 +135,9 @@ const SCRIPTS: Record<string, DemoScript> = {
     id: 'rack-type-seismic',
     userText: 'Seismic-rated.',
     featureTag: 'Spec captured · high-engineering project',
-    botBubbles: [
-      "Seismic — got it. We'll need to know the seismic zone, anchor type, and beam load capacity to spec it properly.",
-      "What city is the facility going up in?",
+    scriptedTurns: [
+      { kind: 'bot', text: "Seismic — got it. We'll need to know the seismic zone, anchor type, and beam load capacity to spec it properly." },
+      { kind: 'bot', text: "What city is the facility going up in?" },
     ],
     followupIds: ['facility-region'],
   },
@@ -118,9 +145,9 @@ const SCRIPTS: Record<string, DemoScript> = {
     id: 'facility-region',
     userText: 'Sacramento, California.',
     featureTag: 'Geo-routed · paired with regional team',
-    botBubbles: [
-      "Sacramento puts you in our West Coast territory. Lauren K. owns that region — she's done about 40 warehouse builds in NorCal in the last two years.",
-      "I'll send her your project (50K sqft, the rack type you picked, your city) so she lands the call already briefed. What's the best email for her to reach you?",
+    scriptedTurns: [
+      { kind: 'bot', text: "Sacramento puts you in our West Coast territory. Lauren K. owns that region — she's done about 40 warehouse builds in NorCal in the last two years." },
+      { kind: 'bot', text: "I'll send her your project (50K sqft, the rack type you picked, your city) so she lands the call already briefed. What's the best email for her to reach you?" },
     ],
     followupIds: ['email-handoff'],
   },
@@ -129,8 +156,8 @@ const SCRIPTS: Record<string, DemoScript> = {
     id: 'closest-distributor',
     userText: "Where's my closest distributor?",
     featureTag: 'Geo-routing · live IP + zip lookup',
-    botBubbles: [
-      "I can find that fast. What's your zip?",
+    scriptedTurns: [
+      { kind: 'bot', text: "I can find that fast. What's your zip?" },
     ],
     followupIds: ['zip-bay-area'],
   },
@@ -138,9 +165,9 @@ const SCRIPTS: Record<string, DemoScript> = {
     id: 'zip-bay-area',
     userText: '94103',
     featureTag: 'Routed to regional manager + premier installer',
-    botBubbles: [
-      "94103 — Bay Area. Crestline's regional manager Lauren K. covers your territory direct, and our premier installer is Cooke Industrial in Oakland.",
-      "Want me to connect you with Lauren first, or set up an install conversation with Cooke?",
+    scriptedTurns: [
+      { kind: 'bot', text: "94103 — Bay Area. Crestline's regional manager Lauren K. covers your territory direct, and our premier installer is Cooke Industrial in Oakland." },
+      { kind: 'bot', text: "Want me to connect you with Lauren first, or set up an install conversation with Cooke?" },
     ],
     followupIds: ['route-direct', 'route-installer'],
   },
@@ -148,8 +175,8 @@ const SCRIPTS: Record<string, DemoScript> = {
     id: 'route-direct',
     userText: 'Connect me with Lauren.',
     featureTag: 'Direct handoff to regional rep',
-    botBubbles: [
-      "Done — Lauren is online right now. Drop your email and a one-liner about the project and I'll route you to her direct line.",
+    scriptedTurns: [
+      { kind: 'bot', text: "Done — Lauren is online right now. Drop your email and a one-liner about the project and I'll route you to her direct line." },
     ],
     followupIds: ['email-handoff'],
   },
@@ -157,9 +184,9 @@ const SCRIPTS: Record<string, DemoScript> = {
     id: 'route-installer',
     userText: 'Set up an install conversation with Cooke.',
     featureTag: 'Routed to dealer · installer notified',
-    botBubbles: [
-      "Cooke's been our Bay Area installer since 2017. They'll come out for a site walk and tie back to Crestline for parts.",
-      "Drop your email and a quick project summary — I'll loop in both teams so the first call is a real conversation, not an intake form.",
+    scriptedTurns: [
+      { kind: 'bot', text: "Cooke's been our Bay Area installer since 2017. They'll come out for a site walk and tie back to Crestline for parts." },
+      { kind: 'bot', text: "Drop your email and a quick project summary — I'll loop in both teams so the first call is a real conversation, not an intake form." },
     ],
     followupIds: ['email-handoff'],
   },
@@ -168,38 +195,89 @@ const SCRIPTS: Record<string, DemoScript> = {
     id: 'custom-install',
     userText: 'Can someone help with a custom installation?',
     featureTag: 'Human handoff · briefed + email-captured',
-    botBubbles: [
-      "Custom installs go straight to our specialist desk — they don't sit in a general queue.",
-      "Quick so I can brief them properly: what's your email, rough sqft, and timeline? Once I have that, I'll loop in the install engineer with the full context.",
+    scriptedTurns: [
+      { kind: 'bot', text: "Custom installs go straight to our specialist desk — they don't sit in a general queue." },
+      { kind: 'bot', text: "Quick so I can brief them properly: what's your email, rough sqft, and timeline? Once I have that, I'll loop in the install engineer with the full context." },
     ],
     followupIds: ['email-handoff'],
   },
 
+  // Email submission → bot acknowledgement → SYSTEM "Marisol joined" →
+  // HUMAN message that references the captured project context. This is
+  // the moment the demo lands the "human-in-the-loop" promise — visitors
+  // see Aiden hand off to a real teammate, not just write a ticket.
   'email-handoff': {
     id: 'email-handoff',
     userText: 'logan@crestline-industrial.com',
     featureTag: 'CRM updated · brief written · human paged',
-    botBubbles: [
-      "Got it. I've written up the brief — your specs, the regional fit, and the captured project size — and dropped it in front of the right human on our team. They'll be in touch within the hour.",
-      "Anything else I can pull up while you wait? Spec sheets, install timelines, similar projects we've shipped?",
+    scriptedTurns: [
+      { kind: 'bot', text: "Got it. I've written the brief — your specs, the regional fit, the captured project size — and paged the right teammate." },
+      { kind: 'system', text: `${HUMAN_AGENT.name} (Crestline Industrial) joined the chat` },
+      {
+        kind: 'human',
+        humanName: HUMAN_AGENT.name,
+        humanInitials: HUMAN_AGENT.initials,
+        text:
+          "Hey — Marisol here. I just read through what you and Boltz worked on. The brief looks solid; I have your specs and the regional fit in front of me already. Quick one so I can move fast: what timeline are you working with?",
+      },
     ],
+    endsWithHuman: true,
   },
 
-  // Freeform fallback — any typed message we can't keyword-match falls
-  // through to this script, which itself demonstrates the handoff feature.
+  // Freeform / chip-triggered direct human handoff. The human's reply
+  // ECHOES the visitor's most recent typed text via the ${USER_MSG}
+  // placeholder so the takeover feels context-aware, not canned.
+  'human-handoff-direct': {
+    id: 'human-handoff-direct',
+    userText: '',
+    featureTag: 'Human takeover · context preserved',
+    scriptedTurns: [
+      { kind: 'bot', text: "Got it — pulling someone in for you. One sec." },
+      { kind: 'system', text: `${HUMAN_AGENT.name} (Crestline Industrial) joined the chat` },
+      {
+        kind: 'human',
+        humanName: HUMAN_AGENT.name,
+        humanInitials: HUMAN_AGENT.initials,
+        text:
+          "Hey — Marisol here. I just caught up: “${USER_MSG}”. Let me dig in. What kind of timeline are you working with, and is this for a single site or a multi-site rollout?",
+      },
+    ],
+    endsWithHuman: true,
+  },
+
+  // Generic freeform fallback — when the visitor types something we can't
+  // route to a specific spec/qualification path, escalate to the human
+  // takeover (which still echoes their text). Keeps every freeform
+  // dead-end interesting instead of a "sorry, I don't understand."
   'freeform-fallback': {
     id: 'freeform-fallback',
     userText: '',
-    featureTag: 'Smart escalation · I get a human when it earns it',
-    botBubbles: [
-      "Good question — that one earns a human. Drop your email and I'll get our team on it with the full chat history attached. No need to re-explain.",
+    featureTag: 'Smart escalation · human in the loop',
+    scriptedTurns: [
+      { kind: 'bot', text: "Good question — that one earns a human." },
+      { kind: 'system', text: `${HUMAN_AGENT.name} (Crestline Industrial) joined the chat` },
+      {
+        kind: 'human',
+        humanName: HUMAN_AGENT.name,
+        humanInitials: HUMAN_AGENT.initials,
+        text:
+          "Hi, Marisol from Crestline. I saw your message: “${USER_MSG}”. Happy to help — give me a sec to pull up your account and I'll come back with specifics.",
+      },
     ],
-    followupIds: ['email-handoff'],
+    endsWithHuman: true,
   },
 };
 
 // Keyword routing for freeform input. Order matters — first hit wins.
+// "Talk to a human" patterns are checked FIRST so an explicit handoff
+// request always wins, even if the rest of the message overlaps with
+// a spec-style pattern below.
 const FREEFORM_ROUTES: { pattern: RegExp; scriptId: string }[] = [
+  {
+    pattern:
+      /\bhuman\b|real person|live agent|talk to (someone|a person|an agent|sales|support)|speak (to|with) (someone|a person|an agent|sales|support)|customer service rep|get a person/i,
+    scriptId: 'human-handoff-direct',
+  },
   { pattern: /lead\s*time|stock|in\s*stock|when can|how (long|fast)/i, scriptId: 'lead-time-pvc' },
   { pattern: /pallet|rack|warehouse|sqft|sq\s*ft|facility/i, scriptId: 'spec-pallet-rack' },
   { pattern: /distributor|dealer|installer|nearest|near me|local|where (are|is)/i, scriptId: 'closest-distributor' },
@@ -217,8 +295,12 @@ function routeFreeform(text: string): string {
 // ─── Component ─────────────────────────────────────────────────────────────
 
 interface ChatBubble {
-  role: 'user' | 'bot' | 'feature-tag' | 'typing';
+  role: 'user' | 'bot' | 'human' | 'system' | 'feature-tag' | 'typing';
   text: string;
+  /** Only set when role === 'human'. Display name + initials for the
+   *  human-takeover bubble's avatar / sender chrome. */
+  humanName?: string;
+  humanInitials?: string;
   scriptId?: string;
 }
 
@@ -234,6 +316,10 @@ export default function BoltzChatDemo() {
   const [activeChipIds, setActiveChipIds] = useState<string[]>(STARTING_CHIP_IDS);
   const [awaitingBot, setAwaitingBot] = useState(false);
   const [freeform, setFreeform] = useState('');
+  /** Once a script with `endsWithHuman: true` runs, the chat is "live"
+   *  with Marisol — chips disappear and freeform input goes read-only
+   *  with a status note so the demo lands the handoff moment. */
+  const [humanInSeat, setHumanInSeat] = useState(false);
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -273,41 +359,80 @@ export default function BoltzChatDemo() {
     }
     setBubbles((prev) => [...prev, ...newBubbles]);
 
-    // Schedule the bot's bubbles with a typing-dots interlude before each.
+    // Inject the visitor's actual message into any ${USER_MSG} placeholder
+    // — that's the bit that makes the human takeover feel context-aware
+    // instead of canned. Falls back to the canned text when the visitor
+    // arrived via a chip click instead of typing.
+    function fillTemplate(text: string): string {
+      const safe = userText && userText.length > 0 ? userText : 'your message';
+      return text.replace(/\$\{USER_MSG\}/g, safe);
+    }
+
+    // System bubbles are render-instant; bot + human bubbles each get a
+    // typing-dots beat in front of them so the cadence feels human.
     let elapsed = 0;
-    script.botBubbles.forEach((bubble, i) => {
-      const typingDelay = i === 0 ? TYPING_DELAY_MS : BOT_BUBBLE_DELAY_MS;
-      // Show typing indicator
+    script.scriptedTurns.forEach((turn, i) => {
+      const isFirst = i === 0;
+      const typingDelay = isFirst ? TYPING_DELAY_MS : BOT_BUBBLE_DELAY_MS;
+
+      if (turn.kind === 'system') {
+        // System notice — appears with a small beat, no typing dots.
+        const t = setTimeout(() => {
+          setBubbles((prev) => [
+            ...prev,
+            { role: 'system', text: turn.text },
+          ]);
+        }, elapsed + Math.min(typingDelay, 350));
+        timersRef.current.push(t);
+        elapsed += Math.min(typingDelay, 350);
+        return;
+      }
+
+      // Bot or human bubble — show typing dots first, then the bubble.
       const typingTimer = setTimeout(() => {
         setBubbles((prev) => [...prev, { role: 'typing', text: '' }]);
       }, elapsed);
       timersRef.current.push(typingTimer);
       elapsed += typingDelay;
 
-      // Replace typing with the bot bubble
       const bubbleTimer = setTimeout(() => {
         setBubbles((prev) => {
           const next = [...prev];
-          // Remove the trailing typing bubble
           for (let j = next.length - 1; j >= 0; j--) {
             if (next[j]?.role === 'typing') {
               next.splice(j, 1);
               break;
             }
           }
-          next.push({ role: 'bot', text: bubble });
+          if (turn.kind === 'human') {
+            next.push({
+              role: 'human',
+              text: fillTemplate(turn.text),
+              humanName: turn.humanName,
+              humanInitials: turn.humanInitials,
+            });
+          } else {
+            next.push({ role: 'bot', text: fillTemplate(turn.text) });
+          }
           return next;
         });
       }, elapsed);
       timersRef.current.push(bubbleTimer);
     });
 
-    // After the last bot bubble, surface follow-up chips (if any).
+    // After all turns play, either flip into "human is in the seat" mode
+    // (closes the demo on the handoff beat) or surface follow-up chips.
     const finalTimer = setTimeout(() => {
-      setActiveChipIds(script.followupIds ?? []);
+      if (script.endsWithHuman) {
+        setHumanInSeat(true);
+        setActiveChipIds([]);
+      } else {
+        setActiveChipIds(script.followupIds ?? []);
+      }
       setAwaitingBot(false);
-      // Re-focus the freeform input so keyboard users continue smoothly.
-      inputRef.current?.focus({ preventScroll: true });
+      if (!script.endsWithHuman) {
+        inputRef.current?.focus({ preventScroll: true });
+      }
     }, elapsed);
     timersRef.current.push(finalTimer);
   }
@@ -333,6 +458,7 @@ export default function BoltzChatDemo() {
     setActiveChipIds(STARTING_CHIP_IDS);
     setAwaitingBot(false);
     setFreeform('');
+    setHumanInSeat(false);
   }
 
   const visibleChips = useMemo(
@@ -543,8 +669,8 @@ export default function BoltzChatDemo() {
           ))}
         </div>
 
-        {/* Chip row */}
-        {visibleChips.length > 0 && (
+        {/* Chip row — hidden once the human is in the seat */}
+        {!humanInSeat && visibleChips.length > 0 && (
           <div
             data-testid="boltz-chip-row"
             style={{
@@ -595,7 +721,8 @@ export default function BoltzChatDemo() {
           </div>
         )}
 
-        {/* Input row */}
+        {/* Input row — locks once Marisol is in the seat (the demo's
+            handoff moment); Reset always lets the visitor start over. */}
         <form
           onSubmit={handleFreeformSubmit}
           style={{
@@ -612,8 +739,12 @@ export default function BoltzChatDemo() {
             type="text"
             value={freeform}
             onChange={(e) => setFreeform(e.target.value)}
-            disabled={awaitingBot}
-            placeholder="Ask about a part, spec, or quantity…"
+            disabled={awaitingBot || humanInSeat}
+            placeholder={
+              humanInSeat
+                ? `${HUMAN_AGENT.name} is on the chat — try Reset to run the demo again`
+                : 'Ask about a part, spec, or quantity…'
+            }
             aria-label="Ask Boltz a question"
             data-testid="boltz-freeform-input"
             style={{
@@ -627,11 +758,13 @@ export default function BoltzChatDemo() {
               fontSize: '0.9375rem',
               fontFamily: 'inherit',
               outline: 'none',
+              opacity: humanInSeat ? 0.6 : 1,
+              cursor: humanInSeat ? 'not-allowed' : 'text',
             }}
           />
           <button
             type="submit"
-            disabled={awaitingBot || freeform.trim().length === 0}
+            disabled={awaitingBot || humanInSeat || freeform.trim().length === 0}
             data-testid="boltz-freeform-submit"
             aria-label="Send"
             style={{
@@ -643,8 +776,11 @@ export default function BoltzChatDemo() {
               color: 'var(--od-ink, #272d3f)',
               border: 0,
               cursor:
-                awaitingBot || freeform.trim().length === 0 ? 'not-allowed' : 'pointer',
-              opacity: awaitingBot || freeform.trim().length === 0 ? 0.5 : 1,
+                awaitingBot || humanInSeat || freeform.trim().length === 0
+                  ? 'not-allowed'
+                  : 'pointer',
+              opacity:
+                awaitingBot || humanInSeat || freeform.trim().length === 0 ? 0.5 : 1,
               fontSize: '1.125rem',
               display: 'inline-flex',
               alignItems: 'center',
@@ -707,6 +843,42 @@ function ChatBubbleView({ bubble }: { bubble: ChatBubble }) {
     );
   }
 
+  if (bubble.role === 'system') {
+    return (
+      <div
+        data-testid="boltz-system-bubble"
+        role="status"
+        style={{
+          alignSelf: 'center',
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '0.5rem',
+          fontSize: '0.75rem',
+          color: 'var(--od-muted)',
+          fontStyle: 'italic',
+          margin: '0.5rem 0',
+          padding: '0.375rem 0.875rem',
+          borderRadius: '999px',
+          background: 'rgba(111, 194, 132, 0.08)',
+          border: '1px solid rgba(111, 194, 132, 0.3)',
+        }}
+      >
+        <span
+          aria-hidden="true"
+          style={{
+            display: 'inline-block',
+            width: 6,
+            height: 6,
+            borderRadius: '50%',
+            background: 'var(--od-green, #6fc284)',
+            boxShadow: '0 0 6px rgba(111, 194, 132, 0.7)',
+          }}
+        />
+        <span>{bubble.text}</span>
+      </div>
+    );
+  }
+
   if (bubble.role === 'typing') {
     return (
       <div
@@ -727,6 +899,72 @@ function ChatBubbleView({ bubble }: { bubble: ChatBubble }) {
         <Dot delay={0} />
         <Dot delay={150} />
         <Dot delay={300} />
+      </div>
+    );
+  }
+
+  if (bubble.role === 'human') {
+    return (
+      <div
+        data-testid="boltz-human-bubble"
+        style={{
+          alignSelf: 'flex-start',
+          maxWidth: '88%',
+          display: 'flex',
+          gap: '0.5rem',
+          alignItems: 'flex-start',
+        }}
+      >
+        <span
+          aria-hidden="true"
+          style={{
+            flex: '0 0 auto',
+            width: 28,
+            height: 28,
+            borderRadius: '8px',
+            background: 'var(--od-pink, #ef4e73)',
+            color: '#ffffff',
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontFamily: 'var(--font-poppins, Poppins, sans-serif)',
+            fontWeight: 800,
+            fontSize: '0.8125rem',
+          }}
+        >
+          {bubble.humanInitials ?? 'H'}
+        </span>
+        <div style={{ minWidth: 0 }}>
+          {bubble.humanName && (
+            <div
+              data-testid="boltz-human-name"
+              style={{
+                fontSize: '0.6875rem',
+                fontWeight: 700,
+                letterSpacing: '0.04em',
+                textTransform: 'uppercase',
+                color: 'var(--od-pink, #ef4e73)',
+                marginBottom: '0.25rem',
+              }}
+            >
+              {bubble.humanName} · live agent
+            </div>
+          )}
+          <div
+            style={{
+              padding: '0.625rem 0.875rem',
+              borderRadius: '14px 14px 14px 4px',
+              background: 'rgba(239, 78, 115, 0.10)',
+              border: '1px solid rgba(239, 78, 115, 0.35)',
+              color: 'var(--od-white)',
+              fontSize: '0.9375rem',
+              lineHeight: 1.5,
+              whiteSpace: 'pre-wrap',
+            }}
+          >
+            {bubble.text}
+          </div>
+        </div>
       </div>
     );
   }

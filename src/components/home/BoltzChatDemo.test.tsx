@@ -108,6 +108,82 @@ describe('BoltzChatDemo — freeform input', () => {
   });
 });
 
+describe('BoltzChatDemo — human handoff', () => {
+  beforeEach(() => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+  });
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('typing "I want to talk to a human" routes to the direct human handoff and echoes the visitor text', async () => {
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    render(<BoltzChatDemo />);
+
+    const input = screen.getByTestId('boltz-freeform-input');
+    await user.type(input, 'I want to talk to a human about a custom welding job');
+    await user.click(screen.getByTestId('boltz-freeform-submit'));
+
+    await act(async () => {
+      vi.advanceTimersByTime(5000);
+    });
+
+    expect(screen.getByTestId('boltz-system-bubble').textContent).toMatch(
+      /Marisol K\..*joined the chat/i,
+    );
+    const human = screen.getByTestId('boltz-human-bubble');
+    expect(human.textContent).toMatch(/Marisol here/i);
+    // The human's reply must echo the visitor's actual typed message —
+    // that's the context-preservation requirement.
+    expect(human.textContent).toContain(
+      'I want to talk to a human about a custom welding job',
+    );
+
+    // Once the human is in the seat, chips disappear + input locks.
+    expect(screen.queryByTestId('boltz-chip-row')).toBeNull();
+    expect(screen.getByTestId('boltz-freeform-input')).toBeDisabled();
+  });
+
+  it('the email-handoff script ends the conversation with the human takeover', async () => {
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    render(<BoltzChatDemo />);
+
+    // Walk through the rack-spec → region → email path
+    await user.click(
+      screen
+        .getAllByTestId('boltz-chip')
+        .find((c) => c.getAttribute('data-chip-id') === 'spec-pallet-rack')!,
+    );
+    await act(async () => { vi.advanceTimersByTime(4000); });
+
+    await user.click(
+      screen
+        .getAllByTestId('boltz-chip')
+        .find((c) => c.getAttribute('data-chip-id') === 'rack-type-standard')!,
+    );
+    await act(async () => { vi.advanceTimersByTime(4000); });
+
+    await user.click(
+      screen
+        .getAllByTestId('boltz-chip')
+        .find((c) => c.getAttribute('data-chip-id') === 'facility-region')!,
+    );
+    await act(async () => { vi.advanceTimersByTime(5000); });
+
+    await user.click(
+      screen
+        .getAllByTestId('boltz-chip')
+        .find((c) => c.getAttribute('data-chip-id') === 'email-handoff')!,
+    );
+    await act(async () => { vi.advanceTimersByTime(6000); });
+
+    // System notice + human bubble + locked input
+    expect(screen.getByTestId('boltz-system-bubble')).toBeInTheDocument();
+    expect(screen.getByTestId('boltz-human-bubble')).toBeInTheDocument();
+    expect(screen.getByTestId('boltz-freeform-input')).toBeDisabled();
+  });
+});
+
 describe('BoltzChatDemo — reset', () => {
   it('clicking Reset restores the initial greeting + starting chips', async () => {
     const user = userEvent.setup();

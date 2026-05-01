@@ -42,16 +42,47 @@ export function clearQuizState(): void {
   localStorage.removeItem(QUIZ_STATE_KEY);
 }
 
-export function getTierSignalFromAnswers(answers: Record<string, string>): TierSignal {
-  const size = answers.olark_company_size ?? '';
-  const useCase = answers.olark_use_case ?? '';
-  const volume = answers.olark_inbound_volume ?? '';
+/**
+ * After the industrial-supplier pivot the homepage quiz only sells
+ * commercial-tier products (Signature + Bespoke), so the band signal
+ * sent to HubSpot is always `commercial`. The previous tier-band routing
+ * (essentials / lead_gen / commercial) is gone — kept as a stable
+ * 3-value HubSpot enum so existing list segmentation doesn't break.
+ *
+ * Plan-level discrimination (Signature vs Bespoke) lives in
+ * `getRecommendedPlanFromAnswers` below.
+ */
+export function getTierSignalFromAnswers(_answers: Record<string, string>): TierSignal {
+  return 'commercial';
+}
 
-  if (size === '201-500' || size === '500+' || useCase === 'full_pipeline' || volume === 'high') {
-    return 'commercial';
+/** The two plans the new quiz can recommend. */
+export type RecommendedPlan = 'signature' | 'bespoke';
+
+/**
+ * Maps the three-question quiz answers to a Signature/Bespoke
+ * recommendation. Bespoke triggers any time the visitor signals one of
+ * the three Bespoke-defining capabilities — multi-system integration,
+ * geo / account-level routing with SSO, or a 50+ rep sales floor.
+ * Otherwise Signature is the right fit.
+ */
+export function getRecommendedPlanFromAnswers(
+  answers: Record<string, string>,
+): RecommendedPlan {
+  const size = answers.olark_company_size ?? '';
+  const stack = answers.olark_use_case ?? '';
+  const routing = answers.olark_inbound_volume ?? '';
+
+  // Any single Bespoke-grade signal flips the recommendation. The
+  // routing answer is the strongest tell (geo + SSO + procurement is
+  // the canonical Bespoke profile from PLAN_DATA), but a 50+ team or a
+  // multi-system stack also clears the bar on its own.
+  if (
+    routing === 'geo_account' ||
+    stack === 'multi_system' ||
+    size === '50+'
+  ) {
+    return 'bespoke';
   }
-  if (size === '11-50' || size === '51-200' || useCase === 'outbound_support' || volume === 'medium') {
-    return 'lead_gen';
-  }
-  return 'essentials';
+  return 'signature';
 }

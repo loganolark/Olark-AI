@@ -13,6 +13,7 @@ vi.mock('@/lib/quiz-state', async () => {
     writeQuizSession: vi.fn(),
     clearQuizState: vi.fn(),
     getTierSignalFromAnswers: actual.getTierSignalFromAnswers,
+    getRecommendedPlanFromAnswers: actual.getRecommendedPlanFromAnswers,
   };
 });
 

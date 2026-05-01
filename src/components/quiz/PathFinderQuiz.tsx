@@ -14,6 +14,7 @@ import {
   writeQuizSession,
   writeQuizState,
   getTierSignalFromAnswers,
+  getRecommendedPlanFromAnswers,
 } from '@/lib/quiz-state';
 import {
   readDemoSignals,
@@ -207,12 +208,16 @@ export default function PathFinderQuiz({ onAnswersComplete }: PathFinderQuizProp
       const tierSignal: TierSignal | undefined = allThreeAnswered
         ? getTierSignalFromAnswers(currentAnswers)
         : undefined;
+      const recommendedPlan = allThreeAnswered
+        ? getRecommendedPlanFromAnswers(currentAnswers)
+        : undefined;
       return {
         email,
         olark_company_size: currentAnswers.olark_company_size,
         olark_use_case: currentAnswers.olark_use_case,
         olark_inbound_volume: currentAnswers.olark_inbound_volume,
         ...(tierSignal ? { olark_tier_signal: tierSignal } : {}),
+        ...(recommendedPlan ? { olark_recommended_plan: recommendedPlan } : {}),
         olark_quiz_partial: true,
       };
     },
@@ -222,6 +227,7 @@ export default function PathFinderQuiz({ onAnswersComplete }: PathFinderQuizProp
   const buildCompletionPayload = useCallback(
     (email: string, finalAnswers: Record<string, string>): HubSpotContactPayload => {
       const tierSignal = getTierSignalFromAnswers(finalAnswers);
+      const recommendedPlan = getRecommendedPlanFromAnswers(finalAnswers);
       const { demoDepth, demoUrl } = readDemoSignals();
       const pagesVisited = readPagesVisited();
       return {
@@ -230,6 +236,7 @@ export default function PathFinderQuiz({ onAnswersComplete }: PathFinderQuizProp
         olark_use_case: finalAnswers.olark_use_case,
         olark_inbound_volume: finalAnswers.olark_inbound_volume,
         olark_tier_signal: tierSignal,
+        olark_recommended_plan: recommendedPlan,
         olark_quiz_completed_at: new Date().toISOString(),
         olark_demo_depth: demoDepth,
         olark_demo_url: demoUrl,
@@ -472,6 +479,10 @@ export default function PathFinderQuiz({ onAnswersComplete }: PathFinderQuizProp
     () => getTierSignalFromAnswers(answers),
     [answers],
   );
+  const recommendedPlan = useMemo(
+    () => getRecommendedPlanFromAnswers(answers),
+    [answers],
+  );
 
   const renderProgressDots = () => (
     <div
@@ -688,11 +699,20 @@ export default function PathFinderQuiz({ onAnswersComplete }: PathFinderQuizProp
       {step === REVEAL_STEP && (
         <QuizTierReveal
           tierSignal={tierSignal}
+          recommendedPlan={recommendedPlan}
           onScopeClick={() =>
-            track('quiz_cta_clicked', { target: 'scope_build', tier_signal: tierSignal })
+            track('quiz_cta_clicked', {
+              target: 'scope_build',
+              tier_signal: tierSignal,
+              recommended_plan: recommendedPlan,
+            })
           }
           onTierDetailsClick={() =>
-            track('quiz_cta_clicked', { target: 'tier_details', tier_signal: tierSignal })
+            track('quiz_cta_clicked', {
+              target: 'tier_details',
+              tier_signal: tierSignal,
+              recommended_plan: recommendedPlan,
+            })
           }
           onBack={handleBack}
         />

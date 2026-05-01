@@ -6,6 +6,7 @@ import {
   readQuizState,
   clearQuizState,
   getTierSignalFromAnswers,
+  getRecommendedPlanFromAnswers,
 } from './quiz-state';
 import type { QuizState } from '@/types/quiz';
 
@@ -106,57 +107,76 @@ describe('clearQuizState', () => {
 });
 
 // ─── getTierSignalFromAnswers ─────────────────────────────────────────────────
+// Post-pivot: this function always returns 'commercial' (the band signal sent
+// to HubSpot), regardless of answers. Plan-level discrimination
+// (Signature vs Bespoke) lives in getRecommendedPlanFromAnswers below.
 
 describe('getTierSignalFromAnswers', () => {
-  it('returns commercial for size 500+', () => {
-    expect(getTierSignalFromAnswers({ olark_company_size: '500+' })).toBe('commercial');
-  });
-
-  it('returns commercial for size 201-500', () => {
-    expect(getTierSignalFromAnswers({ olark_company_size: '201-500' })).toBe('commercial');
-  });
-
-  it('returns commercial for full_pipeline use case', () => {
-    expect(getTierSignalFromAnswers({ olark_use_case: 'full_pipeline' })).toBe('commercial');
-  });
-
-  it('returns commercial for high inbound volume', () => {
-    expect(getTierSignalFromAnswers({ olark_inbound_volume: 'high' })).toBe('commercial');
-  });
-
-  it('returns lead_gen for size 11-50', () => {
-    expect(getTierSignalFromAnswers({ olark_company_size: '11-50' })).toBe('lead_gen');
-  });
-
-  it('returns lead_gen for size 51-200', () => {
-    expect(getTierSignalFromAnswers({ olark_company_size: '51-200' })).toBe('lead_gen');
-  });
-
-  it('returns lead_gen for outbound_support use case', () => {
-    expect(getTierSignalFromAnswers({ olark_use_case: 'outbound_support' })).toBe('lead_gen');
-  });
-
-  it('returns lead_gen for medium inbound volume', () => {
-    expect(getTierSignalFromAnswers({ olark_inbound_volume: 'medium' })).toBe('lead_gen');
-  });
-
-  it('returns essentials for small company + inbound_qual + low volume', () => {
+  it('always returns commercial — both Signature and Bespoke fall in the commercial band', () => {
+    expect(getTierSignalFromAnswers({})).toBe('commercial');
     expect(
       getTierSignalFromAnswers({
-        olark_company_size: '1-10',
-        olark_use_case: 'inbound_qual',
-        olark_inbound_volume: 'low',
+        olark_company_size: '1-5',
+        olark_use_case: 'single_crm',
+        olark_inbound_volume: 'single_team',
       }),
-    ).toBe('essentials');
-  });
-
-  it('returns essentials for empty answers (default)', () => {
-    expect(getTierSignalFromAnswers({})).toBe('essentials');
-  });
-
-  it('commercial takes priority over lead_gen signals', () => {
-    expect(
-      getTierSignalFromAnswers({ olark_company_size: '11-50', olark_inbound_volume: 'high' }),
     ).toBe('commercial');
+    expect(
+      getTierSignalFromAnswers({
+        olark_company_size: '50+',
+        olark_use_case: 'multi_system',
+        olark_inbound_volume: 'geo_account',
+      }),
+    ).toBe('commercial');
+  });
+});
+
+// ─── getRecommendedPlanFromAnswers ────────────────────────────────────────────
+
+describe('getRecommendedPlanFromAnswers', () => {
+  it('defaults to signature when no Bespoke triggers fire', () => {
+    expect(getRecommendedPlanFromAnswers({})).toBe('signature');
+    expect(
+      getRecommendedPlanFromAnswers({
+        olark_company_size: '1-5',
+        olark_use_case: 'single_crm',
+        olark_inbound_volume: 'single_team',
+      }),
+    ).toBe('signature');
+    expect(
+      getRecommendedPlanFromAnswers({
+        olark_company_size: '6-15',
+        olark_use_case: 'crm_plus_one',
+        olark_inbound_volume: 'regional',
+      }),
+    ).toBe('signature');
+  });
+
+  it('flips to bespoke when routing requires geo + account-level + SSO', () => {
+    expect(
+      getRecommendedPlanFromAnswers({ olark_inbound_volume: 'geo_account' }),
+    ).toBe('bespoke');
+  });
+
+  it('flips to bespoke when stack requires multi-system / custom integration', () => {
+    expect(
+      getRecommendedPlanFromAnswers({ olark_use_case: 'multi_system' }),
+    ).toBe('bespoke');
+  });
+
+  it('flips to bespoke for a 50+ rep sales floor', () => {
+    expect(
+      getRecommendedPlanFromAnswers({ olark_company_size: '50+' }),
+    ).toBe('bespoke');
+  });
+
+  it('any single Bespoke signal wins over Signature defaults on the others', () => {
+    expect(
+      getRecommendedPlanFromAnswers({
+        olark_company_size: '1-5',
+        olark_use_case: 'single_crm',
+        olark_inbound_volume: 'geo_account',
+      }),
+    ).toBe('bespoke');
   });
 });
