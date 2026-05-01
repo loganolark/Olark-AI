@@ -14,6 +14,7 @@ import IndustrialPillars from '@/components/home/IndustrialPillars';
 import WhyItMattersStatsPanel from '@/components/home/WhyItMattersStatsPanel';
 import EnhanceTheHumanMomentBlock from '@/components/home/EnhanceTheHumanMomentBlock';
 import BoltzChatDemo from '@/components/home/BoltzChatDemo';
+import ProblemAnimation from '@/components/home/ProblemAnimation';
 import TypewriterRotator from '@/components/home/TypewriterRotator';
 
 export const metadata: Metadata = {
@@ -108,53 +109,80 @@ export default function HomePage() {
         <HeroStatsRow />
       </SectionHero>
 
-      {/* ─── "Kill the Contact Us form" callout ─────────────────────────── */}
+      {/* ─── "Kill the Contact Us form" callout — text + animation ──────── */}
       <section
         style={{
           backgroundColor: 'var(--od-card)',
-          padding: '4rem 1.5rem',
-          textAlign: 'center',
+          padding: '5rem 1.5rem',
         }}
       >
-        <Reveal style={{ maxWidth: '720px', margin: '0 auto' }}>
-          <p
-            style={{
-              fontSize: '0.75rem',
-              letterSpacing: '0.1em',
-              textTransform: 'uppercase',
-              fontWeight: 600,
-              color: 'var(--od-gold)',
-              margin: '0 0 1rem',
-            }}
-          >
-            The Problem
-          </p>
-          <p
-            style={{
-              fontFamily: 'var(--font-poppins, Poppins, sans-serif)',
-              fontWeight: 700,
-              fontSize: 'clamp(1.25rem, 3.2vw, 1.625rem)',
-              lineHeight: 1.4,
-              letterSpacing: '-0.02em',
-              color: 'var(--od-white)',
-              margin: 0,
-            }}
-          >
-            Most B2B sites are{' '}
-            <em
+        <Reveal
+          style={{
+            maxWidth: '1100px',
+            margin: '0 auto',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+            gap: '3rem',
+            alignItems: 'center',
+          }}
+        >
+          {/* Left: the copy */}
+          <div style={{ textAlign: 'left' }}>
+            <p
               style={{
-                fontStyle: 'italic',
-                color: 'var(--od-pink)',
-                fontWeight: 700,
+                fontSize: '0.75rem',
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                fontWeight: 600,
+                color: 'var(--od-gold)',
+                margin: '0 0 1rem',
               }}
             >
-              expensive digital filing cabinets
-            </em>
-            . You spend a fortune to get buyers there, then greet them with a
-            Contact Us form that goes into a black hole. Aiden is the alive
-            replacement &mdash; the one that actually engages, qualifies, and
-            converts.
-          </p>
+              The Problem
+            </p>
+            <p
+              style={{
+                fontFamily: 'var(--font-poppins, Poppins, sans-serif)',
+                fontWeight: 700,
+                fontSize: 'clamp(1.25rem, 3.2vw, 1.625rem)',
+                lineHeight: 1.4,
+                letterSpacing: '-0.02em',
+                color: 'var(--od-white)',
+                margin: '0 0 1rem',
+              }}
+            >
+              Most B2B sites are{' '}
+              <em
+                style={{
+                  fontStyle: 'italic',
+                  color: 'var(--od-pink)',
+                  fontWeight: 700,
+                }}
+              >
+                expensive digital filing cabinets
+              </em>
+              . You spend a fortune to get buyers there, then greet them with
+              a Contact Us form that goes into a black hole.
+            </p>
+            <p
+              style={{
+                fontFamily: 'var(--font-dm-sans, DM Sans, sans-serif)',
+                fontWeight: 400,
+                fontSize: '1rem',
+                lineHeight: 1.65,
+                color: 'var(--od-text)',
+                margin: 0,
+              }}
+            >
+              Aiden is the alive replacement — the one that actually engages
+              your buyer, captures the spec, routes them to the right rep,
+              and drops the brief into your CRM before the call ever
+              happens.
+            </p>
+          </div>
+
+          {/* Right: the animation */}
+          <ProblemAnimation />
         </Reveal>
       </section>
 

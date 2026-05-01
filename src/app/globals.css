@@ -118,6 +118,13 @@ h1, h2, h3, h4, h5, h6 {
   50%, 100% { opacity: 0; }
 }
 
+/* Bubble enter animation — used by ProblemAnimation's mini chat bubbles
+   so each new message pops in instead of jumping into place mid-loop. */
+@keyframes problem-bubble-in {
+  from { opacity: 0; transform: translateY(6px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0)   scale(1); }
+}
+
 /* ─── Global prefers-reduced-motion override ─── */
 /* Collapses ALL animations and transitions to near-instant for users
    who have enabled the OS-level "Reduce Motion" preference.
