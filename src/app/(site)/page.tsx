@@ -7,22 +7,24 @@ import LogoStrip from '@/components/product/LogoStrip';
 import URLDemoWidgetLoader from '@/components/url-demo/URLDemoWidgetLoader';
 import HeroQuizCTA from '@/components/quiz/HeroQuizCTA';
 import HomepageQuizBlock from '@/components/quiz/HomepageQuizBlock';
-import TierCard from '@/components/product/TierCard';
 import PersonaTabSwitcher from '@/components/product/PersonaTabSwitcher';
 import ParticleBackground from '@/components/ui/ParticleBackground';
-import type { TierVariant } from '@/types/tier';
+import HeroStatsRow from '@/components/home/HeroStatsRow';
+import IndustrialPillars from '@/components/home/IndustrialPillars';
+import WhyItMattersStatsPanel from '@/components/home/WhyItMattersStatsPanel';
+import EnhanceTheHumanMomentBlock from '@/components/home/EnhanceTheHumanMomentBlock';
 
 export const metadata: Metadata = {
-  title: 'Your Leads Arrive Ready | Aiden by Olark',
+  title: 'Aiden by Olark — AI Live Chat for Industrial Suppliers',
   description:
-    'Aiden is your AI sales chat — it qualifies every visitor before they reach your team. The AI sales rep that turns browsers into briefed buyers.',
+    'Aiden combines 17 years of live chat with AI engineered for industrial supply. We answer the spec questions instantly, route by territory and dealer network, and turn your dead Contact Us form into the highest-converting surface on your site.',
   alternates: {
     canonical: '/',
   },
   openGraph: {
-    title: 'Your Leads Arrive Ready | Aiden by Olark',
+    title: 'Aiden by Olark — AI Live Chat for Industrial Suppliers',
     description:
-      'Aiden is your AI sales chat — it qualifies every visitor before they reach your team. The AI sales rep that turns browsers into briefed buyers.',
+      'Aiden combines 17 years of live chat with AI engineered for industrial supply. We answer the spec questions instantly, route by territory and dealer network, and turn your dead Contact Us form into the highest-converting surface on your site.',
     images: [{ url: '/og-image.png', width: 1200, height: 630 }],
     type: 'website',
   },
@@ -34,38 +36,13 @@ const organizationJsonLd = {
   name: 'Olark',
   url: 'https://olark.ai',
   logo: 'https://olark.ai/logo.png',
-  description: 'Aiden by Olark — AI-powered sales chat that qualifies leads before they reach your team.',
+  description:
+    'Aiden by Olark — AI live chat engineered for industrial suppliers. 17 years of live chat heritage; technical-spec qualification, dealer-network routing, CRM-integrated handoffs.',
   sameAs: [
     'https://twitter.com/olark',
     'https://www.linkedin.com/company/olark',
   ],
 };
-
-interface HomepageTier {
-  tier: TierVariant;
-  name: string;
-  positioning: string;
-  capabilities: string[];
-  href: string;
-}
-
-// Phase 3 will replace this whole section with the four "Engineered for
-// industrial supply" pillars. For the strip we leave a single product
-// card pointing at /commercial so the section still renders cleanly.
-const TIERS: HomepageTier[] = [
-  {
-    tier: 'commercial',
-    name: 'See the product',
-    positioning:
-      'Industrial-grade chat that qualifies the technical questions, routes by territory, and hands every real opportunity to your team with the spec sheet attached.',
-    capabilities: [
-      'Speaks PSI, NEMA, SKU — trained on your catalog',
-      'Routes by territory and dealer network, automatically',
-      'Hands the human the call with the brief already written',
-    ],
-    href: '/commercial',
-  },
-];
 
 export default function HomePage() {
   return (
@@ -75,27 +52,117 @@ export default function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
       />
 
-      {/* ─── Hero ─── */}
+      {/* ─── Hero ──────────────────────────────────────────────────────── */}
       <SectionHero
         backgroundEffect={<ParticleBackground density={70} />}
         badge={
           <PillBadge variant="gold" pulse>
-            16 years of live chat · Now AI-first
+            17 years of live chat · Built for industrial supply
           </PillBadge>
         }
-        headline="Your Leads Arrive Ready"
-        subhead="Aiden turns browsers into briefed buyers — before your rep says hello. No replacement. Pure augmentation."
+        headline="AI for Industrial Suppliers."
+        subhead="We combine 17 years of live chat expertise with AI engineered for the way industrial supply actually sells — turning complex technical inquiries into briefed, qualified RFQs your team can close."
         cta={
           <>
             <CTAButton variant="primary" size="lg" href="#demo">
-              See Aiden on Your Site
+              Try It on Your Site →
             </CTAButton>
             <HeroQuizCTA />
           </>
         }
-      />
+      >
+        <HeroStatsRow />
+      </SectionHero>
 
-      {/* ─── Social Proof ─── */}
+      {/* ─── "Kill the Contact Us form" callout ─────────────────────────── */}
+      <section
+        style={{
+          backgroundColor: 'var(--od-card)',
+          padding: '4rem 1.5rem',
+          textAlign: 'center',
+        }}
+      >
+        <Reveal style={{ maxWidth: '720px', margin: '0 auto' }}>
+          <p
+            style={{
+              fontSize: '0.75rem',
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+              fontWeight: 600,
+              color: 'var(--od-gold)',
+              margin: '0 0 1rem',
+            }}
+          >
+            The Problem
+          </p>
+          <p
+            style={{
+              fontFamily: 'var(--font-poppins, Poppins, sans-serif)',
+              fontWeight: 700,
+              fontSize: 'clamp(1.25rem, 3.2vw, 1.625rem)',
+              lineHeight: 1.4,
+              letterSpacing: '-0.02em',
+              color: 'var(--od-white)',
+              margin: 0,
+            }}
+          >
+            Most B2B sites are{' '}
+            <em
+              style={{
+                fontStyle: 'italic',
+                color: 'var(--od-pink)',
+                fontWeight: 700,
+              }}
+            >
+              expensive digital filing cabinets
+            </em>
+            . You spend a fortune to get buyers there, then greet them with a
+            Contact Us form that goes into a black hole. Aiden is the alive
+            replacement &mdash; the one that actually engages, qualifies, and
+            converts.
+          </p>
+        </Reveal>
+      </section>
+
+      {/* ─── URL Demo Widget — try it on your site ──────────────────────── */}
+      <section
+        id="demo"
+        style={{
+          position: 'relative',
+          overflow: 'hidden',
+          backgroundColor: 'var(--od-dark)',
+          padding: '5rem 1.5rem',
+          textAlign: 'center',
+        }}
+      >
+        <ParticleBackground density={50} />
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          <URLDemoWidgetLoader />
+        </div>
+      </section>
+
+      {/* ─── 4 Industrial Pillars ───────────────────────────────────────── */}
+      <IndustrialPillars />
+
+      {/* ─── Why It Matters stats panel ─────────────────────────────────── */}
+      <WhyItMattersStatsPanel />
+
+      {/* ─── Personas (rewritten for industrial roles) ──────────────────── */}
+      <section
+        style={{
+          backgroundColor: 'var(--od-card)',
+          padding: '5rem 1.5rem',
+        }}
+      >
+        <div style={{ maxWidth: '960px', margin: '0 auto' }}>
+          <PersonaTabSwitcher />
+        </div>
+      </section>
+
+      {/* ─── "Enhance the Human Moment" centerpiece ─────────────────────── */}
+      <EnhanceTheHumanMomentBlock />
+
+      {/* ─── Logo Strip ─────────────────────────────────────────────────── */}
       <section
         style={{
           position: 'relative',
@@ -117,116 +184,13 @@ export default function HomePage() {
               fontWeight: 500,
             }}
           >
-            Trusted by teams already winning with live chat
+            Trusted by industrial suppliers already winning with live chat
           </p>
           <LogoStrip />
         </Reveal>
       </section>
 
-      {/* ─── URL Demo Widget ─── */}
-      <section
-        id="demo"
-        style={{
-          position: 'relative',
-          overflow: 'hidden',
-          backgroundColor: 'var(--od-dark)',
-          padding: '5rem 1.5rem',
-          textAlign: 'center',
-        }}
-      >
-        <ParticleBackground density={50} />
-        <div style={{ position: 'relative', zIndex: 1 }}>
-          <URLDemoWidgetLoader />
-        </div>
-      </section>
-
-      {/* ─── How It Works ─── */}
-      <section
-        style={{
-          position: 'relative',
-          overflow: 'hidden',
-          backgroundColor: 'var(--od-navy)',
-          padding: '5rem 1.5rem',
-          textAlign: 'center',
-        }}
-      >
-        <ParticleBackground density={70} />
-        <Reveal style={{ position: 'relative', zIndex: 1 }}>
-          <p
-            style={{
-              color: 'var(--od-gold)',
-              fontSize: '0.75rem',
-              letterSpacing: '0.1em',
-              textTransform: 'uppercase',
-              fontWeight: 600,
-              marginBottom: '1rem',
-            }}
-          >
-            Three ways to deploy
-          </p>
-          <h2
-            style={{
-              fontFamily: 'var(--font-poppins), ui-sans-serif, sans-serif',
-              fontWeight: 900,
-              fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)',
-              letterSpacing: '-0.025em',
-              color: 'var(--od-white)',
-              margin: '0 0 0.5rem',
-            }}
-          >
-            How Aiden Works for Your Team
-          </h2>
-          <p
-            style={{
-              color: 'var(--od-muted)',
-              fontSize: '0.9375rem',
-              marginBottom: '0',
-            }}
-          >
-            Pick the tier that matches where your team is today.
-          </p>
-        </Reveal>
-        <div
-          style={{
-            position: 'relative',
-            zIndex: 1,
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: '1.5rem',
-            maxWidth: '1100px',
-            margin: '2.5rem auto 0',
-            textAlign: 'left',
-          }}
-        >
-          {TIERS.map((t) => (
-            <TierCard
-              key={t.tier}
-              tier={t.tier}
-              headline={t.name}
-              tagline={t.positioning}
-              capabilities={t.capabilities}
-              ctaHref={t.href}
-              ctaLabel="Learn more →"
-              ctaVariant="secondary"
-              ctaSize="md"
-            />
-          ))}
-        </div>
-      </section>
-
-      {/* ─── Persona Tab Switcher (replaces Before/With duo) ─── */}
-      <section
-        style={{
-          backgroundColor: 'var(--od-card)',
-          padding: '5rem 1.5rem',
-        }}
-      >
-        <div style={{ maxWidth: '960px', margin: '0 auto' }}>
-          <PersonaTabSwitcher />
-        </div>
-      </section>
-
-      {/* ─── Final CTA + Path Finder Quiz (swapped order, shared dark bg) ─── */}
+      {/* ─── Final CTA + Path Finder Quiz ───────────────────────────────── */}
       <HomepageQuizBlock />
     </>
   );

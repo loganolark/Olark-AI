@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Reveal from '@/components/ui/Reveal';
 
-type PersonaId = 'revops' | 'vp-sales' | 'sdr';
+type PersonaId = 'sales-engineer' | 'inside-sales' | 'vp-sales';
 
 interface Persona {
   id: PersonaId;
@@ -14,46 +14,51 @@ interface Persona {
   closer: string;
 }
 
+// Personas reskinned for the industrial-supplier ICP. The roles map to the
+// people who actually keep an industrial sales floor running — the engineer
+// fielding spec questions, the inside rep owning the dealer relationships,
+// the VP defending the number to the board. Voice stays second-person and
+// concrete; no "leverage" / "synergize" filler.
 const PERSONAS: Persona[] = [
   {
-    id: 'sdr',
-    pillLabel: 'SDR',
-    eyebrow: 'For the rep doing the work',
-    headline: 'All You Have to Do Is Eat.',
+    id: 'sales-engineer',
+    pillLabel: 'Sales Engineer',
+    eyebrow: 'For the one who actually knows the spec',
+    headline: 'Stop Being the Search Bar for Your Own Catalog.',
     paragraphs: [
-      'Monday morning, you open your queue and every chat handoff is already pre-qualified — company size, role, inbound intent, the questions they asked, the objections they raised. No cold opens. No twenty minutes spent figuring out who you’re talking to.',
-      'You walk in briefed. The visitor walks in expecting someone who already knows their context. That’s the difference between a chat queue that drains your day and one that compounds your wins.',
+      'Half your inbound is buyers asking about flange bolt sizing or 2" SS ball valve availability — questions the spec sheet on page 47 already answers. You shouldn\'t be a human PDF search engine. Aiden ingests the catalog, the install manuals, the load charts, and answers in the chat instantly — citing the page.',
+      'When something walks in that\'s actually engineering-grade — payload, voltage, clear height, seismic zone — Aiden captures it cleanly and hands you the chat with the spec already written down. You join already knowing what the project needs.',
     ],
     closer:
-      'Aiden does the qualifying. You do what you’re great at — closing the conversation a real human is owed.',
+      'You stop answering the same five questions in fifteen different ways. You start scoping the deals you went to school to scope.',
   },
   {
-    id: 'revops',
-    pillLabel: 'RevOps Director',
-    eyebrow: 'For the systems thinker',
-    headline: 'Every Conversation Logs Itself, Routes Itself, Reports Itself.',
+    id: 'inside-sales',
+    pillLabel: 'Inside Sales / Account Manager',
+    eyebrow: 'For the one owning the dealer relationships',
+    headline: 'Every Lead Lands on the Right Desk Before It Goes Cold.',
     paragraphs: [
-      'Every visitor exchange becomes a clean record — company size, intent signal, source, full transcript — written straight to HubSpot with the right segmentation. No more chasing reps to log calls. No more pivot-table forensics on what your funnel actually did last month.',
-      'Aiden gives you the data layer you’ve quietly been fighting for. Routing rules respected. Tier signals attached. Reporting that doesn’t require a SQL detour.',
+      'A buyer in California, a direct rep in Wisconsin, a regional installer in Sacramento — and right now, that handoff is happening over Slack DMs and a manual lookup. By Tuesday the lead has gone dark. Aiden uses IP, zip prompts, and territory rules to route to the right rep or premier installer in seconds.',
+      'Every chat lands in your CRM with the company, the project size category, the captured specs, and the dealer assignment already attached. No re-typing. No hunting through a transcript for the answer the buyer already gave the bot.',
     ],
     closer:
-      'Your pipeline finally reflects reality — without anyone having to manage it.',
+      'Your reps walk into every call already briefed. Your dealer network gets the leads it earned. Speed-to-lead stops being a stat you wince at.',
   },
   {
     id: 'vp-sales',
     pillLabel: 'VP of Sales',
-    eyebrow: 'For the number-keeper',
-    headline: 'Walk Into Monday Knowing the Pipeline Is Real.',
+    eyebrow: 'For the one defending the number',
+    headline: 'Walk Into the Forecast Meeting With Pipeline You Can Defend.',
     paragraphs: [
-      'When every chat is qualified, briefed, and routed, your reps spend their time on conversations that move the deal — not on triage that should never have been theirs. Pipeline coverage stops being a guessing game.',
-      'You walk into the forecast meeting with a number you can defend. Your team walks in already up to speed. Aiden does the upstream work so the conversation that closes the deal can actually happen.',
+      'Right now, your top-of-funnel is a Contact Us form that disappears into an inbox and an MQL definition that nobody trusts. Aiden gives you a real upstream layer: every visitor scored as High Value (new facility project) or Low Value (one-off small parts), tagged with the technical inputs that prove it.',
+      'Your engineers stop being burned on tire-kickers. Your dealer network gets warmer leads, faster. The number you commit to is the number the conversations actually support — and you can show your board the spec sheet that backs it up.',
     ],
     closer:
-      'The number you commit to is the number the conversations support.',
+      'Pipeline that reflects reality. Reporting that doesn\'t require a SQL detour. A number you can hold the line on.',
   },
 ];
 
-const DEFAULT_PERSONA: PersonaId = 'sdr';
+const DEFAULT_PERSONA: PersonaId = 'sales-engineer';
 
 export default function PersonaTabSwitcher() {
   const [activeId, setActiveId] = useState<PersonaId>(DEFAULT_PERSONA);

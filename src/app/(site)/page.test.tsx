@@ -2,65 +2,110 @@ import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import HomePage from './page';
 
-describe('HomePage — How It Works section', () => {
-  it('renders section heading', () => {
+describe('HomePage — Hero (industrial-supplier rebuild)', () => {
+  it('hero h1 reads "AI for Industrial Suppliers."', () => {
     render(<HomePage />);
-    expect(screen.getByText(/How Aiden Works for Your Team/i)).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', {
+        level: 1,
+        name: /AI for Industrial Suppliers\./i,
+      }),
+    ).toBeInTheDocument();
   });
 
-  it('renders the single product card linking to /commercial (essentials + lead-gen collapsed)', () => {
+  it('renders the heritage PillBadge in the hero', () => {
     render(<HomePage />);
-    const link = screen.getByRole('link', { name: /Learn more/i });
-    expect(link).toHaveAttribute('href', '/commercial');
+    // PillBadge nests text inside a wrapper span — getAllByText catches both.
+    expect(
+      screen.getAllByText(/17 years of live chat.*industrial supply/i).length,
+    ).toBeGreaterThan(0);
   });
 
-  it('does NOT render the old Essentials or Lead-Gen tier cards', () => {
-    const { container } = render(<HomePage />);
-    const text = container.textContent ?? '';
-    // Permitted: text like "Essentials Tier" elsewhere is fine, but the old
-    // standalone tier cards used these as their headlines. After the strip
-    // neither name should appear as a heading.
-    const headings = container.querySelectorAll('h2, h3');
-    headings.forEach((h) => {
-      expect(h.textContent ?? '').not.toMatch(/^Essentials$/);
-      expect(h.textContent ?? '').not.toMatch(/^Lead-Gen$/);
-    });
-    expect(text).toBeTruthy();
+  it('renders the 3 hero stats (4.2× / <2 sec / 87%)', () => {
+    render(<HomePage />);
+    const row = screen.getByTestId('hero-stats-row');
+    expect(row.textContent).toContain('4.2×');
+    expect(row.textContent).toContain('< 2 sec');
+    expect(row.textContent).toContain('87%');
   });
 });
 
-describe('HomePage — Persona tab switcher (replaces Before/With rep duo)', () => {
-  it('renders the PersonaTabSwitcher with all 3 role tabs', () => {
+describe('HomePage — narrative sections', () => {
+  it('renders the "expensive digital filing cabinets" callout', () => {
+    render(<HomePage />);
+    expect(
+      screen.getByText(/expensive digital filing cabinets/i),
+    ).toBeInTheDocument();
+  });
+
+  it('renders the "Engineered for Industrial Supply" pillars section with 4 pillars', () => {
+    render(<HomePage />);
+    expect(
+      screen.getByRole('heading', {
+        level: 2,
+        name: /Engineered for Industrial Supply/i,
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getAllByTestId('industrial-pillar')).toHaveLength(4);
+  });
+
+  it('renders the WhyItMatters stats panel with 4 outcome stats', () => {
+    render(<HomePage />);
+    expect(
+      screen.getByRole('heading', {
+        level: 2,
+        name: /We Remove the Cruft\. Your Team Gets the Chats That Matter\./i,
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getAllByTestId('why-it-matters-stat')).toHaveLength(4);
+  });
+
+  it('renders the "Enhance the Human Moment" centerpiece', () => {
+    render(<HomePage />);
+    expect(screen.getByTestId('enhance-human-moment')).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', {
+        level: 2,
+        name: /We Enhance the Human Moment\./i,
+      }),
+    ).toBeInTheDocument();
+  });
+});
+
+describe('HomePage — Persona tab switcher (industrial roles)', () => {
+  it('renders the PersonaTabSwitcher with the 3 industrial role tabs', () => {
     render(<HomePage />);
     expect(screen.getByTestId('persona-tab-switcher')).toBeInTheDocument();
-    expect(screen.getByRole('tab', { name: /^SDR$/ })).toBeInTheDocument();
-    expect(screen.getByRole('tab', { name: /^RevOps Director$/ })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /^Sales Engineer$/ })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /Inside Sales/i })).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: /^VP of Sales$/ })).toBeInTheDocument();
   });
 
-  it('SDR tab is the default-active persona, with "All You Have to Do Is Eat." headline', () => {
+  it('Sales Engineer tab is the default-active persona', () => {
     render(<HomePage />);
-    expect(screen.getByTestId('persona-panel-sdr')).toBeInTheDocument();
-    expect(screen.getByText(/All You Have to Do Is Eat\./i)).toBeInTheDocument();
+    expect(screen.getByTestId('persona-panel-sales-engineer')).toBeInTheDocument();
+    expect(
+      screen.getByText(/Stop Being the Search Bar for Your Own Catalog\./i),
+    ).toBeInTheDocument();
   });
 
-  it('SDR persona body uses second-person voice ("you walk in briefed")', () => {
-    render(<HomePage />);
-    expect(screen.getByText(/Monday morning, you open your queue/i)).toBeInTheDocument();
-    expect(screen.getByText(/You walk in briefed/i)).toBeInTheDocument();
+  it('does NOT render the legacy SDR / RevOps Director / "All You Have to Do Is Eat" copy', () => {
+    const { container } = render(<HomePage />);
+    const text = container.textContent ?? '';
+    expect(text).not.toMatch(/^SDR$/m);
+    expect(text).not.toMatch(/RevOps Director/);
+    expect(text).not.toMatch(/All You Have to Do Is Eat/);
   });
 
   it('does NOT render the old Before/With Aiden duo', () => {
     const { container } = render(<HomePage />);
     const text = container.textContent ?? '';
     expect(text).not.toMatch(/Before Aiden/i);
-    // "With Aiden" is generic enough to hit elsewhere; the unique tell of the
-    // old layout was the side-by-side eyebrow style around the duo.
     expect(text).not.toMatch(/45-minute discovery calls/i);
   });
 });
 
-describe('HomePage — Final CTA (replaces former 3-button CTA bridge)', () => {
+describe('HomePage — Final CTA + Quiz block (kept from prior build)', () => {
   it('renders the "Still Not Sure" headline', () => {
     render(<HomePage />);
     expect(
@@ -70,11 +115,8 @@ describe('HomePage — Final CTA (replaces former 3-button CTA bridge)', () => {
 
   it('renders both quiz CTAs — hero link to #quiz + Final CTA start-quiz button', () => {
     render(<HomePage />);
-    // Hero CTA stays an <a href="#quiz"> so anchor-scrolling still works.
     const heroLink = screen.getByRole('link', { name: /Take the 60-Second Quiz/i });
     expect(heroLink).toHaveAttribute('href', '#quiz');
-    // Final CTA "Take the 60-Second Quiz" became a <button> — clicking it
-    // starts the quiz via the QUIZ_START_EVENT, no href needed.
     const finalCtaButton = screen.getByRole('button', {
       name: /Take the 60-Second Quiz/i,
     });
@@ -90,17 +132,31 @@ describe('HomePage — Final CTA (replaces former 3-button CTA bridge)', () => {
   });
 });
 
+describe('HomePage — TierCard removal (collapsed into /commercial)', () => {
+  it('does NOT render any TierCard on the homepage', () => {
+    const { container } = render(<HomePage />);
+    expect(container.querySelector('article.tier-card')).toBeNull();
+  });
+
+  it('does NOT render the legacy "How Aiden Works for Your Team" tier-card section heading', () => {
+    render(<HomePage />);
+    expect(
+      screen.queryByRole('heading', {
+        level: 2,
+        name: /How Aiden Works for Your Team/i,
+      }),
+    ).toBeNull();
+  });
+});
+
 describe('HomePage — Placeholders', () => {
   it('renders URL demo widget section (loading state while JS loads)', () => {
     render(<HomePage />);
-    // next/dynamic with ssr:false renders the loading prop in tests; loading prop shows this text
     expect(screen.getByText(/Loading demo/i)).toBeInTheDocument();
   });
 
   it('renders the QuizPlaceholder by default (PathFinderQuiz is gated behind it)', () => {
     render(<HomePage />);
-    // The quiz section now starts with a clickable placeholder card. The
-    // real PathFinderQuiz radiogroup only mounts after the visitor opts in.
     expect(screen.getByTestId('quiz-placeholder')).toBeInTheDocument();
     expect(
       screen.queryByRole('radiogroup', { name: /How big is your company/i }),
@@ -110,5 +166,29 @@ describe('HomePage — Placeholders', () => {
   it('renders the #quiz section anchor that the hero CTA scrolls to', () => {
     const { container } = render(<HomePage />);
     expect(container.querySelector('#quiz')).not.toBeNull();
+  });
+});
+
+describe('HomePage — DOM order of major sections', () => {
+  it('places sections in the expected narrative order', () => {
+    render(<HomePage />);
+    const text = (document.body.textContent ?? '').replace(/\s+/g, ' ');
+    const markers = [
+      'AI for Industrial Suppliers.',
+      'expensive digital filing cabinets',
+      'Engineered for Industrial Supply',
+      'We Remove the Cruft',
+      'Stop Being the Search Bar',
+      'We Enhance the Human Moment',
+      'Trusted by industrial suppliers',
+      'Still Not Sure Which Tier Fits',
+    ];
+    let lastIdx = -1;
+    for (const m of markers) {
+      const idx = text.indexOf(m);
+      expect(idx, `expected marker "${m}" to appear in DOM`).toBeGreaterThanOrEqual(0);
+      expect(idx, `expected "${m}" to come AFTER previous marker`).toBeGreaterThan(lastIdx);
+      lastIdx = idx;
+    }
   });
 });
