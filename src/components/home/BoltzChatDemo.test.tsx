@@ -116,7 +116,7 @@ describe('BoltzChatDemo — human handoff', () => {
     vi.useRealTimers();
   });
 
-  it('typing "I want to talk to a human" routes to the direct human handoff and echoes the visitor text', async () => {
+  it('typing "I want to talk to a human" routes to the direct human handoff and echoes the visitor text (default agent: Marisol)', async () => {
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
     render(<BoltzChatDemo />);
 
@@ -128,13 +128,14 @@ describe('BoltzChatDemo — human handoff', () => {
       vi.advanceTimersByTime(5000);
     });
 
+    // No upstream script promised a specific agent — the freeform
+    // handoff falls back to Marisol (default sales rep).
     expect(screen.getByTestId('boltz-system-bubble').textContent).toMatch(
       /Marisol K\..*joined the chat/i,
     );
     const human = screen.getByTestId('boltz-human-bubble');
     expect(human.textContent).toMatch(/Marisol here/i);
-    // The human's reply must echo the visitor's actual typed message —
-    // that's the context-preservation requirement.
+    // The human's reply must echo the visitor's actual typed message.
     expect(human.textContent).toContain(
       'I want to talk to a human about a custom welding job',
     );
@@ -144,11 +145,14 @@ describe('BoltzChatDemo — human handoff', () => {
     expect(screen.getByTestId('boltz-freeform-input')).toBeDisabled();
   });
 
-  it('the email-handoff script ends the conversation with the human takeover', async () => {
+  it('rack-spec → region → email path delivers Lauren K. (the agent the upstream script promised) — NOT Marisol', async () => {
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
     render(<BoltzChatDemo />);
 
-    // Walk through the rack-spec → region → email path
+    // Walk: pallet-rack project → standard rack → Sacramento region →
+    // email handoff. The Sacramento step says "Lauren K. owns that
+    // region" — so the human-takeover bubble MUST be Lauren, not the
+    // default Marisol.
     await user.click(
       screen
         .getAllByTestId('boltz-chip')
@@ -177,10 +181,85 @@ describe('BoltzChatDemo — human handoff', () => {
     );
     await act(async () => { vi.advanceTimersByTime(6000); });
 
-    // System notice + human bubble + locked input
-    expect(screen.getByTestId('boltz-system-bubble')).toBeInTheDocument();
-    expect(screen.getByTestId('boltz-human-bubble')).toBeInTheDocument();
+    expect(screen.getByTestId('boltz-system-bubble').textContent).toMatch(
+      /Lauren K\..*joined the chat/i,
+    );
+    const human = screen.getByTestId('boltz-human-bubble');
+    expect(human.textContent).toMatch(/Lauren here/i);
+    expect(human.textContent).not.toMatch(/Marisol/);
+
+    // Lauren's name shows in the avatar block too.
+    expect(screen.getByTestId('boltz-human-name').textContent).toMatch(
+      /Lauren K\..*live agent/i,
+    );
+
     expect(screen.getByTestId('boltz-freeform-input')).toBeDisabled();
+  });
+
+  it('custom-install path delivers Diego R. (the engineering specialist promised by the script)', async () => {
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    render(<BoltzChatDemo />);
+
+    await user.click(
+      screen
+        .getAllByTestId('boltz-chip')
+        .find((c) => c.getAttribute('data-chip-id') === 'custom-install')!,
+    );
+    await act(async () => { vi.advanceTimersByTime(4000); });
+
+    await user.click(
+      screen
+        .getAllByTestId('boltz-chip')
+        .find((c) => c.getAttribute('data-chip-id') === 'email-handoff')!,
+    );
+    await act(async () => { vi.advanceTimersByTime(6000); });
+
+    expect(screen.getByTestId('boltz-system-bubble').textContent).toMatch(
+      /Diego R\..*joined the chat/i,
+    );
+    expect(screen.getByTestId('boltz-human-bubble').textContent).toMatch(
+      /Diego here/i,
+    );
+  });
+
+  it('distributor → installer route delivers Jordan T. from the dealer (Cooke Industrial)', async () => {
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    render(<BoltzChatDemo />);
+
+    await user.click(
+      screen
+        .getAllByTestId('boltz-chip')
+        .find((c) => c.getAttribute('data-chip-id') === 'closest-distributor')!,
+    );
+    await act(async () => { vi.advanceTimersByTime(3000); });
+
+    await user.click(
+      screen
+        .getAllByTestId('boltz-chip')
+        .find((c) => c.getAttribute('data-chip-id') === 'zip-bay-area')!,
+    );
+    await act(async () => { vi.advanceTimersByTime(4000); });
+
+    await user.click(
+      screen
+        .getAllByTestId('boltz-chip')
+        .find((c) => c.getAttribute('data-chip-id') === 'route-installer')!,
+    );
+    await act(async () => { vi.advanceTimersByTime(4000); });
+
+    await user.click(
+      screen
+        .getAllByTestId('boltz-chip')
+        .find((c) => c.getAttribute('data-chip-id') === 'email-handoff')!,
+    );
+    await act(async () => { vi.advanceTimersByTime(6000); });
+
+    expect(screen.getByTestId('boltz-system-bubble').textContent).toMatch(
+      /Jordan T\..*joined the chat/i,
+    );
+    expect(screen.getByTestId('boltz-human-bubble').textContent).toMatch(
+      /Jordan here/i,
+    );
   });
 });
 

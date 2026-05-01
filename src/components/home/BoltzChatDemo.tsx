@@ -66,12 +66,67 @@ interface DemoScript {
   /** When true, the conversation closes with a human in the seat — input
    *  + chip controls disable so the demo lands the handoff moment. */
   endsWithHuman?: boolean;
+  /** When the script names a specific human in its copy (e.g.,
+   *  "Lauren K. owns that region"), set the agent here so the
+   *  downstream email-handoff / human-takeover bubbles substitute the
+   *  matching name + initials. Carries forward until another script
+   *  promises a different agent — that's how the rack-spec → region
+   *  → email path stays Lauren even though `email-handoff` is shared. */
+  promisesAgent?: PromisedAgent;
 }
 
-const HUMAN_AGENT = {
-  name: 'Marisol K.',
-  initials: 'M',
+/**
+ * Named human agents the demo can hand the visitor off to. WHICH agent
+ * shows up depends on which script path the visitor walked — Lauren for
+ * the West Coast regional path, Jordan for the dealer-installer path,
+ * Diego for engineering-grade installs, Marisol as the catch-all sales
+ * rep. The script that promises the agent (e.g., "Lauren K. owns that
+ * region") sets the agent in state via `promisesAgent`, and the
+ * downstream email-handoff / human-takeover bubbles substitute the
+ * right name / first name / initials at render time so the demo's
+ * conversational continuity holds.
+ */
+interface PromisedAgent {
+  /** Full display name, e.g., "Lauren K." */
+  name: string;
+  /** First name only, used in bubble openings ("Hey — Lauren here") */
+  firstName: string;
+  /** Single-letter avatar */
+  initials: string;
+  /** Short role label that can be referenced in bubble copy */
+  role: string;
+}
+
+const AGENTS: Record<string, PromisedAgent> = {
+  marisol: {
+    name: 'Marisol K.',
+    firstName: 'Marisol',
+    initials: 'M',
+    role: 'senior account exec',
+  },
+  lauren: {
+    name: 'Lauren K.',
+    firstName: 'Lauren',
+    initials: 'L',
+    role: 'West Coast regional manager',
+  },
+  jordan: {
+    name: 'Jordan T.',
+    firstName: 'Jordan',
+    initials: 'J',
+    role: 'install lead at Cooke Industrial',
+  },
+  diego: {
+    name: 'Diego R.',
+    firstName: 'Diego',
+    initials: 'D',
+    role: 'install engineer',
+  },
 };
+
+/** Catch-all agent when no upstream script set a specific one (e.g., the
+ *  visitor opened the demo and immediately typed "talk to a human"). */
+const DEFAULT_AGENT: PromisedAgent = AGENTS.marisol!;
 
 const STARTING_CHIP_IDS = [
   'lead-time-pvc',
@@ -97,9 +152,10 @@ const SCRIPTS: Record<string, DemoScript> = {
     featureTag: 'Quote-ready RFQ',
     scriptedTurns: [
       { kind: 'bot', text: "Got it — 12,000 ft of 4\" Sch 80 PVC, delivered Phoenix. That's about 2,400 sticks at 5ft." },
-      { kind: 'bot', text: "I'll get our regional rep the spec, your timeline, and the delivery point. They'll come back with a freight quote and bulk pricing within the hour. What's the best email for them to reach you?" },
+      { kind: 'bot', text: "I'll get our regional rep Marisol the spec, your timeline, and the delivery point. She'll come back with a freight quote and bulk pricing within the hour. What's the best email for her to reach you?" },
     ],
     followupIds: ['email-handoff'],
+    promisesAgent: AGENTS.marisol,
   },
 
   'spec-pallet-rack': {
@@ -126,7 +182,7 @@ const SCRIPTS: Record<string, DemoScript> = {
     userText: 'Drive-in for high-density storage.',
     featureTag: 'Spec captured',
     scriptedTurns: [
-      { kind: 'bot', text: "Drive-in is a specialty config — I'll loop in the engineering desk so you get someone who can model the lane depth + lift heights with you." },
+      { kind: 'bot', text: "Drive-in is a specialty config — your regional rep will pull in our engineering desk on lane depth + lift heights when they scope it with you." },
       { kind: 'bot', text: "What city is the facility going up in?" },
     ],
     followupIds: ['facility-region'],
@@ -136,7 +192,7 @@ const SCRIPTS: Record<string, DemoScript> = {
     userText: 'Seismic-rated.',
     featureTag: 'Spec captured · high-engineering project',
     scriptedTurns: [
-      { kind: 'bot', text: "Seismic — got it. We'll need to know the seismic zone, anchor type, and beam load capacity to spec it properly." },
+      { kind: 'bot', text: "Seismic — got it. Your regional rep will loop in our engineering desk on seismic zone, anchor type, and beam load capacity so it's spec'd properly." },
       { kind: 'bot', text: "What city is the facility going up in?" },
     ],
     followupIds: ['facility-region'],
@@ -150,6 +206,7 @@ const SCRIPTS: Record<string, DemoScript> = {
       { kind: 'bot', text: "I'll send her your project (50K sqft, the rack type you picked, your city) so she lands the call already briefed. What's the best email for her to reach you?" },
     ],
     followupIds: ['email-handoff'],
+    promisesAgent: AGENTS.lauren,
   },
 
   'closest-distributor': {
@@ -179,16 +236,18 @@ const SCRIPTS: Record<string, DemoScript> = {
       { kind: 'bot', text: "Done — Lauren is online right now. Drop your email and a one-liner about the project and I'll route you to her direct line." },
     ],
     followupIds: ['email-handoff'],
+    promisesAgent: AGENTS.lauren,
   },
   'route-installer': {
     id: 'route-installer',
     userText: 'Set up an install conversation with Cooke.',
     featureTag: 'Routed to dealer · installer notified',
     scriptedTurns: [
-      { kind: 'bot', text: "Cooke's been our Bay Area installer since 2017. They'll come out for a site walk and tie back to Crestline for parts." },
-      { kind: 'bot', text: "Drop your email and a quick project summary — I'll loop in both teams so the first call is a real conversation, not an intake form." },
+      { kind: 'bot', text: "Cooke's been our Bay Area installer since 2017. Jordan T. runs install ops over there — he'll come out for a site walk and tie back to Crestline for parts." },
+      { kind: 'bot', text: "Drop your email and a quick project summary and I'll get Jordan looped in so the first call is a real conversation, not an intake form." },
     ],
     followupIds: ['email-handoff'],
+    promisesAgent: AGENTS.jordan,
   },
 
   'custom-install': {
@@ -196,29 +255,31 @@ const SCRIPTS: Record<string, DemoScript> = {
     userText: 'Can someone help with a custom installation?',
     featureTag: 'Human handoff · briefed + email-captured',
     scriptedTurns: [
-      { kind: 'bot', text: "Custom installs go straight to our specialist desk — they don't sit in a general queue." },
-      { kind: 'bot', text: "Quick so I can brief them properly: what's your email, rough sqft, and timeline? Once I have that, I'll loop in the install engineer with the full context." },
+      { kind: 'bot', text: "Custom installs go straight to our specialist desk — Diego R. on engineering owns those, and he doesn't sit in a general queue." },
+      { kind: 'bot', text: "Quick so I can brief him properly: what's your email, rough sqft, and timeline? Once I have those, I'll loop Diego in with the full context." },
     ],
     followupIds: ['email-handoff'],
+    promisesAgent: AGENTS.diego,
   },
 
-  // Email submission → bot acknowledgement → SYSTEM "Marisol joined" →
-  // HUMAN message that references the captured project context. This is
-  // the moment the demo lands the "human-in-the-loop" promise — visitors
-  // see Aiden hand off to a real teammate, not just write a ticket.
+  // Email submission → bot acknowledgement → SYSTEM "X joined" → HUMAN
+  // message that references the captured project context. This is the
+  // moment the demo lands the "human-in-the-loop" promise — visitors see
+  // Aiden hand off to a real teammate (the SAME teammate the upstream
+  // script promised them, via the ${HUMAN_*} template substitutions).
+  // Only fires when an upstream script set `promisesAgent`; otherwise
+  // falls back to the default sales rep.
   'email-handoff': {
     id: 'email-handoff',
     userText: 'logan@crestline-industrial.com',
     featureTag: 'CRM updated · brief written · human paged',
     scriptedTurns: [
-      { kind: 'bot', text: "Got it. I've written the brief — your specs, the regional fit, the captured project size — and paged the right teammate." },
-      { kind: 'system', text: `${HUMAN_AGENT.name} (Crestline Industrial) joined the chat` },
+      { kind: 'bot', text: "Got it. I've written the brief — your specs, the regional fit, the captured project size — and paged ${HUMAN_FIRST_NAME}." },
+      { kind: 'system', text: '${HUMAN_NAME} (${HUMAN_ROLE}, Crestline Industrial) joined the chat' },
       {
         kind: 'human',
-        humanName: HUMAN_AGENT.name,
-        humanInitials: HUMAN_AGENT.initials,
         text:
-          "Hey — Marisol here. I just read through what you and Boltz worked on. The brief looks solid; I have your specs and the regional fit in front of me already. Quick one so I can move fast: what timeline are you working with?",
+          "Hey — ${HUMAN_FIRST_NAME} here. I just read through what you and Boltz worked on. The brief looks solid; I have your specs and the rest of the context in front of me. Quick one so I can move fast: what timeline are you working with?",
       },
     ],
     endsWithHuman: true,
@@ -226,20 +287,20 @@ const SCRIPTS: Record<string, DemoScript> = {
 
   // Freeform / chip-triggered direct human handoff. The human's reply
   // ECHOES the visitor's most recent typed text via the ${USER_MSG}
-  // placeholder so the takeover feels context-aware, not canned.
+  // placeholder so the takeover feels context-aware, not canned. Uses
+  // the default sales rep (Marisol) since this fires before any
+  // upstream script could have promised someone specific.
   'human-handoff-direct': {
     id: 'human-handoff-direct',
     userText: '',
     featureTag: 'Human takeover · context preserved',
     scriptedTurns: [
       { kind: 'bot', text: "Got it — pulling someone in for you. One sec." },
-      { kind: 'system', text: `${HUMAN_AGENT.name} (Crestline Industrial) joined the chat` },
+      { kind: 'system', text: '${HUMAN_NAME} (${HUMAN_ROLE}, Crestline Industrial) joined the chat' },
       {
         kind: 'human',
-        humanName: HUMAN_AGENT.name,
-        humanInitials: HUMAN_AGENT.initials,
         text:
-          "Hey — Marisol here. I just caught up: “${USER_MSG}”. Let me dig in. What kind of timeline are you working with, and is this for a single site or a multi-site rollout?",
+          "Hey — ${HUMAN_FIRST_NAME} here. I just caught up: “${USER_MSG}”. Let me dig in. What kind of timeline are you working with, and is this for a single site or a multi-site rollout?",
       },
     ],
     endsWithHuman: true,
@@ -255,13 +316,11 @@ const SCRIPTS: Record<string, DemoScript> = {
     featureTag: 'Smart escalation · human in the loop',
     scriptedTurns: [
       { kind: 'bot', text: "Good question — that one earns a human." },
-      { kind: 'system', text: `${HUMAN_AGENT.name} (Crestline Industrial) joined the chat` },
+      { kind: 'system', text: '${HUMAN_NAME} (${HUMAN_ROLE}, Crestline Industrial) joined the chat' },
       {
         kind: 'human',
-        humanName: HUMAN_AGENT.name,
-        humanInitials: HUMAN_AGENT.initials,
         text:
-          "Hi, Marisol from Crestline. I saw your message: “${USER_MSG}”. Happy to help — give me a sec to pull up your account and I'll come back with specifics.",
+          "Hi, ${HUMAN_FIRST_NAME} from Crestline. I saw your message: “${USER_MSG}”. Happy to help — give me a sec to pull up your account and I'll come back with specifics.",
       },
     ],
     endsWithHuman: true,
@@ -317,9 +376,15 @@ export default function BoltzChatDemo() {
   const [awaitingBot, setAwaitingBot] = useState(false);
   const [freeform, setFreeform] = useState('');
   /** Once a script with `endsWithHuman: true` runs, the chat is "live"
-   *  with Marisol — chips disappear and freeform input goes read-only
-   *  with a status note so the demo lands the handoff moment. */
+   *  with the promised human — chips disappear and freeform input goes
+   *  read-only with a status note so the demo lands the handoff moment. */
   const [humanInSeat, setHumanInSeat] = useState(false);
+  /** Tracks WHICH human will jump in if/when the conversation hits an
+   *  email-handoff or human-handoff-direct script. Updated each time an
+   *  upstream script's `promisesAgent` field is set; persists otherwise
+   *  so the rack-spec → region → email path correctly delivers Lauren
+   *  even though `email-handoff` is a shared script. */
+  const [promisedAgent, setPromisedAgent] = useState<PromisedAgent>(DEFAULT_AGENT);
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -349,6 +414,17 @@ export default function BoltzChatDemo() {
     setActiveChipIds([]);
     setAwaitingBot(true);
 
+    // Determine which human takes over IF this flow ends with a handoff.
+    // If THIS script promises an agent, that wins; otherwise carry forward
+    // whoever the prior script promised (so rack-spec → region → email
+    // → handoff lands on Lauren even though email-handoff itself doesn't
+    // mention her). Captured as a const so the setTimeout closures below
+    // see a consistent value even after setPromisedAgent batches.
+    const agentForFlow: PromisedAgent = script.promisesAgent ?? promisedAgent;
+    if (script.promisesAgent) {
+      setPromisedAgent(script.promisesAgent);
+    }
+
     const userText = userTextOverride ?? script.userText;
     const newBubbles: ChatBubble[] = [];
     if (script.featureTag) {
@@ -359,13 +435,19 @@ export default function BoltzChatDemo() {
     }
     setBubbles((prev) => [...prev, ...newBubbles]);
 
-    // Inject the visitor's actual message into any ${USER_MSG} placeholder
-    // — that's the bit that makes the human takeover feel context-aware
-    // instead of canned. Falls back to the canned text when the visitor
-    // arrived via a chip click instead of typing.
+    // Substitution targets:
+    //   ${USER_MSG}         — visitor's most recent typed/clicked message
+    //   ${HUMAN_NAME}       — full name of the agent the upstream flow
+    //                         promised (e.g. "Lauren K.")
+    //   ${HUMAN_FIRST_NAME} — same agent, first-name only ("Lauren")
+    //   ${HUMAN_ROLE}       — short role label for the system bubble
     function fillTemplate(text: string): string {
       const safe = userText && userText.length > 0 ? userText : 'your message';
-      return text.replace(/\$\{USER_MSG\}/g, safe);
+      return text
+        .replace(/\$\{USER_MSG\}/g, safe)
+        .replace(/\$\{HUMAN_NAME\}/g, agentForFlow.name)
+        .replace(/\$\{HUMAN_FIRST_NAME\}/g, agentForFlow.firstName)
+        .replace(/\$\{HUMAN_ROLE\}/g, agentForFlow.role);
     }
 
     // System bubbles are render-instant; bot + human bubbles each get a
@@ -377,10 +459,13 @@ export default function BoltzChatDemo() {
 
       if (turn.kind === 'system') {
         // System notice — appears with a small beat, no typing dots.
+        // Substitute templates so "Lauren K. (West Coast regional manager)
+        // joined the chat" matches the upstream-promised agent.
+        const filledText = fillTemplate(turn.text);
         const t = setTimeout(() => {
           setBubbles((prev) => [
             ...prev,
-            { role: 'system', text: turn.text },
+            { role: 'system', text: filledText },
           ]);
         }, elapsed + Math.min(typingDelay, 350));
         timersRef.current.push(t);
@@ -405,11 +490,14 @@ export default function BoltzChatDemo() {
             }
           }
           if (turn.kind === 'human') {
+            // Per-turn override is honoured (lets a script hard-pin a
+            // specific person), but in practice the agent comes from
+            // the upstream flow's promisesAgent state.
             next.push({
               role: 'human',
               text: fillTemplate(turn.text),
-              humanName: turn.humanName,
-              humanInitials: turn.humanInitials,
+              humanName: turn.humanName ?? agentForFlow.name,
+              humanInitials: turn.humanInitials ?? agentForFlow.initials,
             });
           } else {
             next.push({ role: 'bot', text: fillTemplate(turn.text) });
@@ -459,6 +547,7 @@ export default function BoltzChatDemo() {
     setAwaitingBot(false);
     setFreeform('');
     setHumanInSeat(false);
+    setPromisedAgent(DEFAULT_AGENT);
   }
 
   const visibleChips = useMemo(
@@ -742,7 +831,7 @@ export default function BoltzChatDemo() {
             disabled={awaitingBot || humanInSeat}
             placeholder={
               humanInSeat
-                ? `${HUMAN_AGENT.name} is on the chat — try Reset to run the demo again`
+                ? `${promisedAgent.firstName} is on the chat — try Reset to run the demo again`
                 : 'Ask about a part, spec, or quantity…'
             }
             aria-label="Ask Boltz a question"
