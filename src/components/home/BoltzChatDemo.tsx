@@ -1050,16 +1050,45 @@ export default function BoltzChatDemo() {
           </div>
         )}
 
+        {/* Type-a-question hint — surfaces the KB topics so visitors
+            know the freeform input is real, not just a fallback. Hidden
+            once the human is in the seat (input is locked then). */}
+        {!humanInSeat && (
+          <div
+            data-testid="boltz-type-hint"
+            style={{
+              padding: '0.625rem 1.125rem 0.5rem',
+              borderTop: '1px solid var(--od-border)',
+              background: 'var(--od-card)',
+              fontSize: '0.75rem',
+              lineHeight: 1.5,
+              color: 'var(--od-muted)',
+              textAlign: 'left',
+            }}
+          >
+            Or type a question — try{' '}
+            <span style={{ color: 'var(--od-gold)', fontWeight: 600 }}>
+              pricing, shipping, returns, warranty, payment terms, MOQs, hours,
+              or PVC specs
+            </span>
+            .
+          </div>
+        )}
+
         {/* Input row — locks once Marisol is in the seat (the demo's
-            handoff moment); Reset always lets the visitor start over. */}
+            handoff moment); Reset always lets the visitor start over.
+            Skips its borderTop when the type-hint is rendered (hint
+            already provides the divider) to avoid a doubled rule. */}
         <form
           onSubmit={handleFreeformSubmit}
           style={{
             display: 'flex',
             alignItems: 'center',
             gap: '0.5rem',
-            padding: '0.875rem 1.125rem 1rem',
-            borderTop: '1px solid var(--od-border)',
+            padding: humanInSeat
+              ? '0.875rem 1.125rem 1rem'
+              : '0.5rem 1.125rem 1rem',
+            borderTop: humanInSeat ? '1px solid var(--od-border)' : 'none',
             background: 'var(--od-card)',
           }}
         >
