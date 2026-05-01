@@ -4,8 +4,11 @@ import Reveal from './Reveal';
 export interface SectionHeroProps {
   /** Optional badge/pill above the headline — e.g. <PillBadge variant="gold" pulse>...</PillBadge> */
   badge?: React.ReactNode;
-  /** Main headline — rendered as <h1>. Poppins weight 900, clamp(2.5rem, 5vw, 4rem) */
-  headline: string;
+  /** Main headline — rendered as <h1>. Poppins weight 900,
+   *  clamp(2.5rem, 5vw, 4rem). Accepts ReactNode so a hero can compose
+   *  the headline with inline elements (e.g., the homepage's rotating
+   *  TypewriterRotator on its second line). */
+  headline: React.ReactNode;
   /** Subhead — DM Sans weight 300, color: var(--od-text) */
   subhead?: string;
   /** Slot for CTAButton(s) — rendered below the subhead */

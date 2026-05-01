@@ -3,19 +3,28 @@ import { describe, it, expect } from 'vitest';
 import HomePage from './page';
 
 describe('HomePage — Hero (industrial-supplier rebuild)', () => {
-  it('hero h1 reads "AI for Industrial Suppliers."', () => {
+  it('hero h1 leads with "Level up your industrial supply lead conversion"', () => {
     render(<HomePage />);
-    expect(
-      screen.getByRole('heading', {
-        level: 1,
-        name: /AI for Industrial Suppliers\./i,
-      }),
-    ).toBeInTheDocument();
+    const h1 = screen.getByRole('heading', { level: 1 });
+    expect(h1.textContent ?? '').toContain(
+      'Level up your industrial supply lead conversion',
+    );
+  });
+
+  it('renders the typewriter rotator inline with all 3 source phrases (sr-only)', () => {
+    render(<HomePage />);
+    const tw = screen.getByTestId('typewriter-rotator');
+    expect(tw).toBeInTheDocument();
+    // Visually-hidden sibling carries the joined phrase list for screen
+    // readers — assert all three phrases are reachable in the DOM.
+    const text = tw.textContent ?? '';
+    expect(text).toMatch(/from your trade shows/i);
+    expect(text).toMatch(/from your outbound campaigns/i);
+    expect(text).toMatch(/from your inbound campaigns/i);
   });
 
   it('renders the heritage PillBadge in the hero', () => {
     render(<HomePage />);
-    // PillBadge nests text inside a wrapper span — getAllByText catches both.
     expect(
       screen.getAllByText(/17 years of live chat.*industrial supply/i).length,
     ).toBeGreaterThan(0);
@@ -174,7 +183,7 @@ describe('HomePage — DOM order of major sections', () => {
     render(<HomePage />);
     const text = (document.body.textContent ?? '').replace(/\s+/g, ' ');
     const markers = [
-      'AI for Industrial Suppliers.',
+      'Level up your industrial supply lead conversion',
       'expensive digital filing cabinets',
       'A Real Industrial-Supply Conversation',
       'Engineered for Industrial Supply',

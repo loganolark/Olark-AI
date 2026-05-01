@@ -109,6 +109,15 @@ h1, h2, h3, h4, h5, h6 {
   30%           { opacity: 1;   transform: translateY(-3px); }
 }
 
+/* TypewriterRotator cursor blink — used by the homepage hero's rotating
+   "from your trade shows / outbound campaigns / inbound campaigns" line.
+   step-end timing function gives the hard on/off "terminal cursor" feel
+   instead of a sinusoidal fade. */
+@keyframes typewriter-cursor-blink {
+  0%, 49%   { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
 /* ─── Global prefers-reduced-motion override ─── */
 /* Collapses ALL animations and transitions to near-instant for users
    who have enabled the OS-level "Reduce Motion" preference.

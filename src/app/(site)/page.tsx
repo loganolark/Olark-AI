@@ -14,6 +14,7 @@ import IndustrialPillars from '@/components/home/IndustrialPillars';
 import WhyItMattersStatsPanel from '@/components/home/WhyItMattersStatsPanel';
 import EnhanceTheHumanMomentBlock from '@/components/home/EnhanceTheHumanMomentBlock';
 import BoltzChatDemo from '@/components/home/BoltzChatDemo';
+import TypewriterRotator from '@/components/home/TypewriterRotator';
 
 export const metadata: Metadata = {
   title: 'Aiden by Olark — AI Live Chat for Industrial Suppliers',
@@ -61,7 +62,39 @@ export default function HomePage() {
             17 years of live chat · Built for industrial supply
           </PillBadge>
         }
-        headline="AI for Industrial Suppliers."
+        headline={
+          <>
+            Level up your industrial supply lead conversion
+            <span
+              data-testid="hero-typewriter-line"
+              style={{
+                display: 'block',
+                marginTop: '0.625rem',
+                fontFamily:
+                  'ui-monospace, SFMono-Regular, "JetBrains Mono", Menlo, monospace',
+                fontWeight: 700,
+                fontSize: 'clamp(1.125rem, 2.6vw, 1.625rem)',
+                letterSpacing: '-0.01em',
+                color: 'var(--od-gold)',
+                lineHeight: 1.3,
+              }}
+            >
+              <span
+                aria-hidden="true"
+                style={{ marginRight: '0.5em', opacity: 0.6 }}
+              >
+                {'>'}
+              </span>
+              <TypewriterRotator
+                phrases={[
+                  'from your trade shows.',
+                  'from your outbound campaigns.',
+                  'from your inbound campaigns.',
+                ]}
+              />
+            </span>
+          </>
+        }
         subhead="We combine 17 years of live chat expertise with AI engineered for the way industrial supply actually sells — turning complex technical inquiries into briefed, qualified RFQs your team can close."
         cta={
           <>
