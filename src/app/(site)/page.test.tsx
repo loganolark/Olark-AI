@@ -3,11 +3,11 @@ import { describe, it, expect } from 'vitest';
 import HomePage from './page';
 
 describe('HomePage — Hero (industrial-supplier rebuild)', () => {
-  it('hero h1 leads with "Level up your industrial supply lead conversion"', () => {
+  it('hero h1 leads with "Level Up Your Industrial Supply Lead Conversion" (title case)', () => {
     render(<HomePage />);
     const h1 = screen.getByRole('heading', { level: 1 });
     expect(h1.textContent ?? '').toContain(
-      'Level up your industrial supply lead conversion',
+      'Level Up Your Industrial Supply Lead Conversion',
     );
   });
 
@@ -183,7 +183,7 @@ describe('HomePage — DOM order of major sections', () => {
     render(<HomePage />);
     const text = (document.body.textContent ?? '').replace(/\s+/g, ' ');
     const markers = [
-      'Level up your industrial supply lead conversion',
+      'Level Up Your Industrial Supply Lead Conversion',
       'expensive digital filing cabinets',
       'A Real Industrial-Supply Conversation',
       'Engineered for Industrial Supply',

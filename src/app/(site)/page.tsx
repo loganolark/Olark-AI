@@ -64,7 +64,7 @@ export default function HomePage() {
         }
         headline={
           <>
-            Level up your industrial supply lead conversion
+            Level Up Your Industrial Supply Lead Conversion
             <span
               data-testid="hero-typewriter-line"
               style={{
@@ -87,9 +87,9 @@ export default function HomePage() {
               </span>
               <TypewriterRotator
                 phrases={[
-                  'from your trade shows.',
-                  'from your outbound campaigns.',
-                  'from your inbound campaigns.',
+                  'From Your Trade Shows.',
+                  'From Your Outbound Campaigns.',
+                  'From Your Inbound Campaigns.',
                 ]}
               />
             </span>
