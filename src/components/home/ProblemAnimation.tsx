@@ -395,18 +395,23 @@ function ChatWidgetLayer({
         </div>
         <span
           style={{
-            fontSize: '0.5625rem',
-            letterSpacing: '0.06em',
-            textTransform: 'uppercase',
-            fontWeight: 700,
-            color: 'var(--od-gold)',
+            display: 'inline-flex',
+            alignItems: 'center',
             border: '1px solid rgba(250, 201, 23, 0.4)',
-            padding: '0.15rem 0.375rem',
+            padding: '0.2rem 0.4rem',
             borderRadius: 4,
             background: 'rgba(250, 201, 23, 0.08)',
+            lineHeight: 0,
           }}
         >
-          By Aiden
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/brand/aiden-logo-96.png"
+            alt="Aiden by Olark"
+            width={96}
+            height={49}
+            style={{ display: 'block', height: 12, width: 'auto' }}
+          />
         </span>
       </div>
 

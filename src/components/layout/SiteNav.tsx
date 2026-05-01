@@ -151,14 +151,20 @@ export default function SiteNav() {
             aria-label="Aiden by Olark — home"
             className="site-nav-brand"
             style={{
-              color: 'var(--od-white)',
-              fontFamily: 'var(--font-poppins)',
-              fontWeight: 700,
-              fontSize: '1.25rem',
+              display: 'inline-flex',
+              alignItems: 'center',
               textDecoration: 'none',
+              lineHeight: 0,
             }}
           >
-            Aiden
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/brand/aiden-logo-360.png"
+              alt="Aiden by Olark"
+              width={140}
+              height={71}
+              style={{ display: 'block', height: 36, width: 'auto' }}
+            />
           </Link>
 
           <div

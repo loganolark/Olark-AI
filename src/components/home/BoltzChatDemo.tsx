@@ -961,6 +961,9 @@ export default function BoltzChatDemo() {
           <span
             data-testid="powered-by-aiden"
             style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
               fontSize: '0.6875rem',
               letterSpacing: '0.08em',
               textTransform: 'uppercase',
@@ -970,9 +973,18 @@ export default function BoltzChatDemo() {
               padding: '0.25rem 0.5rem',
               borderRadius: '6px',
               background: 'rgba(250, 201, 23, 0.08)',
+              lineHeight: 1,
             }}
           >
-            Powered by Aiden
+            <span>Powered by</span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/brand/aiden-logo-96.png"
+              alt="Aiden by Olark"
+              width={96}
+              height={49}
+              style={{ display: 'block', height: 16, width: 'auto' }}
+            />
           </span>
         </header>
 
