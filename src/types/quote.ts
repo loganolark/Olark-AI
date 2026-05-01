@@ -195,6 +195,15 @@ export const PLAN_DATA: Record<Plan, PlanData> = {
     ],
     inheritedLabel: 'All Signature features included',
     inheritedFrom: 'Aiden Signature',
+    // Inherited list intentionally OMITS items that Bespoke supersedes
+    // with a better version OR duplicates wholesale in its own features
+    // array. Keeps the "what you get from Signature" view honest:
+    //   • Up to 30 routing buttons → Bespoke gives Up to 50
+    //   • One standard CRM integration → Bespoke gives Two
+    //   • 4 hours maintenance/quarter → Bespoke gives 8
+    //   • 3 agent seats → Bespoke gives 5
+    //   • Dedicated Account Manager → identical line in Bespoke features
+    //   • First Priority Support Queue → identical line in Bespoke features
     inheritedFeatures: [
       'Aiden Chatbot for one website',
       'Live Search — Website Ingest',
@@ -207,14 +216,8 @@ export const PLAN_DATA: Record<Plan, PlanData> = {
       'AI Reporting',
       'Live Chat Translation PowerUp',
       'Visitor Cobrowsing PowerUp',
-      'Up to 30 routing buttons with custom lead capture flows',
-      'One standard CRM integration (HubSpot or Salesforce)',
       'Departmental routing by sales & support need',
       'Dedicated Onboarding Manager',
-      'Dedicated Account Manager',
-      'First Priority Support Queue',
-      '4 hours maintenance per quarter',
-      '3 included agent seats',
     ],
     managed: [
       'Dedicated account manager.',
