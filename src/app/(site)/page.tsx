@@ -174,6 +174,39 @@ export default function HomePage() {
       >
         <ParticleBackground density={50} />
         <div style={{ position: 'relative', zIndex: 1 }}>
+          <Reveal
+            style={{
+              maxWidth: '680px',
+              margin: '0 auto 2.5rem',
+            }}
+          >
+            <h2
+              style={{
+                fontFamily: 'var(--font-poppins), ui-sans-serif, sans-serif',
+                fontWeight: 900,
+                fontSize: 'clamp(1.75rem, 4vw, 2.5rem)',
+                letterSpacing: '-0.02em',
+                lineHeight: 1.15,
+                color: 'var(--od-white)',
+                margin: '0 0 1rem',
+              }}
+            >
+              Want to Take It for a Test Drive?
+            </h2>
+            <p
+              style={{
+                fontFamily: 'var(--font-dm-sans), ui-sans-serif, sans-serif',
+                fontWeight: 300,
+                fontSize: 'clamp(1rem, 2.2vw, 1.125rem)',
+                lineHeight: 1.6,
+                color: 'var(--od-text)',
+                margin: 0,
+              }}
+            >
+              Just paste your company URL and email. We&rsquo;ll build you a
+              custom demo based on your website to show you on a demo call.
+            </p>
+          </Reveal>
           <URLDemoWidgetLoader />
         </div>
       </section>
