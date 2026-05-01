@@ -27,13 +27,16 @@ export default function CommercialAidenQuote() {
             letterSpacing: '-0.01em',
           }}
         >
-          &ldquo;Aiden does not replace the human moment.{' '}
+          &ldquo;17 years building live chat taught us one thing: the human
+          conversation still closes the deal.{' '}
           <span style={{ color: 'var(--od-gold)', fontWeight: 700 }}>
-            It sets it up for success.
+            AI just makes it sharper.
           </span>{' '}
-          When the rep takes over, they are arriving at a conversation that is
-          already warmed up, stepping into a deal that&rsquo;s ready to close
-          rather than struggling to understand the problem.&rdquo;
+          Aiden scans your catalog continuously — products, specs, services,
+          the works — answering the repetitive questions instantly, then
+          routing the buyer the moment it&rsquo;s worth a human&rsquo;s
+          time. Your reps get warmer leads. Your buyers get answers
+          immediately. Everyone wins.&rdquo;
         </blockquote>
         <cite
           style={{
@@ -43,7 +46,7 @@ export default function CommercialAidenQuote() {
             color: 'var(--od-muted)',
           }}
         >
-          &mdash; From the Commercial Presales Desk at Olark
+          &mdash; The Aiden by Olark team
         </cite>
       </Reveal>
     </section>

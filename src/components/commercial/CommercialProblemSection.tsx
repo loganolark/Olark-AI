@@ -12,24 +12,31 @@ interface Signal {
   tag: string;
 }
 
+// The three problems that define the industrial-supplier ICP — the engineered-
+// to-order, dealer-network, technical-spec world. Modelled on the Steel King
+// archetype (warehouse-safety / pallet-rack manufacturer with regional dealers
+// and six-figure projects) without naming them. Source: PDF brief pp. 6–7.
 const SIGNALS: Signal[] = [
   {
+    icon: 'inbox-x',
+    title: 'Filtering Real Projects from Tire-Kickers',
+    body:
+      "Your team is bogged down by 'one shelf for my garage' inquiries when they could be scoping a new 50,000sqft facility. Aiden does the technical triage upfront — payload, voltage, NEMA rating — so a real project lands warm and a one-off lands... somewhere else.",
+    tag: 'Qualification',
+  },
+  {
     icon: 'clock',
-    title: 'Pre-Chat CRM Lookup',
-    body: "Time lost to manual data look-up before every chat, and that's assuming the rep can find it at all.",
-    tag: 'Time Lost',
+    title: 'Capturing the Spec Without Losing It in Translation',
+    body:
+      "An engineer wants to know if a rack handles 3,000 lbs per pair of beams in a seismic zone. By the time that question reaches the rep, half the detail is gone. Aiden captures load capacity, clear height, and forklift type — then attaches a clean PDF spec sheet to the handoff.",
+    tag: 'Spec',
   },
   {
     icon: 'shuffle',
-    title: 'Routing to the Right Rep',
-    body: 'Misrouted conversations burn time on both sides and create dead ends for prospects who just wanted a quick answer.',
-    tag: 'Misdirected',
-  },
-  {
-    icon: 'inbox-x',
-    title: 'Missing Context at Handoff',
-    body: 'Most live chat treats every visitor the same. Your reps start every single conversation from zero.',
-    tag: 'Zero Context',
+    title: 'Routing to the Right Dealer, Not the Wrong Region',
+    body:
+      "The visitor's in California, your direct rep's in Wisconsin, and the local installer is a third party. Aiden uses IP and zip prompts to route to the regional manager or premier installer in seconds — instead of a manual handoff that loses the lead by Tuesday.",
+    tag: 'Dealer Network',
   },
 ];
 
@@ -66,9 +73,12 @@ export default function CommercialProblemSection() {
             letterSpacing: '-0.01em',
           }}
         >
-          How much of your team&rsquo;s day is spent on work that happens{' '}
-          <em style={{ fontStyle: 'italic' }}>before</em>{' '}
-          the actual sales conversation?
+          Most B2B sites are{' '}
+          <em style={{ fontStyle: 'italic' }}>expensive digital filing
+          cabinets</em>{' '}
+          — you spend a fortune to get buyers there, then greet them with a
+          Contact Us form that goes into a black hole. Industrial buyers
+          deserve better.
         </blockquote>
 
         <div
@@ -191,7 +201,7 @@ export default function CommercialProblemSection() {
               <line x1="7.5" y1="4.5" x2="7.5" y2="8" />
               <circle cx="7.5" cy="10" r="0.75" fill="var(--od-pink)" />
             </svg>
-            <span>3 friction points before the rep says a single word.</span>
+            <span>Three pain points the dead Contact Us form was never going to fix.</span>
           </div>
         </div>
       </div>

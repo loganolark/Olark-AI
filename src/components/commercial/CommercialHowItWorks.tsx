@@ -8,12 +8,12 @@ import PillBadge from '@/components/ui/PillBadge';
 type Phase = 1 | 2 | 3;
 
 const NET_RESULT_BULLETS = [
-  'No missed context at handoff, ever',
-  'No dead ends for customers mid-conversation',
-  'No CRM gaps from manual entry failures',
-  'Faster speed-to-lead',
-  'Reps spend more time closing, less time context-switching',
-  'Every conversation ends in a pipeline action',
+  'Spec questions answered instantly — from your own catalog',
+  'No engineer pulled into a chat that should have been a search',
+  'Lead-decay killed: zero "did anyone email back?" moments',
+  'Every RFQ scored and tagged before it hits the queue',
+  'Dealer + territory routing happens in seconds, not Tuesdays',
+  'Your CRM sees the spec sheet, not just the contact info',
 ];
 
 interface Step {
@@ -24,62 +24,65 @@ interface Step {
   body: string;
 }
 
+// Reskinned for the industrial-supplier ICP: technical-question intake,
+// dealer/territory routing, CRM + spec-sheet handoff. Same 7-step shape,
+// industrial-flavoured copy.
 const STEPS: Step[] = [
   {
     number: '01',
-    tag: 'Awareness',
+    tag: 'Catalog Ingest',
     phase: 1,
-    title: 'Recognize the Entry Point',
-    body: "Aiden understands and recognizes where a visitor came from, whether it's an ad, an email campaign, or an organic web search.",
+    title: 'Aiden Scans Your Site Continuously',
+    body: 'Spec sheets, product pages, install manuals, FAQ — Aiden ingests it all and re-ingests it the moment you change a price or add a SKU. No quarterly retraining cycles.',
   },
   {
     number: '02',
-    tag: 'Personalization',
+    tag: 'Technical Triage',
     phase: 1,
-    title: 'Deliver a Tailored Opening',
-    body: 'When the conversation opens, the bot provides visitors with specific information tailored to their entry point rather than a generic greeting.',
+    title: 'Filter the Spec Question from the Sales Question',
+    body: 'A buyer asks about flange bolt sizing or load capacity — Aiden answers from your catalog instantly. A buyer asks about a 50,000sqft project — Aiden flags it as a real RFQ.',
   },
   {
     number: '03',
-    tag: 'Transparency',
+    tag: 'Qualification',
     phase: 1,
-    title: 'Surface That Context to Your Team',
-    body: 'Entry source, intent signals, and conversation history are immediately visible to every rep before they take over.',
+    title: 'Capture the Specs That Define the Deal',
+    body: "Payload, voltage, NEMA rating, clear height, square footage — Aiden asks the technical questions your engineers would ask, before a human ever joins the chat.",
   },
   {
     number: '04',
-    tag: 'Enrichment',
+    tag: 'CRM Lookup',
     phase: 2,
-    title: 'Pull the CRM Record in Real Time',
-    body: 'As the visitor enters their information, Aiden simultaneously fetches their contact info, deal stage, and interaction history from your CRM.',
+    title: 'Pull the Account Record in Real Time',
+    body: 'Salesforce, HubSpot, Microsoft Dynamics — Aiden plugs into your existing stack and pulls the company, deal stage, and prior interactions before the rep is paged.',
   },
   {
     number: '05',
-    tag: 'Routing',
+    tag: 'Geo + Dealer Routing',
     phase: 2,
-    title: 'Qualify and Route by Territory',
-    body: 'Geography, sales identifiers, and team structure determine exactly which rep or department gets the conversation, automatically.',
+    title: 'Send the Lead to the Right Region or Distributor',
+    body: 'Visitor IP, zip prompt, territory rules — Aiden routes to the regional manager, the premier installer, or the direct rep automatically. No manual handoff games.',
   },
   {
     number: '06',
-    tag: 'Handoff',
+    tag: 'Briefed Handoff',
     phase: 2,
-    title: 'Arm the Rep with Full Context',
-    body: 'When the human moment is ready, the rep receives everything: questions asked, contact origin, past Olark history, and all relevant CRM fields.',
+    title: 'Arm the Rep With the Spec Sheet, Not Just a Name',
+    body: 'When a human takes over, they get the full transcript, the captured specs, the CRM record, and (when the buyer wants it) a generated PDF spec summary attached to the conversation.',
   },
   {
     number: '07',
-    tag: 'Automation',
+    tag: 'Pipeline Logged',
     phase: 3,
-    title: 'Update the CRM Automatically',
-    body: 'When the conversation ends, the CRM record is updated with everything that happened. No manual entry. No gaps.',
+    title: 'Update Your CRM Without Lifting a Finger',
+    body: 'Lead score, project size category, technical inputs, dealer assignment — written back to your CRM the moment the conversation closes. No forms. No re-typing.',
   },
 ];
 
 const PHASES: { phase: Phase; label: string; color: string }[] = [
-  { phase: 1, label: 'Phase 1 — Customer Lookup', color: 'var(--od-gold)' },
-  { phase: 2, label: 'Phase 2 — Qualification & Handoff', color: 'var(--od-pink)' },
-  { phase: 3, label: 'Phase 3 — CRM Update', color: 'rgba(91,192,190,0.85)' },
+  { phase: 1, label: 'Phase 1 — Catalog & Triage', color: 'var(--od-gold)' },
+  { phase: 2, label: 'Phase 2 — Routing & Handoff', color: 'var(--od-pink)' },
+  { phase: 3, label: 'Phase 3 — CRM Logged', color: 'rgba(91,192,190,0.85)' },
 ];
 
 const PHASE_TAG_STYLES: Record<Phase, React.CSSProperties> = {
@@ -142,7 +145,7 @@ export default function CommercialHowItWorks() {
               margin: '0 0 1.25rem',
             }}
           >
-            Seven Steps From First Click to Closed Deal
+            Seven Steps From Spec Question to Logged Pipeline
           </h2>
           <p
             style={{
@@ -153,8 +156,9 @@ export default function CommercialHowItWorks() {
               margin: '0 auto',
             }}
           >
-            Aiden automates the entire intake and handoff workflow, with no
-            engineering resources required.
+            Aiden runs the full intake-to-handoff workflow for industrial
+            supply — from catalog ingest to CRM update — with no engineering
+            lift on your side.
           </p>
         </div>
 
@@ -314,7 +318,7 @@ export default function CommercialHowItWorks() {
               letterSpacing: '-0.01em',
             }}
           >
-            SDR Prep Is Nearly Eliminated.
+            Your Sales Engineers Get Their Time Back.
           </h3>
           <ul
             role="list"

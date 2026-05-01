@@ -12,6 +12,7 @@ import {
   type QuoteQuestion,
   type QuoteState,
 } from '@/types/quote';
+import CompareSignatureBespoke from './CompareSignatureBespoke';
 import type { HubSpotContactPayload } from '@/types/hubspot';
 import { calcPricing, formatUSD } from '@/lib/quote-pricing';
 import {
@@ -487,6 +488,16 @@ export default function QuoteBuilder({ tier, onComplete }: QuoteBuilderProps) {
               quote.
             </p>
           )}
+
+          {/* Compare-tiers affordance for the commercial-tier lineup. The
+              visitor has to unlock first (so we don't waste the comparison on
+              someone who hasn't given email yet), and the comparison only
+              makes sense when their recommendation is one of the two top
+              tiers — otherwise hide it. */}
+          {!isLocked &&
+            (plan === 'signature' || plan === 'bespoke') && (
+              <CompareSignatureBespoke />
+            )}
 
           <button
             type="button"

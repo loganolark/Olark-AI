@@ -23,16 +23,21 @@ describe('CommercialPage — structure', () => {
     expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
   });
 
-  it('hero h1 reads "Provable Pipeline. Full Signal Trail."', () => {
+  it('hero h1 reads "Industrial Intelligence. Human Connection."', () => {
     renderPage();
     expect(
-      screen.getByRole('heading', { level: 1, name: /Provable Pipeline\. Full Signal Trail\./i }),
+      screen.getByRole('heading', {
+        level: 1,
+        name: /Industrial Intelligence\. Human Connection\./i,
+      }),
     ).toBeInTheDocument();
   });
 
-  it('renders the "Commercial Tier" PillBadge in the hero', () => {
+  it('renders the heritage PillBadge in the hero (17 years + industrial supply)', () => {
     renderPage();
-    expect(screen.getByText(/Commercial Tier/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/17 years of live chat.*industrial supply/i),
+    ).toBeInTheDocument();
   });
 });
 
@@ -55,10 +60,16 @@ describe('CommercialPage — Crawl/Walk/Run timeline', () => {
   it('phases default to collapsed (aria-expanded="false")', () => {
     renderPage();
     // Scope to the timeline triggers only — Story 8.2 added a "Get My Custom
-    // Quote" button via <QuoteSection> that doesn't carry aria-expanded.
+    // Quote" button via <QuoteSection>, the compare-tier toggle in
+    // QuoteBuilder, and inheritance toggles. Filter to the triggers we expect.
     const triggers = screen
       .getAllByRole('button')
-      .filter((b) => b.hasAttribute('aria-expanded'));
+      .filter(
+        (b) =>
+          b.hasAttribute('aria-expanded') &&
+          b.textContent &&
+          /Crawl|Walk|Run|Days|Weeks|Month/i.test(b.textContent),
+      );
     expect(triggers).toHaveLength(3);
     triggers.forEach((t) => expect(t).toHaveAttribute('aria-expanded', 'false'));
   });
@@ -72,8 +83,6 @@ describe('CommercialPage — TierCard relocation', () => {
 
   it('does NOT show big-card capability copy on the product page', () => {
     renderPage();
-    // "Full signal trail" still appears in the hero h1 + commercial narrative
-    // sections — assert only the longer capability-list strings are absent.
     expect(
       screen.queryByText(/Rep intelligence brief on every contact — context/i),
     ).not.toBeInTheDocument();
@@ -109,12 +118,12 @@ describe('CommercialPage — bottom QuoteSection (merged with former MidPageMeet
 });
 
 describe('CommercialPage — Story 8.5 video section', () => {
-  it('renders the solo "Watch Aiden Handle the Entire Pre-Sales Workflow" VideoSection', () => {
+  it('renders the solo industrial-conversation VideoSection', () => {
     renderPage();
     expect(
       screen.getByRole('heading', {
         level: 2,
-        name: /Watch Aiden Handle the Entire Pre-Sales Workflow/i,
+        name: /Watch Aiden Run a Real Industrial-Supply Conversation/i,
       }),
     ).toBeInTheDocument();
     expect(screen.getByTestId('video-section').getAttribute('data-variant')).toBe('solo');
@@ -139,7 +148,7 @@ describe('CommercialPage — Story 8.5 video section', () => {
     renderPage();
     const headings = screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent);
     const videoIdx = headings.findIndex((t) =>
-      /Watch Aiden Handle the Entire Pre-Sales Workflow/i.test(t ?? ''),
+      /Watch Aiden Run a Real Industrial-Supply Conversation/i.test(t ?? ''),
     );
     const timelineIdx = headings.findIndex((t) => /Crawl\. Walk\. Run\./i.test(t ?? ''));
     expect(videoIdx).toBeGreaterThan(-1);
@@ -147,27 +156,26 @@ describe('CommercialPage — Story 8.5 video section', () => {
   });
 });
 
-describe('CommercialPage — Story 8.6 narrative sections', () => {
-  it('renders the problem section blockquote', () => {
+describe('CommercialPage — narrative sections (industrial-supplier rebuild)', () => {
+  it('renders the "expensive digital filing cabinets" problem blockquote', () => {
     renderPage();
     expect(
-      screen.getByText(
-        /How much of your team’s day is spent on work that happens/i,
-      ),
+      screen.getByText(/Most B2B sites are/i),
     ).toBeInTheDocument();
   });
 
-  it('renders all 3 problem-signal cards', () => {
+  it('renders all 3 industrial-archetype problem cards', () => {
     renderPage();
     const signals = screen.getAllByTestId('commercial-problem-signal');
     expect(signals).toHaveLength(3);
+    expect(signals[0].textContent).toContain('Filtering Real Projects from Tire-Kickers');
+    expect(signals[1].textContent).toContain('Capturing the Spec Without Losing It in Translation');
+    expect(signals[2].textContent).toContain('Routing to the Right Dealer, Not the Wrong Region');
   });
 
-  it('renders the Aiden quote attribution', () => {
+  it('renders the heritage Aiden quote attribution', () => {
     renderPage();
-    expect(
-      screen.getByText(/From the Commercial Presales Desk at Olark/i),
-    ).toBeInTheDocument();
+    expect(screen.getByText(/The Aiden by Olark team/i)).toBeInTheDocument();
   });
 
   it('renders the How It Works h2 and all 7 step cards', () => {
@@ -175,36 +183,72 @@ describe('CommercialPage — Story 8.6 narrative sections', () => {
     expect(
       screen.getByRole('heading', {
         level: 2,
-        name: /Seven Steps From First Click to Closed Deal/i,
+        name: /Seven Steps From Spec Question to Logged Pipeline/i,
       }),
     ).toBeInTheDocument();
     const stepCards = screen.getAllByTestId('commercial-step-card');
     expect(stepCards).toHaveLength(7);
   });
 
-  it('renders the Net Result callout (merged from former OutcomeFlow) inside HowItWorks', () => {
+  it('renders the Net Result callout with the new "Sales Engineers Get Their Time Back" headline', () => {
     renderPage();
     const callout = screen.getByTestId('commercial-net-result');
     expect(callout).toBeInTheDocument();
     expect(
       screen.getByRole('heading', {
         level: 3,
-        name: /SDR Prep Is Nearly Eliminated\./i,
+        name: /Your Sales Engineers Get Their Time Back\./i,
       }),
     ).toBeInTheDocument();
     const bullets = callout.querySelectorAll('li');
     expect(bullets).toHaveLength(6);
   });
 
-  it('renders the Built For h2 and all 3 who-cards', () => {
+  it('renders the IndustrialFeatureGrid (4 cards: Doc Scanning / Lead Scoring / Geo Routing / Heritage)', () => {
+    renderPage();
+    expect(
+      screen.getByRole('heading', {
+        level: 2,
+        name: /Four Capabilities Industrial Supply Actually Asks For/i,
+      }),
+    ).toBeInTheDocument();
+    const cards = screen.getAllByTestId('industrial-feature-card');
+    expect(cards).toHaveLength(4);
+  });
+
+  it('renders the PlatformProofSection with three dashboard frames', () => {
+    renderPage();
+    expect(
+      screen.getByRole('heading', {
+        level: 2,
+        name: /See the Platform, Not Just the Pitch/i,
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getAllByTestId('platform-shot-frame')).toHaveLength(3);
+  });
+
+  it('renders the Built For h2 with the new industrial framing', () => {
     renderPage();
     const builtForHeading = screen.getByRole('heading', {
       level: 2,
-      name: /This Is a Commercial Product\./i,
+      name: /Built for Industrial Supply\./i,
     });
-    expect(builtForHeading.textContent).toContain('Here’s Who We Built It For.');
+    expect(builtForHeading.textContent).toContain(
+      'Calibrated for the Way You Actually Sell.',
+    );
     const whoCards = screen.getAllByTestId('commercial-who-card');
     expect(whoCards).toHaveLength(3);
+  });
+
+  it('renders the PlaysWithYourStackStrip with the no-rip-and-replace promise', () => {
+    renderPage();
+    expect(
+      screen.getByRole('heading', {
+        level: 2,
+        name: /No Rip and Replace\. No New Tool for Your Team to Learn\./i,
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getAllByTestId('stack-item').length).toBeGreaterThan(0);
   });
 
   it('places narrative sections in the correct DOM order between video and timeline', () => {
@@ -214,19 +258,22 @@ describe('CommercialPage — Story 8.6 narrative sections', () => {
       .map((h) => h.textContent ?? '');
 
     const expectedOrder = [
-      /Watch Aiden Handle the Entire Pre-Sales Workflow/i,
-      /Seven Steps From First Click to Closed Deal/i,
-      /This Is a Commercial Product\./i,
+      /Watch Aiden Run a Real Industrial-Supply Conversation/i,
+      /Seven Steps From Spec Question to Logged Pipeline/i,
+      /Four Capabilities Industrial Supply Actually Asks For/i,
+      /See the Platform, Not Just the Pitch/i,
+      /Built for Industrial Supply\./i,
+      /No Rip and Replace\./i,
       /Crawl\. Walk\. Run\./i,
       /Ready to Put Aiden to Work as Your Commercial Sales Engine/i,
     ];
-    // The QuoteSection now carries the bottom-CTA "Ready to Put Aiden to Work…"
-    // h2 (merged from the former standalone MidPageMeetingCTA).
 
     const indexes = expectedOrder.map((re) =>
       headings.findIndex((t) => re.test(t)),
     );
-    indexes.forEach((idx) => expect(idx).toBeGreaterThan(-1));
+    indexes.forEach((idx, i) =>
+      expect(idx, `section ${i} (${expectedOrder[i]}) not found in DOM`).toBeGreaterThan(-1),
+    );
     for (let i = 1; i < indexes.length; i++) {
       expect(indexes[i]).toBeGreaterThan(indexes[i - 1]);
     }

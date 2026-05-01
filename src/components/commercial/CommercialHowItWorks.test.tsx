@@ -21,12 +21,12 @@ describe('CommercialHowItWorks', () => {
     expect(
       screen.getByRole('heading', {
         level: 2,
-        name: /Seven Steps From First Click to Closed Deal/i,
+        name: /Seven Steps From Spec Question to Logged Pipeline/i,
       }),
     ).toBeInTheDocument();
     expect(
       screen.getByText(
-        /Aiden automates the entire intake and handoff workflow/i,
+        /Aiden runs the full intake-to-handoff workflow for industrial supply/i,
       ),
     ).toBeInTheDocument();
   });
@@ -42,12 +42,12 @@ describe('CommercialHowItWorks', () => {
   it('renders 3 phase labels with correct names', () => {
     render(<CommercialHowItWorks />);
     expect(
-      screen.getByText(/Phase 1 — Customer Lookup/i),
+      screen.getByText(/Phase 1 — Catalog & Triage/i),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/Phase 2 — Qualification & Handoff/i),
+      screen.getByText(/Phase 2 — Routing & Handoff/i),
     ).toBeInTheDocument();
-    expect(screen.getByText(/Phase 3 — CRM Update/i)).toBeInTheDocument();
+    expect(screen.getByText(/Phase 3 — CRM Logged/i)).toBeInTheDocument();
   });
 
   it('applies phase-color tags to each step (g1/g2/g3)', () => {
@@ -59,20 +59,26 @@ describe('CommercialHowItWorks', () => {
 
   it('renders all 7 step titles in order', () => {
     render(<CommercialHowItWorks />);
-    expect(screen.getByText('Recognize the Entry Point')).toBeInTheDocument();
-    expect(screen.getByText('Deliver a Tailored Opening')).toBeInTheDocument();
     expect(
-      screen.getByText('Surface That Context to Your Team'),
+      screen.getByText('Aiden Scans Your Site Continuously'),
     ).toBeInTheDocument();
     expect(
-      screen.getByText('Pull the CRM Record in Real Time'),
+      screen.getByText('Filter the Spec Question from the Sales Question'),
     ).toBeInTheDocument();
     expect(
-      screen.getByText('Qualify and Route by Territory'),
+      screen.getByText('Capture the Specs That Define the Deal'),
     ).toBeInTheDocument();
-    expect(screen.getByText('Arm the Rep with Full Context')).toBeInTheDocument();
     expect(
-      screen.getByText('Update the CRM Automatically'),
+      screen.getByText('Pull the Account Record in Real Time'),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText('Send the Lead to the Right Region or Distributor'),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText('Arm the Rep With the Spec Sheet, Not Just a Name'),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText('Update Your CRM Without Lifting a Finger'),
     ).toBeInTheDocument();
   });
 
@@ -92,19 +98,19 @@ describe('CommercialHowItWorks', () => {
     const callout = screen.getByTestId('commercial-net-result');
     expect(callout).toBeInTheDocument();
     expect(callout.textContent).toContain('Net Result');
-    expect(callout.textContent).toContain('SDR Prep Is Nearly Eliminated.');
+    expect(callout.textContent).toContain('Your Sales Engineers Get Their Time Back.');
     const bullets = callout.querySelectorAll('li');
     expect(bullets).toHaveLength(6);
     const bulletTexts = Array.from(bullets).map(
       (b) => b.querySelector('span:last-child')?.textContent,
     );
     expect(bulletTexts).toEqual([
-      'No missed context at handoff, ever',
-      'No dead ends for customers mid-conversation',
-      'No CRM gaps from manual entry failures',
-      'Faster speed-to-lead',
-      'Reps spend more time closing, less time context-switching',
-      'Every conversation ends in a pipeline action',
+      'Spec questions answered instantly — from your own catalog',
+      'No engineer pulled into a chat that should have been a search',
+      'Lead-decay killed: zero "did anyone email back?" moments',
+      'Every RFQ scored and tagged before it hits the queue',
+      'Dealer + territory routing happens in seconds, not Tuesdays',
+      'Your CRM sees the spec sheet, not just the contact info',
     ]);
   });
 });

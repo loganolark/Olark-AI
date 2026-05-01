@@ -5,31 +5,49 @@ import { useInView } from '@/lib/hooks/use-in-view';
 import { useReducedMotion } from '@/lib/hooks/use-reduced-motion';
 import ProductIcon, { type ProductIconName } from '@/components/ui/ProductIcon';
 
-interface WhoCard {
+interface FeatureRow {
   icon: ProductIconName;
   title: string;
   body: string;
+  /** One-line "why it matters to industrial buyers" tag — pulled from the brief. */
+  why: string;
 }
 
-const WHO_CARDS: WhoCard[] = [
+const FEATURES: FeatureRow[] = [
   {
-    icon: 'map',
-    title: 'Dealer + Regional Networks',
-    body: 'Manufacturers selling through regional reps, distributors, or third-party installers who need geo-aware routing and clean territory rules — without anyone manually copy-pasting a zip code into Slack.',
+    icon: 'inbox-x',
+    title: 'Document Scanning',
+    body: 'Aiden ingests PDFs, spec sheets, install manuals, and CAD-adjacent docs — then answers technical "how-to" or "can it hold?" questions inline, citing the source page.',
+    why: 'Buyers stop bouncing on paywalled PDFs. Spec answers happen in the chat.',
   },
   {
     icon: 'trophy',
-    title: 'Engineered-to-Order, Six-Figure Projects',
-    body: 'High-value, high-consideration industrial products where every spec question matters and every lead could be a 50,000sqft facility — or a one-shelf garage buyer your team should not be on a call with.',
+    title: 'Lead Scoring Dashboard',
+    body: 'Every conversation is tagged "High Value" (new facility project) vs. "Low Value" (one-off small parts) based on the technical inputs the buyer gave the bot.',
+    why: 'Your team stops triaging by gut. The pipeline reflects reality.',
+  },
+  {
+    icon: 'map',
+    title: 'Geo + Dealer-Network Routing',
+    body: 'IP detection, zip prompts, and territory rules combine to send each lead to the right regional manager, premier installer, or direct rep — automatically.',
+    why: 'No more "the rep is in Wisconsin, the buyer is in California" dead ends.',
   },
   {
     icon: 'gear',
-    title: 'Technical Catalogs at Scale',
-    body: 'Companies whose product pages are walls of PDFs, load charts, and PSI ratings. Aiden scans all of it continuously so your buyers get the right answer immediately, in the language of your industry.',
+    title: '17 Years of Live Chat Heritage',
+    body: 'Aiden is built by Olark — the team that has run live chat for 17 years across every kind of B2B sales motion. We are not a fly-by-night AI startup learning chat as we go.',
+    why: 'Stability and chat fluency that brand-new AI tools cannot fake.',
   },
 ];
 
-export default function CommercialBuiltFor() {
+/**
+ * The "What's Inside" feature grid for the product page. Four cards modelled
+ * on the Steel King-anchored brief (PDF p. 10) — Document Scanning, Lead
+ * Scoring, Geo Routing, 17-Year Heritage. Each card carries a "why it
+ * matters" line that mirrors how the industrial buyer thinks, not how the
+ * marketer thinks.
+ */
+export default function IndustrialFeatureGrid() {
   const ref = useRef<HTMLDivElement | null>(null);
   const inView = useInView(ref, { threshold: 0.2, once: true });
   const reduced = useReducedMotion();
@@ -38,10 +56,7 @@ export default function CommercialBuiltFor() {
   return (
     <section
       className="product-section"
-      style={{
-        backgroundColor: 'var(--od-navy)',
-        borderTop: '1px solid var(--od-border)',
-      }}
+      style={{ backgroundColor: 'var(--od-navy)' }}
     >
       <div ref={ref} style={{ maxWidth: '1080px', margin: '0 auto' }}>
         <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
@@ -55,7 +70,7 @@ export default function CommercialBuiltFor() {
               margin: '0 0 1rem',
             }}
           >
-            Built For
+            What You Actually Get
           </p>
           <h2
             style={{
@@ -68,33 +83,30 @@ export default function CommercialBuiltFor() {
               margin: 0,
             }}
           >
-            <span style={{ display: 'block' }}>
-              Built for Industrial Supply.
-            </span>{' '}
-            <span style={{ display: 'block' }}>
-              Calibrated for the Way You Actually Sell.
-            </span>
+            Four Capabilities Industrial Supply Actually Asks For
           </h2>
         </div>
 
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
             gap: '1rem',
           }}
         >
-          {WHO_CARDS.map((card, i) => {
+          {FEATURES.map((f, i) => {
             const delayMs = reduced ? 0 : i * 100;
             return (
               <article
-                key={card.title}
-                data-testid="commercial-who-card"
+                key={f.title}
+                data-testid="industrial-feature-card"
                 style={{
+                  display: 'flex',
+                  flexDirection: 'column',
                   background: 'var(--od-card)',
                   border: '1px solid var(--od-border)',
-                  borderRadius: '16px',
-                  padding: '1.75rem 1.5rem',
+                  borderRadius: '14px',
+                  padding: '1.5rem',
                   opacity: reduced || animate ? 1 : 0,
                   transform:
                     reduced || animate ? 'translateY(0)' : 'translateY(8px)',
@@ -114,7 +126,7 @@ export default function CommercialBuiltFor() {
                     marginBottom: '0.875rem',
                   }}
                 >
-                  <ProductIcon name={card.icon} size={22} />
+                  <ProductIcon name={f.icon} size={22} />
                 </span>
                 <h3
                   style={{
@@ -126,17 +138,31 @@ export default function CommercialBuiltFor() {
                     letterSpacing: '-0.01em',
                   }}
                 >
-                  {card.title}
+                  {f.title}
                 </h3>
                 <p
                   style={{
-                    margin: 0,
-                    color: 'var(--od-muted)',
+                    margin: '0 0 1rem',
+                    color: 'var(--od-text)',
                     fontSize: '0.9375rem',
-                    lineHeight: 1.6,
+                    lineHeight: 1.55,
                   }}
                 >
-                  {card.body}
+                  {f.body}
+                </p>
+                <p
+                  style={{
+                    margin: 'auto 0 0',
+                    paddingTop: '0.75rem',
+                    borderTop: '1px solid var(--od-border)',
+                    color: 'var(--od-gold)',
+                    fontSize: '0.8125rem',
+                    fontWeight: 600,
+                    fontStyle: 'italic',
+                    lineHeight: 1.4,
+                  }}
+                >
+                  {f.why}
                 </p>
               </article>
             );

@@ -7,6 +7,9 @@ import CommercialAidenQuote from '@/components/commercial/CommercialAidenQuote';
 import CommercialBuiltFor from '@/components/commercial/CommercialBuiltFor';
 import CommercialHowItWorks from '@/components/commercial/CommercialHowItWorks';
 import CommercialProblemSection from '@/components/commercial/CommercialProblemSection';
+import IndustrialFeatureGrid from '@/components/commercial/IndustrialFeatureGrid';
+import PlatformProofSection from '@/components/commercial/PlatformProofSection';
+import PlaysWithYourStackStrip from '@/components/commercial/PlaysWithYourStackStrip';
 import CrawlWalkRunTimeline from '@/components/product/CrawlWalkRunTimeline';
 import VideoSection from '@/components/product/VideoSection';
 import QuizResumeBanner from '@/components/quiz/QuizResumeBanner';
@@ -14,14 +17,16 @@ import QuoteSection from '@/components/quote/QuoteSection';
 import Reveal from '@/components/ui/Reveal';
 
 export const metadata: Metadata = {
-  title: 'AI Sales Rep for High-Volume Teams | Aiden Commercial by Olark',
-  description: 'Aiden Commercial handles full-pipeline automation — from inbound qualification to outbound support — for enterprise and commercial sales teams.',
+  title: 'Aiden by Olark — AI Live Chat Built for Industrial Supply',
+  description:
+    "Aiden is the live-chat platform engineered for industrial suppliers. We answer the technical spec questions instantly, route by territory and dealer network, and hand the real RFQs to your team — fully briefed.",
   alternates: {
     canonical: '/commercial',
   },
   openGraph: {
-    title: 'AI Sales Rep for High-Volume Teams | Aiden Commercial by Olark',
-    description: 'Aiden Commercial handles full-pipeline automation — from inbound qualification to outbound support — for enterprise and commercial sales teams.',
+    title: 'Aiden by Olark — AI Live Chat Built for Industrial Supply',
+    description:
+      "Aiden is the live-chat platform engineered for industrial suppliers. We answer the technical spec questions instantly, route by territory and dealer network, and hand the real RFQs to your team — fully briefed.",
     images: [{ url: '/og-image.png', width: 1200, height: 630 }],
     type: 'website',
   },
@@ -30,8 +35,9 @@ export const metadata: Metadata = {
 const productJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Product',
-  name: 'Aiden Commercial',
-  description: 'Enterprise AI sales chat with full pipeline automation — inbound qualification, outbound support, and Crawl/Walk/Run onboarding.',
+  name: 'Aiden by Olark',
+  description:
+    'AI live-chat platform engineered for industrial supply: technical-spec qualification, dealer-network routing, CRM-integrated handoffs, and a 17-year live-chat heritage.',
   brand: { '@type': 'Brand', name: 'Olark' },
   url: 'https://olark.ai/commercial',
 };
@@ -49,21 +55,30 @@ export default function CommercialPage() {
       </Suspense>
 
       <SectionHero
-        badge={<PillBadge variant="muted">Commercial Tier</PillBadge>}
-        headline="Provable Pipeline. Full Signal Trail."
-        subhead="Implementation in days, not quarters. Every visitor logged, every handoff briefed, every rep equipped."
+        badge={
+          <PillBadge variant="gold" pulse>
+            17 years of live chat · Built for industrial supply
+          </PillBadge>
+        }
+        headline="Industrial Intelligence. Human Connection."
+        subhead="Aiden is the AI live-chat platform engineered for industrial suppliers. We answer the spec questions instantly, route by territory and dealer network, and hand every real RFQ to your team with the brief already written."
         cta={
-          <CTAButton variant="secondary" size="md" href="#quote-section">
-            See Pricing →
-          </CTAButton>
+          <>
+            <CTAButton variant="primary" size="lg" href="#quote-section">
+              See Pricing →
+            </CTAButton>
+            <CTAButton variant="secondary" size="lg" href="/get-started">
+              Book a Technical Deep Dive
+            </CTAButton>
+          </>
         }
       />
 
       <VideoSection
         variant="solo"
         label="See It In Action"
-        title="Watch Aiden Handle the Entire Pre-Sales Workflow"
-        intro="From entry-point recognition to CRM update, in a single automated conversation."
+        title="Watch Aiden Run a Real Industrial-Supply Conversation"
+        intro="Spec question to qualified RFQ to logged pipeline — in a single chat, with the dealer routed and the CRM updated automatically."
         mediaId="ttc5obl4nd"
         page="commercial"
       />
@@ -74,7 +89,13 @@ export default function CommercialPage() {
 
       <CommercialHowItWorks />
 
+      <IndustrialFeatureGrid />
+
+      <PlatformProofSection />
+
       <CommercialBuiltFor />
+
+      <PlaysWithYourStackStrip />
 
       <section
         id="implementation-timeline"

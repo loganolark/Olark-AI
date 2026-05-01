@@ -15,33 +15,31 @@ import { useReducedMotion } from '@/lib/hooks/use-reduced-motion';
 import { useInView } from '@/lib/hooks/use-in-view';
 
 describe('CommercialProblemSection', () => {
-  it('renders the blockquote with italicized "before"', () => {
+  it('renders the "expensive digital filing cabinets" blockquote with italicised emphasis', () => {
     render(<CommercialProblemSection />);
     const quote = screen.getByTestId('commercial-problem-quote');
-    expect(quote.textContent).toContain(
-      'How much of your team’s day is spent on work that happens',
-    );
-    expect(quote.textContent).toContain('before');
-    const em = within(quote).getByText('before');
+    expect(quote.textContent).toContain('Most B2B sites are');
+    expect(quote.textContent).toContain('expensive digital filing');
+    const em = within(quote).getByText(/expensive digital filing/);
     expect(em.tagName).toBe('EM');
   });
 
-  it('renders all 3 problem-signal cards in correct order with correct tags', () => {
+  it('renders the 3 industrial-supplier problem cards (Steel King archetype) in order', () => {
     render(<CommercialProblemSection />);
     const cards = screen.getAllByTestId('commercial-problem-signal');
     expect(cards).toHaveLength(3);
-    expect(cards[0].textContent).toContain('Pre-Chat CRM Lookup');
-    expect(cards[0].textContent).toContain('Time Lost');
-    expect(cards[1].textContent).toContain('Routing to the Right Rep');
-    expect(cards[1].textContent).toContain('Misdirected');
-    expect(cards[2].textContent).toContain('Missing Context at Handoff');
-    expect(cards[2].textContent).toContain('Zero Context');
+    expect(cards[0].textContent).toContain('Filtering Real Projects from Tire-Kickers');
+    expect(cards[0].textContent).toContain('Qualification');
+    expect(cards[1].textContent).toContain('Capturing the Spec Without Losing It in Translation');
+    expect(cards[1].textContent).toContain('Spec');
+    expect(cards[2].textContent).toContain('Routing to the Right Dealer, Not the Wrong Region');
+    expect(cards[2].textContent).toContain('Dealer Network');
   });
 
-  it('renders the summary line with the friction-points text', () => {
+  it('renders the summary line referencing the dead Contact Us form', () => {
     render(<CommercialProblemSection />);
     expect(
-      screen.getByText(/3 friction points before the rep says a single word\./i),
+      screen.getByText(/Three pain points the dead Contact Us form was never going to fix\./i),
     ).toBeInTheDocument();
   });
 

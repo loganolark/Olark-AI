@@ -19,19 +19,21 @@ describe('CommercialBuiltFor', () => {
     render(<CommercialBuiltFor />);
     expect(screen.getByText('Built For')).toBeInTheDocument();
     const heading = screen.getByRole('heading', { level: 2 });
-    expect(heading.textContent).toContain('This Is a Commercial Product.');
-    expect(heading.textContent).toContain('Here’s Who We Built It For.');
+    expect(heading.textContent).toContain('Built for Industrial Supply.');
+    expect(heading.textContent).toContain(
+      'Calibrated for the Way You Actually Sell.',
+    );
   });
 
-  it('renders 3 who-cards with the correct icon SVGs and titles', () => {
+  it('renders 3 who-cards with the correct icon SVGs and industrial-archetype titles', () => {
     const { container } = render(<CommercialBuiltFor />);
     const cards = screen.getAllByTestId('commercial-who-card');
     expect(cards).toHaveLength(3);
-    expect(cards[0].textContent).toContain('Regional Sales Teams');
+    expect(cards[0].textContent).toContain('Dealer + Regional Networks');
     expect(cards[1].textContent).toContain(
-      'High-Value, High-Consideration Products',
+      'Engineered-to-Order, Six-Figure Projects',
     );
-    expect(cards[2].textContent).toContain('Live Chat at Scale');
+    expect(cards[2].textContent).toContain('Technical Catalogs at Scale');
     cards.forEach((card) => {
       expect(card.querySelectorAll('svg')).toHaveLength(1);
     });
