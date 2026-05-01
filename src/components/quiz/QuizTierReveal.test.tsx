@@ -5,7 +5,10 @@ import userEvent from '@testing-library/user-event';
 import QuizTierReveal from './QuizTierReveal';
 
 describe('QuizTierReveal', () => {
-  it('renders Essentials headline and CTA link to /essentials', () => {
+  // /essentials and /lead-gen were collapsed into /commercial when the site
+  // pivoted to an industrial-supplier narrative — the "details" CTA for the
+  // SMB tiers now points at the unified product page.
+  it('renders Essentials headline and routes the details CTA to /commercial', () => {
     render(<QuizTierReveal tierSignal="essentials" />);
     expect(
       screen.getByRole('heading', { name: /Based on what you told us: Essentials/i }),
@@ -15,17 +18,17 @@ describe('QuizTierReveal', () => {
     ).toHaveAttribute('href', '/get-started');
     expect(
       screen.getByRole('link', { name: /See Essentials details/i }),
-    ).toHaveAttribute('href', '/essentials');
+    ).toHaveAttribute('href', '/commercial');
   });
 
-  it('renders Lead-Gen headline and CTA link to /lead-gen', () => {
+  it('renders Lead-Gen headline and routes the details CTA to /commercial', () => {
     render(<QuizTierReveal tierSignal="lead_gen" />);
     expect(
       screen.getByRole('heading', { name: /Based on what you told us: Lead-Gen/i }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole('link', { name: /See Lead-Gen details/i }),
-    ).toHaveAttribute('href', '/lead-gen');
+    ).toHaveAttribute('href', '/commercial');
   });
 
   it('renders Commercial headline and CTA link to /commercial', () => {

@@ -13,9 +13,10 @@ export interface TierContentEntry {
  *
  * Surfaced on /get-started as the dynamic recommendation card after the
  * visitor's quiz/cookie variant is known. Previously each product page
- * (/essentials, /lead-gen, /commercial) hand-rolled its own copy in a
- * #capabilities section — those have been consolidated here so the
- * conversion page is the single source for the post-recommendation card.
+ * hand-rolled its own copy; consolidated here. /essentials and /lead-gen
+ * have since been collapsed into /commercial — the entries below stay so
+ * the recommendation copy still differentiates by visitor profile, but the
+ * CTA destinations all flow to the unified product page or /get-started.
  */
 export const TIER_CONTENT: Record<TierVariant, TierContentEntry> = {
   essentials: {

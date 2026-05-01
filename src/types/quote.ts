@@ -6,7 +6,8 @@
  *   - `Plan` — the actual plan a visitor qualifies for after the quote quiz.
  *
  * A "commercial" QuizTier may produce a `signature` or `bespoke` Plan. A
- * "advanced" QuizTier (i.e. /lead-gen) may produce `advanced` or `pro`.
+ * "advanced" QuizTier (now also surfaced on /commercial after the SMB-page
+ * collapse) may produce `advanced` or `pro`.
  */
 
 export type Plan = 'essentials' | 'advanced' | 'pro' | 'signature' | 'bespoke';

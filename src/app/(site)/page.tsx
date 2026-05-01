@@ -49,37 +49,19 @@ interface HomepageTier {
   href: string;
 }
 
+// Phase 3 will replace this whole section with the four "Engineered for
+// industrial supply" pillars. For the strip we leave a single product
+// card pointing at /commercial so the section still renders cleanly.
 const TIERS: HomepageTier[] = [
   {
-    tier: 'essentials',
-    name: 'Essentials',
-    positioning: 'Live in 48 hours. Every visitor qualified, routed, and ready for your rep.',
-    capabilities: [
-      'Live chatbot trained on your website in one click',
-      'Visitor capture, qualification, and rep handoff',
-      'Free onboarding — no engineering required',
-    ],
-    href: '/essentials',
-  },
-  {
-    tier: 'lead-gen',
-    name: 'Lead-Gen',
-    positioning: 'Your leads arrive with a context brief. Your reps just got a teammate.',
-    capabilities: [
-      'AI Analyst surfaces your highest-intent visitors',
-      'Smart routing to the right rep, automatically',
-      'Pipeline-ready handoffs with full context',
-    ],
-    href: '/lead-gen',
-  },
-  {
     tier: 'commercial',
-    name: 'Commercial',
-    positioning: 'Full pipeline signal. Provable ROI, direct team access, no ticket queue.',
+    name: 'See the product',
+    positioning:
+      'Industrial-grade chat that qualifies the technical questions, routes by territory, and hands every real opportunity to your team with the spec sheet attached.',
     capabilities: [
-      'Full signal trail on every visitor interaction',
-      'Deep CRM integration with rep intelligence briefs',
-      'Implementation in days, not quarters',
+      'Speaks PSI, NEMA, SKU — trained on your catalog',
+      'Routes by territory and dealer network, automatically',
+      'Hands the human the call with the brief already written',
     ],
     href: '/commercial',
   },

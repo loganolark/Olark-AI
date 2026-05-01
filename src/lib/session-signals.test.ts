@@ -65,8 +65,8 @@ describe('hasDemoRun', () => {
 
 describe('readPagesVisited', () => {
   it('returns the stored value when present', () => {
-    sessionStorage.setItem('olark_pages_visited', '/essentials,/lead-gen');
-    expect(readPagesVisited()).toBe('/essentials,/lead-gen');
+    sessionStorage.setItem('olark_pages_visited', '/commercial,/get-started');
+    expect(readPagesVisited()).toBe('/commercial,/get-started');
   });
 
   it('falls back to window.location.pathname when missing', () => {

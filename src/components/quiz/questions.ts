@@ -8,9 +8,15 @@ export const TIER_LABELS: Record<TierSignal, string> = {
   commercial: 'Commercial',
 };
 
+/**
+ * All quiz outcomes route to the single product page now. The two SMB tiers
+ * (essentials, lead_gen) were collapsed when the site pivoted to an
+ * industrial-supplier narrative — kept as quiz signals (HubSpot still
+ * receives them) but every CTA points at /commercial.
+ */
 export const TIER_PRODUCT_PATHS: Record<TierSignal, string> = {
-  essentials: '/essentials',
-  lead_gen: '/lead-gen',
+  essentials: '/commercial',
+  lead_gen: '/commercial',
   commercial: '/commercial',
 };
 

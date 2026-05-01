@@ -370,9 +370,11 @@ describe('PathFinderQuiz — email submit advances to tier reveal', () => {
     expect(
       screen.getByRole('link', { name: /Let.s scope your build/i }),
     ).toHaveAttribute('href', '/get-started');
+    // /lead-gen was collapsed into /commercial — the SMB-tier "details" CTA
+    // routes there now.
     expect(
       screen.getByRole('link', { name: /See Lead-Gen details/i }),
-    ).toHaveAttribute('href', '/lead-gen');
+    ).toHaveAttribute('href', '/commercial');
   });
 
   it('back from step 5 returns to step 4 with email pre-filled', async () => {

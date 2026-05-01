@@ -6,9 +6,7 @@ import { usePathname } from 'next/navigation';
 import { smoothScrollToHash } from '@/lib/scroll-to-hash';
 
 const NAV_LINKS = [
-  { href: '/essentials', label: 'Essentials' },
-  { href: '/lead-gen', label: 'Lead-Gen' },
-  { href: '/commercial', label: 'Commercial' },
+  { href: '/commercial', label: 'Product' },
 ];
 
 export default function SiteNav() {
@@ -116,11 +114,8 @@ export default function SiteNav() {
   }, [targetHref, pathname]);
 
   // Story 8.2: product-page-only "Get a Quote" CTA — scrolls to #quote-section
-  // (the QuoteSection wrapper sets that anchor on each product page).
-  const isProductPage =
-    pathname === '/essentials' ||
-    pathname === '/lead-gen' ||
-    pathname === '/commercial';
+  // (the QuoteSection wrapper sets that anchor on the product page).
+  const isProductPage = pathname === '/commercial';
 
   return (
     <header>

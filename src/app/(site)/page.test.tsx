@@ -8,21 +8,24 @@ describe('HomePage — How It Works section', () => {
     expect(screen.getByText(/How Aiden Works for Your Team/i)).toBeInTheDocument();
   });
 
-  it('renders Essentials tier card with Learn more link', () => {
+  it('renders the single product card linking to /commercial (essentials + lead-gen collapsed)', () => {
     render(<HomePage />);
-    expect(screen.getByText('Essentials')).toBeInTheDocument();
-    const essentialsLink = screen.getAllByRole('link', { name: /Learn more/i })[0];
-    expect(essentialsLink).toHaveAttribute('href', '/essentials');
+    const link = screen.getByRole('link', { name: /Learn more/i });
+    expect(link).toHaveAttribute('href', '/commercial');
   });
 
-  it('renders Lead-Gen tier card', () => {
-    render(<HomePage />);
-    expect(screen.getByText('Lead-Gen')).toBeInTheDocument();
-  });
-
-  it('renders Commercial tier card', () => {
-    render(<HomePage />);
-    expect(screen.getByText('Commercial')).toBeInTheDocument();
+  it('does NOT render the old Essentials or Lead-Gen tier cards', () => {
+    const { container } = render(<HomePage />);
+    const text = container.textContent ?? '';
+    // Permitted: text like "Essentials Tier" elsewhere is fine, but the old
+    // standalone tier cards used these as their headlines. After the strip
+    // neither name should appear as a heading.
+    const headings = container.querySelectorAll('h2, h3');
+    headings.forEach((h) => {
+      expect(h.textContent ?? '').not.toMatch(/^Essentials$/);
+      expect(h.textContent ?? '').not.toMatch(/^Lead-Gen$/);
+    });
+    expect(text).toBeTruthy();
   });
 });
 
