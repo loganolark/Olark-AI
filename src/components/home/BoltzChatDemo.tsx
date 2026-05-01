@@ -262,6 +262,198 @@ const SCRIPTS: Record<string, DemoScript> = {
     promisesAgent: AGENTS.diego,
   },
 
+  // ─── Knowledge base ────────────────────────────────────────────────────
+  // Boltz answers these directly from a fictional Crestline policy / product
+  // doc instead of escalating to a human. Each KB script ends by offering
+  // the visitor a choice: "Talk to a product expert" → kb-escalate (which
+  // captures email and pages a human) OR "I have another question" →
+  // kb-keep-asking (which re-opens the conversation with starting chips).
+  // FREEFORM_ROUTES below maps typed questions to these scripts so a real
+  // typed question feels answered, not punted.
+
+  'kb-payment-terms': {
+    id: 'kb-payment-terms',
+    userText: '',
+    featureTag: 'KB answer · payment policy',
+    scriptedTurns: [
+      {
+        kind: 'bot',
+        text:
+          "Crestline offers Net 30 to qualified accounts. New customers fill out a quick credit app — usually 1–2 business days to a decision. Until terms are set we accept ACH, wire, or major credit cards (3% surcharge over $5K).",
+      },
+      {
+        kind: 'bot',
+        text:
+          "Want to talk to a product expert about your account, or do you have another question?",
+      },
+    ],
+    followupIds: ['kb-escalate', 'kb-keep-asking'],
+  },
+
+  'kb-shipping-policy': {
+    id: 'kb-shipping-policy',
+    userText: '',
+    featureTag: 'KB answer · shipping & freight',
+    scriptedTurns: [
+      {
+        kind: 'bot',
+        text:
+          "We ship from three DCs — Memphis, Reno, and Allentown. Stock items ship same-day on orders placed before 2pm local. Standard freight is LTL via SAIA, R+L, or your preferred carrier; loads over 12K lbs go dedicated truckload (we'll quote it).",
+      },
+      {
+        kind: 'bot',
+        text:
+          "Want a freight quote on something specific, or have another question?",
+      },
+    ],
+    followupIds: ['kb-escalate', 'kb-keep-asking'],
+  },
+
+  'kb-returns': {
+    id: 'kb-returns',
+    userText: '',
+    featureTag: 'KB answer · returns policy',
+    scriptedTurns: [
+      {
+        kind: 'bot',
+        text:
+          "Stock items are returnable within 30 days — 15% restocking fee, waived if it's our error. Custom-cut, custom-fab, or special-order items are non-returnable once production starts. Your rep sends the RMA form when you're ready.",
+      },
+      {
+        kind: 'bot',
+        text: "Want me to start an RMA, or have another question?",
+      },
+    ],
+    followupIds: ['kb-escalate', 'kb-keep-asking'],
+  },
+
+  'kb-warranty': {
+    id: 'kb-warranty',
+    userText: '',
+    featureTag: 'KB answer · warranty terms',
+    scriptedTurns: [
+      {
+        kind: 'bot',
+        text:
+          "Crestline-branded steel and racking carries a 5-year structural warranty. PVC, fittings, and valves carry the manufacturer's warranty (typically 1 year). Custom installs add a 1-year workmanship warranty from the certified installer.",
+      },
+      {
+        kind: 'bot',
+        text:
+          "Want a warranty PDF for a specific product, or have another question?",
+      },
+    ],
+    followupIds: ['kb-escalate', 'kb-keep-asking'],
+  },
+
+  'kb-min-order': {
+    id: 'kb-min-order',
+    userText: '',
+    featureTag: 'KB answer · MOQ',
+    scriptedTurns: [
+      {
+        kind: 'bot',
+        text:
+          "No hard minimum on stock items — we'll ship a single fitting if that's what you need (small orders just cost more per unit on freight). Custom-fab and cut-to-length work has a $2,500 minimum so the setup time pencils out.",
+      },
+      {
+        kind: 'bot',
+        text: "Want to price a specific run, or have another question?",
+      },
+    ],
+    followupIds: ['kb-escalate', 'kb-keep-asking'],
+  },
+
+  'kb-hours-locations': {
+    id: 'kb-hours-locations',
+    userText: '',
+    featureTag: 'KB answer · hours & contact',
+    scriptedTurns: [
+      {
+        kind: 'bot',
+        text:
+          "HQ is Memphis, TN. Phone support runs 7am–7pm Central, Mon–Fri at (901) 555-0142. After hours, this chat routes to our overnight desk for urgent stuff (pages someone within 15 min for a real outage). Regional reps cover 18 territories across the US.",
+      },
+      {
+        kind: 'bot',
+        text:
+          "Want me to connect you with your regional rep, or have another question?",
+      },
+    ],
+    followupIds: ['kb-escalate', 'kb-keep-asking'],
+  },
+
+  'kb-pricing': {
+    id: 'kb-pricing',
+    userText: '',
+    featureTag: 'KB answer · pricing',
+    scriptedTurns: [
+      {
+        kind: 'bot',
+        text:
+          "Stock pricing lives behind login on the catalog — your account-specific tier (Bronze / Silver / Gold) auto-applies. Volume work over 5,000 ft or 1,000 units gets a custom quote from your rep, usually back within an hour during business hours.",
+      },
+      {
+        kind: 'bot',
+        text: "Want to put a quote together now, or have another question?",
+      },
+    ],
+    followupIds: ['kb-escalate', 'kb-keep-asking'],
+  },
+
+  'kb-pvc-schedules': {
+    id: 'kb-pvc-schedules',
+    userText: '',
+    featureTag: 'KB answer · PVC product knowledge',
+    scriptedTurns: [
+      {
+        kind: 'bot',
+        text:
+          "Crestline stocks Sch 40 (general pressure / DWV) and Sch 80 (high-pressure / industrial) PVC in 1/2\" through 12\". We also carry CPVC for hot-water lines and PVC-U electrical conduit (gray). Sch 40 4\" handles ~280 PSI; Sch 80 4\" doubles wall thickness for ~430 PSI.",
+      },
+      {
+        kind: 'bot',
+        text: "Want a quote on a specific size and run, or have another question?",
+      },
+    ],
+    followupIds: ['kb-escalate', 'kb-keep-asking'],
+  },
+
+  // KB → escalate. Captures email then routes through email-handoff so
+  // the visitor sees the same "Marisol joined the chat" beat the scripted
+  // paths use. Default agent because no upstream rack-spec / region path
+  // ran to promise someone specific.
+  'kb-escalate': {
+    id: 'kb-escalate',
+    userText: 'Connect me with a product expert.',
+    featureTag: 'Email captured · human paged',
+    scriptedTurns: [
+      {
+        kind: 'bot',
+        text:
+          "On it. What's the best email so we can follow up with the full context of what we just covered?",
+      },
+    ],
+    followupIds: ['email-handoff'],
+    promisesAgent: AGENTS.marisol,
+  },
+
+  // KB → keep talking. Re-opens the conversation with the starting chips
+  // so the visitor can either pick a suggestion or type another question.
+  'kb-keep-asking': {
+    id: 'kb-keep-asking',
+    userText: 'I have another question.',
+    featureTag: '',
+    scriptedTurns: [
+      {
+        kind: 'bot',
+        text:
+          "Go for it — ask me anything about specs, stock, lead times, pricing, or our policies.",
+      },
+    ],
+    followupIds: STARTING_CHIP_IDS,
+  },
+
   // Email submission → bot acknowledgement → SYSTEM "X joined" → HUMAN
   // message that references the captured project context. This is the
   // moment the demo lands the "human-in-the-loop" promise — visitors see
@@ -306,16 +498,19 @@ const SCRIPTS: Record<string, DemoScript> = {
     endsWithHuman: true,
   },
 
-  // Generic freeform fallback — when the visitor types something we can't
-  // route to a specific spec/qualification path, escalate to the human
-  // takeover (which still echoes their text). Keeps every freeform
-  // dead-end interesting instead of a "sorry, I don't understand."
+  // Generic freeform fallback — fires only when neither the KB nor the
+  // scripted spec/qualification routes match. The visitor's text echoes
+  // through the human takeover so the handoff still feels context-aware.
   'freeform-fallback': {
     id: 'freeform-fallback',
     userText: '',
     featureTag: 'Smart escalation · human in the loop',
     scriptedTurns: [
-      { kind: 'bot', text: "Good question — that one earns a human." },
+      {
+        kind: 'bot',
+        text:
+          "I don't have that one in my docs yet — let me grab a product expert who does.",
+      },
       { kind: 'system', text: '${HUMAN_NAME} (${HUMAN_ROLE}, Crestline Industrial) joined the chat' },
       {
         kind: 'human',
@@ -328,20 +523,65 @@ const SCRIPTS: Record<string, DemoScript> = {
 };
 
 // Keyword routing for freeform input. Order matters — first hit wins.
-// "Talk to a human" patterns are checked FIRST so an explicit handoff
-// request always wins, even if the rest of the message overlaps with
-// a spec-style pattern below.
+// Routing strategy:
+//   1. Explicit "talk to a human" wins over everything.
+//   2. Knowledge-base questions (policy / pricing / hours / product
+//      knowledge) — Boltz answers these from the fictional Crestline KB
+//      instead of escalating, so a real typed question feels answered.
+//   3. Scripted spec / qualification paths — these capture project-style
+//      questions ("I need 50,000 sqft of pallet racking") and run the
+//      multi-turn qualification + geo-routing demos.
+//   4. Fall through to freeform-fallback (which still echoes the typed
+//      text into the human takeover so even unmatched questions feel
+//      personal).
 const FREEFORM_ROUTES: { pattern: RegExp; scriptId: string }[] = [
+  // 1. Explicit human handoff — always wins.
   {
     pattern:
       /\bhuman\b|real person|live agent|talk to (someone|a person|an agent|sales|support)|speak (to|with) (someone|a person|an agent|sales|support)|customer service rep|get a person/i,
     scriptId: 'human-handoff-direct',
   },
-  { pattern: /lead\s*time|stock|in\s*stock|when can|how (long|fast)/i, scriptId: 'lead-time-pvc' },
+
+  // 2. Knowledge base — Boltz answers itself, then offers escalation.
+  {
+    pattern: /\b(payment|net\s*30|net\s*60|terms|invoice|billing|credit (card|app|application)|wire|ach)\b/i,
+    scriptId: 'kb-payment-terms',
+  },
+  {
+    pattern: /\b(ship|shipping|shipped|freight|carrier|delivery|deliver|ltl|truckload|tracking)\b/i,
+    scriptId: 'kb-shipping-policy',
+  },
+  {
+    pattern: /\b(return|returns|returning|refund|rma|restock(ing)?|exchange)\b|send (it|them) back/i,
+    scriptId: 'kb-returns',
+  },
+  {
+    pattern: /\b(warranty|warranties|guarantee|warrantied|warrantee)\b/i,
+    scriptId: 'kb-warranty',
+  },
+  {
+    pattern: /\b(minimum|moq|min\s*order|smallest order)\b|how (few|small)/i,
+    scriptId: 'kb-min-order',
+  },
+  {
+    pattern: /\b(hours|open|closed|location|address|phone|call you|reach you)\b|where (are|is) you/i,
+    scriptId: 'kb-hours-locations',
+  },
+  {
+    pattern: /\b(price|pricing|cost|costs|catalog price|how much)\b/i,
+    scriptId: 'kb-pricing',
+  },
+  {
+    pattern: /\b(pvc|sch\s*\d+|schedule\s*\d+|cpvc|conduit)\b/i,
+    scriptId: 'kb-pvc-schedules',
+  },
+
+  // 3. Scripted spec / qualification paths — multi-turn demos.
+  { pattern: /lead\s*time|in\s*stock|stock|when can|how (long|fast)/i, scriptId: 'lead-time-pvc' },
   { pattern: /pallet|rack|warehouse|sqft|sq\s*ft|facility/i, scriptId: 'spec-pallet-rack' },
   { pattern: /distributor|dealer|installer|nearest|near me|local|where (are|is)/i, scriptId: 'closest-distributor' },
   { pattern: /custom|install|installation|specialist/i, scriptId: 'custom-install' },
-  { pattern: /pvc|pipe|valve|fitting|flange|bolt|hydraulic|psi|ss\b/i, scriptId: 'lead-time-pvc' },
+  { pattern: /pipe|valve|fitting|flange|bolt|hydraulic|psi|ss\b/i, scriptId: 'lead-time-pvc' },
 ];
 
 function routeFreeform(text: string): string {
@@ -366,7 +606,7 @@ interface ChatBubble {
 const TYPING_DELAY_MS = 700;
 const BOT_BUBBLE_DELAY_MS = 1000;
 const INITIAL_BOT_GREETING =
-  "Hey — Boltz here, Crestline's parts assistant. Ask me about specs, stock, lead times, or where to find your local installer. I'll pull a human in when it earns it.";
+  "Hey, Boltz here, Crestline's parts assistant. Ask me about specs, stock, lead times, pricing, or where to find your local installer. I'll pull in one of our product experts once I know a little bit more about how we can help you.";
 
 export default function BoltzChatDemo() {
   const [bubbles, setBubbles] = useState<ChatBubble[]>([

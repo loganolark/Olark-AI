@@ -103,8 +103,96 @@ describe('BoltzChatDemo — freeform input', () => {
 
     const botBubbles = screen.getAllByTestId('boltz-bot-bubble');
     expect(botBubbles[botBubbles.length - 1].textContent).toMatch(
-      /that one earns a human/i,
+      /don't have that one in my docs/i,
     );
+  });
+});
+
+describe('BoltzChatDemo — knowledge base routing', () => {
+  beforeEach(() => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+  });
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('typing a payment-terms question gets a KB answer (not an escalation), then offers escalate / keep-asking chips', async () => {
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    render(<BoltzChatDemo />);
+
+    const input = screen.getByTestId('boltz-freeform-input');
+    await user.type(input, 'Do you offer net 30 terms?');
+    await user.click(screen.getByTestId('boltz-freeform-submit'));
+
+    await act(async () => {
+      vi.advanceTimersByTime(4000);
+    });
+
+    // Bot answered from the KB — must mention Net 30 and credit app.
+    const botBubbles = screen.getAllByTestId('boltz-bot-bubble');
+    const answerText = botBubbles.map((b) => b.textContent).join(' ');
+    expect(answerText).toMatch(/Net 30/i);
+    expect(answerText).toMatch(/credit app/i);
+
+    // No human in seat yet — input still active.
+    expect(screen.getByTestId('boltz-freeform-input')).not.toBeDisabled();
+    expect(screen.queryByTestId('boltz-human-bubble')).toBeNull();
+
+    // Two follow-up chips: escalate + keep-asking.
+    const chipIds = screen
+      .getAllByTestId('boltz-chip')
+      .map((c) => c.getAttribute('data-chip-id'));
+    expect(chipIds).toEqual(
+      expect.arrayContaining(['kb-escalate', 'kb-keep-asking']),
+    );
+  });
+
+  it('typing a shipping question routes to the shipping KB script', async () => {
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    render(<BoltzChatDemo />);
+
+    const input = screen.getByTestId('boltz-freeform-input');
+    await user.type(input, 'how does shipping work?');
+    await user.click(screen.getByTestId('boltz-freeform-submit'));
+
+    await act(async () => {
+      vi.advanceTimersByTime(4000);
+    });
+
+    const botBubbles = screen.getAllByTestId('boltz-bot-bubble');
+    const answerText = botBubbles.map((b) => b.textContent).join(' ');
+    expect(answerText).toMatch(/Memphis|Reno|Allentown/);
+  });
+
+  it('after a KB answer, clicking "I have another question" reopens the conversation with the starting chips', async () => {
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    render(<BoltzChatDemo />);
+
+    const input = screen.getByTestId('boltz-freeform-input');
+    await user.type(input, 'what is your warranty?');
+    await user.click(screen.getByTestId('boltz-freeform-submit'));
+    await act(async () => { vi.advanceTimersByTime(4000); });
+
+    const keepAsking = screen
+      .getAllByTestId('boltz-chip')
+      .find((c) => c.getAttribute('data-chip-id') === 'kb-keep-asking');
+    expect(keepAsking).toBeTruthy();
+    await user.click(keepAsking!);
+    await act(async () => { vi.advanceTimersByTime(2000); });
+
+    // Starting chips are restored — the four canonical ones.
+    const chipIds = screen
+      .getAllByTestId('boltz-chip')
+      .map((c) => c.getAttribute('data-chip-id'));
+    expect(chipIds).toEqual(
+      expect.arrayContaining([
+        'lead-time-pvc',
+        'spec-pallet-rack',
+        'closest-distributor',
+        'custom-install',
+      ]),
+    );
+    expect(screen.getByTestId('boltz-freeform-input')).not.toBeDisabled();
   });
 });
 
