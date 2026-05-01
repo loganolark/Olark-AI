@@ -65,8 +65,8 @@ export default function HomePage() {
         subhead="We combine 17 years of live chat expertise with AI engineered for the way industrial supply actually sells — turning complex technical inquiries into briefed, qualified RFQs your team can close."
         cta={
           <>
-            <CTAButton variant="primary" size="lg" href="#demo">
-              Try It on Your Site →
+            <CTAButton variant="primary" size="lg" href="#boltz-demo">
+              See How Aiden Works →
             </CTAButton>
             <HeroQuizCTA />
           </>
