@@ -101,6 +101,14 @@ h1, h2, h3, h4, h5, h6 {
   to { transform: rotate(360deg); }
 }
 
+/* BoltzChatDemo typing-dot animation. Each dot's delay is set inline via
+   the animation-delay portion of the shorthand, so we only need the
+   keyframes here. */
+@keyframes boltz-typing-dot {
+  0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+  30%           { opacity: 1;   transform: translateY(-3px); }
+}
+
 /* ─── Global prefers-reduced-motion override ─── */
 /* Collapses ALL animations and transitions to near-instant for users
    who have enabled the OS-level "Reduce Motion" preference.

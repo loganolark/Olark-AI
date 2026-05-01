@@ -13,6 +13,7 @@ import HeroStatsRow from '@/components/home/HeroStatsRow';
 import IndustrialPillars from '@/components/home/IndustrialPillars';
 import WhyItMattersStatsPanel from '@/components/home/WhyItMattersStatsPanel';
 import EnhanceTheHumanMomentBlock from '@/components/home/EnhanceTheHumanMomentBlock';
+import BoltzChatDemo from '@/components/home/BoltzChatDemo';
 
 export const metadata: Metadata = {
   title: 'Aiden by Olark — AI Live Chat for Industrial Suppliers',
@@ -123,6 +124,9 @@ export default function HomePage() {
           </p>
         </Reveal>
       </section>
+
+      {/* ─── Boltz interactive chat demo — "see what good looks like" ───── */}
+      <BoltzChatDemo />
 
       {/* ─── URL Demo Widget — try it on your site ──────────────────────── */}
       <section

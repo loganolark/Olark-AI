@@ -176,6 +176,7 @@ describe('HomePage — DOM order of major sections', () => {
     const markers = [
       'AI for Industrial Suppliers.',
       'expensive digital filing cabinets',
+      'A Real Industrial-Supply Conversation',
       'Engineered for Industrial Supply',
       'We Remove the Cruft',
       'Stop Being the Search Bar',
@@ -190,5 +191,30 @@ describe('HomePage — DOM order of major sections', () => {
       expect(idx, `expected "${m}" to come AFTER previous marker`).toBeGreaterThan(lastIdx);
       lastIdx = idx;
     }
+  });
+});
+
+describe('HomePage — Boltz chat demo', () => {
+  it('renders the BoltzChatDemo section between filing-cabinet callout and URL demo', () => {
+    render(<HomePage />);
+    expect(
+      screen.getByRole('heading', {
+        level: 2,
+        name: /A Real Industrial-Supply Conversation\. Try It\./i,
+      }),
+    ).toBeInTheDocument();
+  });
+
+  it('renders Boltz initial greeting + 4 starting chips + powered-by-Aiden badge', () => {
+    render(<HomePage />);
+    expect(screen.getByText(/Boltz here, Crestline/i)).toBeInTheDocument();
+    expect(screen.getAllByTestId('boltz-chip')).toHaveLength(4);
+    expect(screen.getByTestId('powered-by-aiden')).toBeInTheDocument();
+  });
+
+  it('renders the freeform input + reset controls', () => {
+    render(<HomePage />);
+    expect(screen.getByTestId('boltz-freeform-input')).toBeInTheDocument();
+    expect(screen.getByTestId('boltz-reset')).toBeInTheDocument();
   });
 });
