@@ -114,23 +114,23 @@ describe('HomePage — Persona tab switcher (industrial roles)', () => {
   });
 });
 
-describe('HomePage — Final CTA + Quiz block (kept from prior build)', () => {
-  it('renders the "Still Not Sure" headline', () => {
-    render(<HomePage />);
-    expect(
-      screen.getByRole('heading', { level: 2, name: /Still Not Sure Which Tier Fits/i }),
-    ).toBeInTheDocument();
-  });
-
-  it('renders both quiz CTAs — hero link to #quiz + Final CTA start-quiz button', () => {
+describe('HomePage — Quiz block (collapsed Final CTA into the placeholder card)', () => {
+  it('renders the hero quiz CTA scrolling to #quiz', () => {
     render(<HomePage />);
     const heroLink = screen.getByRole('link', { name: /Take the 60-Second Quiz/i });
     expect(heroLink).toHaveAttribute('href', '#quiz');
-    const finalCtaButton = screen.getByRole('button', {
-      name: /Take the 60-Second Quiz/i,
-    });
-    expect(finalCtaButton).toBeInTheDocument();
-    expect(finalCtaButton).not.toHaveAttribute('href');
+  });
+
+  it('does NOT render the old "Still Not Sure" Final-CTA preamble (collapsed into the placeholder)', () => {
+    render(<HomePage />);
+    expect(
+      screen.queryByRole('heading', { name: /Still Not Sure Which Tier Fits/i }),
+    ).toBeNull();
+    // No <button> with "Take the 60-Second Quiz" — the only CTA with that
+    // copy is the hero <a href="#quiz"> link.
+    expect(
+      screen.queryByRole('button', { name: /Take the 60-Second Quiz/i }),
+    ).toBeNull();
   });
 
   it('does NOT render the old 3-button tier-specific CTA bridge', () => {
@@ -191,7 +191,7 @@ describe('HomePage — DOM order of major sections', () => {
       'Stop Being the Search Bar',
       'We Enhance the Human Moment',
       'Trusted by industrial suppliers',
-      'Still Not Sure Which Tier Fits',
+      'Find Your Tier in About a Minute',
     ];
     let lastIdx = -1;
     for (const m of markers) {

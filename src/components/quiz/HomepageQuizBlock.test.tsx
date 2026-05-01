@@ -38,44 +38,24 @@ beforeEach(() => {
 });
 
 describe('HomepageQuizBlock — initial state', () => {
-  it('renders the Final CTA section first, then the quiz section in DOM order', () => {
-    render(<HomepageQuizBlock />);
-    const heading = screen.getByRole('heading', {
-      level: 2,
-      name: /Still Not Sure Which Tier Fits/i,
-    });
-    const placeholder = screen.getByTestId('quiz-placeholder');
-    const cmp = heading.compareDocumentPosition(placeholder);
-    expect(cmp & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-  });
-
   it('shows the QuizPlaceholder, NOT the live PathFinderQuiz', () => {
     render(<HomepageQuizBlock />);
     expect(screen.getByTestId('quiz-placeholder')).toBeInTheDocument();
     expect(screen.queryByTestId('path-finder-quiz')).toBeNull();
   });
 
-  it('Final CTA "Take the 60-Second Quiz" renders as a <button> (no href)', () => {
+  it('does NOT render the redundant "Still Not Sure" preamble (collapsed into the placeholder card itself)', () => {
     render(<HomepageQuizBlock />);
-    const button = screen.getByRole('button', {
-      name: /Take the 60-Second Quiz/i,
-    });
-    expect(button.tagName).toBe('BUTTON');
-    expect(button).not.toHaveAttribute('href');
+    expect(
+      screen.queryByRole('heading', { name: /Still Not Sure Which Tier Fits/i }),
+    ).toBeNull();
+    expect(
+      screen.queryByRole('button', { name: /Take the 60-Second Quiz/i }),
+    ).toBeNull();
   });
 });
 
 describe('HomepageQuizBlock — start triggers', () => {
-  it('clicking the Final CTA "Take the 60-Second Quiz" replaces the placeholder with the quiz', async () => {
-    const user = userEvent.setup();
-    render(<HomepageQuizBlock />);
-    await user.click(
-      screen.getByRole('button', { name: /Take the 60-Second Quiz/i }),
-    );
-    expect(screen.queryByTestId('quiz-placeholder')).toBeNull();
-    expect(screen.getByTestId('path-finder-quiz')).toBeInTheDocument();
-  });
-
   it('clicking the placeholder card itself starts the quiz', async () => {
     const user = userEvent.setup();
     render(<HomepageQuizBlock />);
