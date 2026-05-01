@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import ParticleBackground from '@/components/ui/ParticleBackground';
+import Reveal from '@/components/ui/Reveal';
 import PathFinderQuiz from './PathFinderQuiz';
 import QuizPlaceholder from './QuizPlaceholder';
 
@@ -51,6 +52,22 @@ export default function HomepageQuizBlock() {
     >
       <ParticleBackground density={50} />
       <div style={{ position: 'relative', zIndex: 1 }}>
+        {!quizStarted && (
+          <Reveal style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+            <h2
+              style={{
+                fontFamily: 'var(--font-poppins), ui-sans-serif, sans-serif',
+                fontWeight: 900,
+                fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)',
+                letterSpacing: '-0.025em',
+                color: 'var(--od-white)',
+                margin: 0,
+              }}
+            >
+              Still Not Sure Which Tier Fits?
+            </h2>
+          </Reveal>
+        )}
         {quizStarted ? (
           <PathFinderQuiz />
         ) : (

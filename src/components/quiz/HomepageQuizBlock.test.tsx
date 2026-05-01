@@ -44,10 +44,21 @@ describe('HomepageQuizBlock — initial state', () => {
     expect(screen.queryByTestId('path-finder-quiz')).toBeNull();
   });
 
-  it('does NOT render the redundant "Still Not Sure" preamble (collapsed into the placeholder card itself)', () => {
+  it('renders the "Still Not Sure Which Tier Fits?" headline above the quiz card', () => {
+    render(<HomepageQuizBlock />);
+    const heading = screen.getByRole('heading', {
+      level: 2,
+      name: /Still Not Sure Which Tier Fits/i,
+    });
+    const placeholder = screen.getByTestId('quiz-placeholder');
+    const cmp = heading.compareDocumentPosition(placeholder);
+    expect(cmp & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
+  it('does NOT render the old redundant subhead + "Take the 60-Second Quiz" button (collapsed into the placeholder card)', () => {
     render(<HomepageQuizBlock />);
     expect(
-      screen.queryByRole('heading', { name: /Still Not Sure Which Tier Fits/i }),
+      screen.queryByText(/Sixty seconds, then you decide/i),
     ).toBeNull();
     expect(
       screen.queryByRole('button', { name: /Take the 60-Second Quiz/i }),
